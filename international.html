@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>國際太空法總覽 — International Space Law</title>
+<meta name="description" content="國際太空法易讀總覽:聯合國五大太空條約、法制沿革時間軸、外太空條約核心原則、原則宣言、Artemis Accords 等當代發展與重要意義。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%236FD4FF'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Space+Grotesk:wght@300;400;500;700&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #262624;
+    --bg-2: #30302E;
+    --bg-3: #3A3936;
+    --border: #464540;
+    --border-soft: #3B3A37;
+    --text: #ECEAE5;
+    --text-2: #CBC8C1;
+    --text-3: #ABA79E;
+    --muted: #8F8C84;
+    --blue: #4C74D9;
+    --cyan: #6FD4FF;
+    --cyan-2: #A8E6FF;
+    --gold: #FFC53D;
+    --coral: #FF7A5C;
+    --green: #35D0A0;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; padding: 0; background: var(--bg); }
+  body { font-family: 'Noto Sans TC', 'Space Grotesk', sans-serif; color: var(--text); line-height: 1.85; }
+  a { color: var(--cyan); text-decoration: none; }
+  a:hover { color: var(--cyan-2); text-decoration: underline; }
+  ::selection { background: #2B5ACF; color: #fff; }
+  @keyframes twinkle { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+  @keyframes orbit-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+
+  .starfield { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .page { position: relative; z-index: 1; }
+
+  .topnav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(38, 38, 36, 0.88); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-soft);
+    padding: 14px 5vw; display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  }
+  .topnav .brand { display: flex; align-items: center; gap: 10px; margin-right: auto; font-weight: 700; font-size: 16px; color: var(--text); }
+  .topnav .orb { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--blue); display: grid; place-items: center; flex: none; }
+  .topnav .orb i { width: 7px; height: 7px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 10px var(--cyan); }
+  .topnav a.navlink { font-size: 14.5px; color: var(--text-2); padding: 4px 2px; border-bottom: 2px solid transparent; }
+  .topnav a.navlink:hover { color: var(--cyan); text-decoration: none; border-bottom-color: var(--cyan); }
+  .topnav a.switch { border: 1px solid var(--gold); color: var(--gold); border-radius: 999px; padding: 5px 16px; font-size: 13.5px; }
+  .topnav a.switch:hover { background: rgba(255,197,61,0.1); text-decoration: none; }
+
+  .hero { position: relative; overflow: hidden; padding: 110px 8vw 130px; border-bottom: 1px solid var(--border-soft); }
+  .hero .kicker { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
+  .hero .kicker span { font-family: 'Space Grotesk'; letter-spacing: 0.25em; font-size: 12.5px; color: var(--blue); text-transform: uppercase; }
+  .hero h1 { font-family: 'Noto Serif TC', serif; font-weight: 600; font-size: clamp(40px, 6vw, 76px); line-height: 1.16; margin: 0 0 14px; letter-spacing: 0.1em; }
+  .hero .sub { font-family: 'Space Grotesk'; font-size: clamp(17px, 2vw, 24px); font-weight: 300; color: var(--text-3); margin: 0 0 30px; letter-spacing: 0.04em; }
+  .hero .lede { max-width: 640px; font-size: 16.5px; color: var(--text-2); margin: 0 0 18px; }
+  .hero .note { max-width: 640px; font-size: 14.5px; color: var(--text-3); margin: 0; border-left: 2px solid var(--gold); padding-left: 18px; }
+  .ridge { position: absolute; left: 0; right: 0; bottom: -2px; width: 100%; height: 160px; pointer-events: none; }
+
+  .hero .orbitfig { position: absolute; right: 9vw; top: 90px; width: clamp(120px, 14vw, 200px); aspect-ratio: 1; pointer-events: none; }
+  .hero .orbitfig .ring { position: absolute; inset: 0; border: 1px dashed #2B5ACF; border-radius: 50%; }
+  .hero .orbitfig .spin { position: absolute; inset: 0; animation: orbit-spin 22s linear infinite; }
+  .hero .orbitfig .sat { position: absolute; top: -5px; left: 50%; margin-left: -5px; width: 10px; height: 10px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+  .hero .orbitfig .earth { position: absolute; top: 50%; left: 50%; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #A8E6FF, #2B5ACF); }
+
+  .stat-strip { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 40px; }
+  .stat { border: 1px solid var(--border); border-radius: 12px; padding: 14px 22px; background: rgba(48,48,46,0.6); min-width: 130px; }
+  .stat b { display: block; font-family: 'Space Grotesk'; font-size: 26px; font-weight: 500; color: var(--cyan); line-height: 1.2; }
+  .stat span { font-size: 12.5px; color: var(--muted); }
+
+  section.block { padding: 96px 8vw; border-bottom: 1px solid var(--border-soft); position: relative; scroll-margin-top: 70px; }
+  .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 14px; flex-wrap: wrap; }
+  .sec-head .no { font-family: 'Space Grotesk'; font-size: 15px; color: var(--gold); letter-spacing: 0.2em; }
+  .sec-head h2 { font-family: 'Noto Serif TC', serif; font-size: clamp(28px, 3.4vw, 38px); font-weight: 600; margin: 0; }
+  .sec-head h2 small { font-family: 'Space Grotesk'; font-weight: 300; font-size: 0.55em; color: var(--muted); margin-left: 10px; }
+  .sec-intro { max-width: 700px; color: var(--text-3); margin: 0 0 48px; font-size: 15.5px; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+  .card {
+    background: linear-gradient(160deg, var(--bg-2) 0%, #2B2A28 100%);
+    border: 1px solid var(--border); border-radius: 20px; padding: 30px 30px 28px;
+    transition: border-color .25s, box-shadow .25s;
+  }
+  .card:hover { border-color: var(--cyan); box-shadow: 0 0 28px rgba(111,212,255,0.14); }
+  .card .tag { font-family: 'Space Grotesk'; font-size: 11.5px; letter-spacing: 0.16em; color: var(--gold); margin-bottom: 10px; }
+  .card h3 { font-size: 19px; font-weight: 700; margin: 0 0 4px; }
+  .card .en { font-family: 'Space Grotesk'; font-size: 12.5px; color: var(--blue); letter-spacing: 0.06em; margin: 0 0 14px; }
+  .card p, .card li { font-size: 14.5px; color: var(--text-3); margin: 0; }
+  .card ul { margin: 10px 0 0; padding-left: 18px; }
+  .card li { margin-bottom: 6px; }
+  .card .src { margin-top: 16px; font-size: 13px; }
+  .card .meta { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 0; }
+
+  .pill { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--muted); color: var(--muted); border-radius: 999px; padding: 4px 13px; font-size: 12.5px; white-space: nowrap; }
+  .pill i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .pill.gold { border-color: var(--gold); color: var(--gold); }
+  .pill.cyan { border-color: var(--cyan); color: var(--cyan); }
+  .pill.green { border-color: var(--green); color: var(--green); }
+  .pill.coral { border-color: var(--coral); color: var(--coral); }
+
+  .timeline { position: relative; margin-left: 10px; padding-left: 34px; border-left: 1px dashed #2B5ACF; max-width: 780px; }
+  .tl-item { position: relative; padding-bottom: 40px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -40px; top: 7px; width: 11px; height: 11px; border-radius: 50%;
+    background: var(--text); box-shadow: 0 0 10px rgba(236,234,229,0.7);
+  }
+  .tl-item.major::before { background: var(--gold); box-shadow: 0 0 14px var(--gold); }
+  .tl-item .date { font-family: 'Space Grotesk'; font-size: 14px; color: var(--cyan); letter-spacing: 0.08em; }
+  .tl-item h3 { font-size: 18px; font-weight: 700; margin: 4px 0 6px; }
+  .tl-item p { font-size: 14.5px; color: var(--text-3); margin: 0; max-width: 620px; }
+
+  .defs { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+  .def { border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; background: var(--bg-2); }
+  .def b { display: block; font-size: 16.5px; margin-bottom: 2px; }
+  .def .en { font-family: 'Space Grotesk'; font-size: 11.5px; color: var(--blue); letter-spacing: 0.08em; }
+  .def p { font-size: 13.5px; color: var(--text-3); margin: 8px 0 0; }
+  .def .art { font-family: 'Space Grotesk'; font-size: 12px; color: var(--gold); letter-spacing: 0.1em; }
+
+  .disclaimer {
+    border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: 12px;
+    background: rgba(255,197,61,0.05); padding: 20px 26px; font-size: 14px; color: var(--text-3); max-width: 860px;
+  }
+
+  .bridge {
+    margin-top: 48px; border: 1px solid var(--border); border-radius: 20px; padding: 34px 36px;
+    background: linear-gradient(150deg, rgba(76,116,217,0.12), rgba(38,38,36,0.4));
+    max-width: 860px;
+  }
+  .bridge h3 { font-family: 'Noto Serif TC', serif; font-size: 22px; margin: 0 0 10px; }
+  .bridge p { font-size: 15px; color: var(--text-2); margin: 0 0 14px; }
+
+  footer { position: relative; padding: 80px 8vw 60px; text-align: center; overflow: hidden; }
+  footer .t { font-family: 'Noto Serif TC', serif; font-weight: 600; font-size: 24px; margin-bottom: 8px; }
+  footer .s { font-family: 'Space Grotesk'; font-size: 12px; letter-spacing: 0.2em; color: var(--muted); }
+  footer .links { margin: 22px 0 0; font-size: 13.5px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="starfield" id="starfield" aria-hidden="true"></div>
+
+<div class="page">
+
+<!-- ============ NAV ============ -->
+<nav class="topnav" aria-label="主要導覽">
+  <span class="brand"><span class="orb"><i></i></span>國際太空法</span>
+  <a class="navlink" href="#timeline">法制沿革</a>
+  <a class="navlink" href="#treaties">五大條約</a>
+  <a class="navlink" href="#ost">外太空條約</a>
+  <a class="navlink" href="#principles">原則宣言</a>
+  <a class="navlink" href="#modern">當代發展</a>
+  <a class="navlink" href="#significance">重要意義</a>
+  <a class="switch" href="index.html">臺灣太空法規 →</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <div class="orbitfig" aria-hidden="true">
+    <div class="ring"></div>
+    <div class="spin"><div class="sat"></div></div>
+    <div class="earth"></div>
+  </div>
+
+  <div class="kicker"><span>International Space Law</span></div>
+  <h1>國際太空法</h1>
+  <p class="sub">The Law of Outer Space — 全人類的太空秩序</p>
+  <p class="lede">自 1957 年史普尼克一號升空以來,人類在聯合國架構下逐步建立太空活動的法律秩序:以 1967 年《外太空條約》為憲章,輔以四項條約與多項原則宣言,確立太空「不得據為己有、限於和平目的、全人類共同利益」的基本規範。本頁彙整國際太空法的沿革、五大條約與當代發展。</p>
+  <p class="note">本頁為便民彙整之易讀版;條約正式文本與締約狀況以<a href="https://www.unoosa.org/oosa/en/ourwork/spacelaw/treaties.html" target="_blank" rel="noopener">聯合國外太空事務廳(UNOOSA)</a>公布者為準。</p>
+
+  <div class="stat-strip">
+    <div class="stat"><b>1967</b><span>外太空條約生效</span></div>
+    <div class="stat"><b>5</b><span>聯合國核心太空條約</span></div>
+    <div class="stat"><b>118</b><span>外太空條約締約國(2025.10)</span></div>
+    <div class="stat"><b>68</b><span>Artemis Accords 簽署國(2026.06)</span></div>
+    <div class="stat"><b>COPUOS</b><span>聯合國和平使用外太空委員會</span></div>
+  </div>
+
+  <svg class="ridge" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,180 L0,120 C120,110 200,70 320,64 C420,60 470,30 560,26 C640,22 700,52 800,58 C900,64 980,40 1080,48 C1200,58 1300,100 1440,108 L1440,180 Z" fill="#454440" opacity="0.55"/>
+    <path d="M0,180 L0,146 C160,138 260,104 380,100 C480,96 540,72 620,70 C710,68 780,92 880,96 C1000,101 1120,84 1240,96 C1320,104 1390,118 1440,124 L1440,180 Z" fill="#262624"/>
+  </svg>
+</header>
+
+<!-- ============ 01 法制沿革 ============ -->
+<section class="block" id="timeline">
+  <div class="sec-head"><span class="no">01</span><h2>法制沿革<small>Timeline</small></h2></div>
+  <p class="sec-intro">冷戰太空競賽催生了人類第一批太空法律。從史普尼克的震撼到 Artemis 時代的重返月球,國際太空法始終在科技與地緣政治的張力中演進。</p>
+  <div class="timeline">
+    <div class="tl-item major">
+      <span class="date">1957.10.04</span>
+      <h3>史普尼克一號升空</h3>
+      <p>蘇聯發射人類第一顆人造衛星。衛星飛越各國上空卻無人抗議「侵犯領空」,意外奠定「太空自由」原則的國家實踐基礎。</p>
+    </div>
+    <div class="tl-item">
+      <span class="date">1958–1959</span>
+      <h3>聯合國成立 COPUOS</h3>
+      <p>聯合國大會設立「和平使用外太空委員會」(COPUOS),1959 年成為常設機構,自此成為國際太空法的主要立法平台;其下設科學技術與法律兩個小組委員會。</p>
+    </div>
+    <div class="tl-item">
+      <span class="date">1963</span>
+      <h3>法律原則宣言與部分禁止核試驗條約</h3>
+      <p>聯大通過《各國探索和利用外太空活動的法律原則宣言》,揭示日後外太空條約的核心內容;同年《部分禁止核試驗條約》禁止在外太空進行核試爆。</p>
+    </div>
+    <div class="tl-item major">
+      <span class="date">1967.10.10</span>
+      <h3>《外太空條約》生效 — 太空的憲章</h3>
+      <p>正式名稱《關於各國探索和利用包括月球和其他天體在內外太空活動的原則條約》,確立太空法制的憲法性框架,被譽為「太空大憲章」。</p>
+    </div>
+    <div class="tl-item">
+      <span class="date">1968</span>
+      <h3>《營救協定》</h3>
+      <p>太空人是「人類派往外太空的使者」——各國有義務援救遇難太空人並歸還太空物體。</p>
+    </div>
+    <div class="tl-item">
+      <span class="date">1972</span>
+      <h3>《責任公約》</h3>
+      <p>確立「發射國」的損害賠償責任:太空物體對地表或飛行中航空器造成損害採絕對責任,在太空中相撞則採過失責任。</p>
+    </div>
+    <div class="tl-item">
+      <span class="date">1975</span>
+      <h3>《登記公約》</h3>
+      <p>發射國應將太空物體登載於本國登記冊,並向聯合國秘書長通報,建立太空物體的「國際戶籍」制度。</p>
+    </div>
+    <div class="tl-item">
+      <span class="date">1979</span>
+      <h3>《月球協定》</h3>
+      <p>宣示月球及其自然資源為「人類共同繼承財產」,但美、俄、中等主要太空國家均未加入,締約國不到二十個,實際影響有限。</p>
+    </div>
+    <div class="tl-item">
+      <span class="date">1982–1996</span>
+      <h3>四項原則宣言時代</h3>
+      <p>條約立法趨緩,聯大改以決議形式通過直播衛星(1982)、遙感探測(1986)、核動力源(1992)與太空利益宣言(1996)等原則。</p>
+    </div>
+    <div class="tl-item">
+      <span class="date">2007–2019</span>
+      <h3>太空碎片減緩與長期永續準則</h3>
+      <p>COPUOS 於 2007 年採認太空碎片減緩準則,2019 年通過外太空活動長期永續性(LTS)21 項準則,回應軌道日益擁擠的現實。</p>
+    </div>
+    <div class="tl-item major">
+      <span class="date">2020</span>
+      <h3>Artemis Accords 簽署</h3>
+      <p>美國主導的重返月球計畫配套政治承諾,重申外太空條約原則並就透明、互操作性、太空資源利用、安全區等訂立行為準則;至 2026 年 6 月已有 68 國簽署。</p>
+    </div>
+    <div class="tl-item">
+      <span class="date">2022</span>
+      <h3>反衛星試驗禁令倡議</h3>
+      <p>聯大通過決議,呼籲各國承諾不進行破壞性直升式反衛星(ASAT)飛彈試驗,以減少太空碎片、維護太空安全。</p>
+    </div>
+    <div class="tl-item">
+      <span class="date">現在進行式</span>
+      <h3>太空資源、太空交通管理與新規則</h3>
+      <p>太空資源開採的法律地位、巨型星系(mega-constellation)的軌道與頻譜管理、太空交通管理(STM)等議題,正於 COPUOS 及各國國內立法中持續發展。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 五大條約 ============ -->
+<section class="block" id="treaties">
+  <div class="sec-head"><span class="no">02</span><h2>聯合國五大太空條約<small>The Five UN Treaties</small></h2></div>
+  <p class="sec-intro">國際太空法的骨幹,皆於 COPUOS 架構下談判完成。締約國數為概數,最新狀況請見 <a href="https://www.unoosa.org/oosa/en/ourwork/spacelaw/treaties/status/index.html" target="_blank" rel="noopener">UNOOSA 條約狀態頁</a>。</p>
+  <div class="cards">
+    <div class="card">
+      <div class="tag">TREATY 01 · 1967</div>
+      <h3>外太空條約</h3>
+      <p class="en">Outer Space Treaty (OST)</p>
+      <p>太空法制的憲章:太空探索為全人類福祉、不得主權據有、禁止大規模毀滅性武器入軌、國家對太空活動負國際責任。幾乎所有太空活動國家皆為締約國。</p>
+      <div class="meta"><span class="pill gold"><i></i>締約國 118(2025.10)</span><span class="pill cyan"><i></i>太空憲章</span></div>
+    </div>
+    <div class="card">
+      <div class="tag">TREATY 02 · 1968</div>
+      <h3>營救協定</h3>
+      <p class="en">Rescue Agreement (ARRA)</p>
+      <p>太空人遇難時,各國應盡力援救並安全送還;落入他國境內的太空物體應歸還發射當局。將 OST 第 5 條的人道義務具體化。</p>
+      <div class="meta"><span class="pill"><i></i>締約國約百國</span></div>
+    </div>
+    <div class="card">
+      <div class="tag">TREATY 03 · 1972</div>
+      <h3>責任公約</h3>
+      <p class="en">Liability Convention (LIAB)</p>
+      <p>「發射國」對太空物體造成的損害負賠償責任:對地表及飛行中航空器採<b style="color:var(--gold);">絕對責任</b>,太空物體之間則採過失責任。1978 年蘇聯核動力衛星 Cosmos 954 墜毀加拿大即援用本公約求償。</p>
+      <div class="meta"><span class="pill"><i></i>締約國約百國</span></div>
+    </div>
+    <div class="card">
+      <div class="tag">TREATY 04 · 1975</div>
+      <h3>登記公約</h3>
+      <p class="en">Registration Convention (REG)</p>
+      <p>發射國應設置太空物體登記冊,並向聯合國秘書長提供軌道參數等資訊,使太空物體的管轄與責任有跡可循——各國國內登錄制度(含臺灣)的國際源頭。</p>
+      <div class="meta"><span class="pill gold"><i></i>締約國 78(2026.01)</span></div>
+    </div>
+    <div class="card">
+      <div class="tag">TREATY 05 · 1979</div>
+      <h3>月球協定</h3>
+      <p class="en">Moon Agreement</p>
+      <p>宣示月球及其資源為「人類共同繼承財產」,開發應設立國際制度分享利益。因主要太空國家均拒絕加入(締約國不到二十個),被視為國際太空立法由盛轉衰的分水嶺。</p>
+      <div class="meta"><span class="pill coral"><i></i>主要太空國家未加入</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 外太空條約核心原則 ============ -->
+<section class="block" id="ost">
+  <div class="sec-head"><span class="no">03</span><h2>外太空條約核心原則<small>OST Principles</small></h2></div>
+  <p class="sec-intro">《外太空條約》僅 17 條,卻奠定了此後六十年太空秩序的基石。以下為主要條文的白話摘要:</p>
+  <div class="defs">
+    <div class="def"><span class="art">ART. I</span><b>全人類的疆域</b><span class="en">PROVINCE OF ALL MANKIND</span><p>太空探索與利用應為所有國家謀福利,太空對各國一律自由開放,不受歧視。</p></div>
+    <div class="def"><span class="art">ART. II</span><b>不得據為己有</b><span class="en">NON-APPROPRIATION</span><p>任何國家不得以主權主張、使用、占領或任何方式,將太空及天體據為己有。</p></div>
+    <div class="def"><span class="art">ART. III</span><b>國際法適用</b><span class="en">INTERNATIONAL LAW APPLIES</span><p>太空活動應遵守國際法(含聯合國憲章),以維護國際和平與安全。</p></div>
+    <div class="def"><span class="art">ART. IV</span><b>限制軍事化</b><span class="en">PARTIAL DEMILITARIZATION</span><p>禁止在軌道部署核武器等大規模毀滅性武器;月球與天體應專用於和平目的,禁止設置軍事基地與試驗武器。</p></div>
+    <div class="def"><span class="art">ART. V</span><b>太空人為人類使者</b><span class="en">ENVOYS OF MANKIND</span><p>各國應視太空人為人類派往外太空的使者,遇難時盡力援救。</p></div>
+    <div class="def"><span class="art">ART. VI</span><b>國家責任</b><span class="en">STATE RESPONSIBILITY</span><p>國家對其太空活動負國際責任——包括民間企業的活動,須經國家授權並持續監督。這是各國制定國內太空法(含臺灣《太空發展法》)的直接動因。</p></div>
+    <div class="def"><span class="art">ART. VII</span><b>損害賠償</b><span class="en">LIABILITY</span><p>發射國對太空物體造成之損害負賠償責任,細節由 1972 年責任公約補充。</p></div>
+    <div class="def"><span class="art">ART. VIII</span><b>管轄與控制</b><span class="en">JURISDICTION &amp; CONTROL</span><p>登記國對其太空物體及其上人員保有管轄權與控制權,所有權不因位處太空而改變。</p></div>
+    <div class="def"><span class="art">ART. IX</span><b>適當顧及原則</b><span class="en">DUE REGARD</span><p>從事太空活動應顧及他國利益,避免對太空與天體造成有害污染,必要時應進行國際磋商。</p></div>
+  </div>
+</section>
+
+<!-- ============ 04 原則宣言 ============ -->
+<section class="block" id="principles">
+  <div class="sec-head"><span class="no">04</span><h2>聯合國原則宣言<small>UN Declarations</small></h2></div>
+  <p class="sec-intro">1980 年代後條約立法停滯,聯合國大會改以不具條約拘束力的「原則宣言」形塑國家行為——軟法(soft law)自此成為國際太空法的重要載體。</p>
+  <div class="cards">
+    <div class="card">
+      <div class="tag">1963</div>
+      <h3>法律原則宣言</h3>
+      <p class="en">Declaration of Legal Principles</p>
+      <p>外太空條約的前身,首度以聯大決議宣示太空自由、不得據有與國家責任等原則。</p>
+    </div>
+    <div class="card">
+      <div class="tag">1982</div>
+      <h3>國際直接電視廣播原則</h3>
+      <p class="en">Direct Broadcasting Principles</p>
+      <p>規範衛星直播電視的跨國訊號傳輸,平衡資訊自由與國家主權的緊張。</p>
+    </div>
+    <div class="card">
+      <div class="tag">1986</div>
+      <h3>遙感探測原則</h3>
+      <p class="en">Remote Sensing Principles</p>
+      <p>確立衛星遙測地球不需被觀測國同意,但被觀測國有權以合理條件取得本國影像資料。</p>
+    </div>
+    <div class="card">
+      <div class="tag">1992</div>
+      <h3>核動力源原則</h3>
+      <p class="en">Nuclear Power Source Principles</p>
+      <p>回應 Cosmos 954 墜毀事件,就太空核動力源的安全使用、通報與賠償訂立準則。</p>
+    </div>
+    <div class="card">
+      <div class="tag">1996</div>
+      <h3>太空利益宣言</h3>
+      <p class="en">Space Benefits Declaration</p>
+      <p>強調太空活動的利益應惠及所有國家,特別關注開發中國家的需求與國際合作。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 當代發展 ============ -->
+<section class="block" id="modern">
+  <div class="sec-head"><span class="no">05</span><h2>當代發展<small>Contemporary Developments</small></h2></div>
+  <p class="sec-intro">商業太空時代帶來條約制定時難以想像的課題:私人載人飛行、太空資源開採、數萬顆衛星的巨型星系。新規則正以政治承諾、國內立法與技術準則等多元形式生成。</p>
+  <div class="cards">
+    <div class="card">
+      <div class="tag">2020 –</div>
+      <h3>Artemis Accords</h3>
+      <p class="en">阿提米絲協定</p>
+      <p>美國主導的月球探索政治承諾,截至 2026 年 6 月已有 68 國簽署。重申 OST 原則之外,就太空資源利用、活動「安全區」、太空遺產保護等訂立準則——但俄、中未參與,規則的普世性仍待觀察。</p>
+      <p class="src"><a href="https://www.nasa.gov/artemis-accords/" target="_blank" rel="noopener">NASA Artemis Accords →</a></p>
+    </div>
+    <div class="card">
+      <div class="tag">2015 –</div>
+      <h3>太空資源國內立法潮</h3>
+      <p class="en">Space Resources Legislation</p>
+      <p>美國(2015)、盧森堡(2017)、阿聯與日本(2021)相繼立法承認私人可擁有開採所得的太空資源,引發「是否牴觸不得據有原則」的論辯;COPUOS 已設工作小組討論。</p>
+    </div>
+    <div class="card">
+      <div class="tag">2007 / 2019</div>
+      <h3>太空碎片與永續準則</h3>
+      <p class="en">Debris Mitigation &amp; LTS Guidelines</p>
+      <p>COPUOS 太空碎片減緩準則與長期永續性(LTS)21 項準則雖屬自願性質,已成為各國許可審查的實質標準——臺灣的發射許可審查亦參照國際標準。</p>
+    </div>
+    <div class="card">
+      <div class="tag">2022 –</div>
+      <h3>太空安全與軍備控制</h3>
+      <p class="en">Space Security</p>
+      <p>聯大決議呼籲暫停破壞性直升式反衛星試驗;「防止外太空軍備競賽」(PAROS)與負責任行為準則的討論,在大國競爭下持續推進。</p>
+    </div>
+    <div class="card">
+      <div class="tag">ITU</div>
+      <h3>頻譜與軌道資源</h3>
+      <p class="en">Spectrum &amp; Orbital Slots</p>
+      <p>國際電信聯盟(ITU)《無線電規則》管理衛星頻率與地球靜止軌道位置的登記協調——巨型星系時代,頻軌資源成為太空治理最實際的戰場。</p>
+    </div>
+    <div class="card">
+      <div class="tag">EMERGING</div>
+      <h3>太空交通管理</h3>
+      <p class="en">Space Traffic Management</p>
+      <p>低軌衛星數量爆炸性成長,碰撞預警、離軌處置、在軌服務(維修、除役)的規則化,是下一階段國際太空法的核心議程。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 重要意義 ============ -->
+<section class="block" id="significance">
+  <div class="sec-head"><span class="no">06</span><h2>重要意義<small>Why It Matters</small></h2></div>
+  <p class="sec-intro">國際太空法為何重要?它是人類第一次在進入新疆域「之前」就先立下規則的嘗試。</p>
+  <div class="cards">
+    <div class="card">
+      <div class="tag">PEACE</div>
+      <h3>和平的底線</h3>
+      <p class="en">Keeping Space Peaceful</p>
+      <p>在冷戰最激烈的年代,美蘇仍同意不將核武部署於軌道、天體專用於和平目的。太空至今未成為武裝衝突的戰場,條約功不可沒。</p>
+    </div>
+    <div class="card">
+      <div class="tag">COMMONS</div>
+      <h3>全球公域的典範</h3>
+      <p class="en">A Global Commons</p>
+      <p>「不得據為己有」使太空成為與公海、南極並列的全球公域,任何國家都能自由進出——這是小國與新興太空國家(包括臺灣)得以參與太空的法律前提。</p>
+    </div>
+    <div class="card">
+      <div class="tag">ACCOUNTABILITY</div>
+      <h3>責任有歸屬</h3>
+      <p class="en">Clear Accountability</p>
+      <p>國家責任 + 發射國賠償 + 登記制度三位一體,確保太空中每個物體都有國家為其負責——即使發射者是私人企業。</p>
+    </div>
+    <div class="card">
+      <div class="tag">FOUNDATION</div>
+      <h3>商業太空的基礎建設</h3>
+      <p class="en">Enabling Commercial Space</p>
+      <p>OST 第 6 條要求國家「授權並持續監督」民間太空活動,直接催生了各國的太空專法與許可制度。沒有這套法制,今日的商業發射、衛星服務與太空新創都無從確立權利義務。</p>
+    </div>
+  </div>
+
+  <div class="bridge">
+    <h3>與臺灣的連結</h3>
+    <p>臺灣因非聯合國會員,無法簽署聯合國太空條約,也不能直接向聯合國登記太空物體。但 2021 年《太空發展法》明定太空活動應本於和平使用目的、遵循相關國際公約與慣例之精神——透過國內立法將國際太空法的核心原則「內國法化」:登錄制度呼應登記公約、發射許可與責任保險呼應國家責任與損害賠償、事故處理呼應營救與責任公約。這是臺灣以自身法制接軌國際太空秩序的方式。</p>
+    <p style="margin:0;"><a href="index.html">← 回到臺灣太空法規總覽</a></p>
+  </div>
+
+  <div class="disclaimer" style="margin-top:32px;">
+    <b style="color:var(--gold);">資料說明</b><br>
+    本頁內容彙整自<a href="https://www.unoosa.org/oosa/en/ourwork/spacelaw/treaties.html" target="_blank" rel="noopener">聯合國外太空事務廳(UNOOSA)</a>、<a href="https://www.nasa.gov/artemis-accords/" target="_blank" rel="noopener">NASA</a>及<a href="https://www.state.gov/bureau-of-oceans-and-international-environmental-and-scientific-affairs/artemis-accords" target="_blank" rel="noopener">美國國務院</a>等公開資訊,為方便閱讀經摘要與白話改寫,不具法律效力。締約國數字隨時間變動,請以 UNOOSA 條約狀態頁為準。資料整理時間:2026 年 7 月。
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="t">從福爾摩沙望向宇宙</div>
+  <div class="s">INTERNATIONAL SPACE LAW · FROM FORMOSA, TOWARD THE COSMOS</div>
+  <div class="links">
+    <a href="index.html">臺灣太空法規總覽</a> ·
+    <a href="https://www.unoosa.org/" target="_blank" rel="noopener">UNOOSA</a> ·
+    <a href="https://www.tasa.org.tw/" target="_blank" rel="noopener">TASA 國家太空中心</a>
+  </div>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var host = document.getElementById('starfield');
+  var colors = ['#ECEAE5', '#ECEAE5', '#6FD4FF', '#FFC53D'];
+  var s = 99;
+  function rand() { s = (s * 16807) % 2147483647; return s / 2147483647; }
+  var frag = document.createDocumentFragment();
+  for (var i = 0; i < 110; i++) {
+    var d = document.createElement('div');
+    var size = rand() < 0.15 ? 2.5 : rand() < 0.5 ? 1.5 : 1;
+    d.style.cssText = 'position:absolute;border-radius:50%;' +
+      'left:' + (rand() * 100).toFixed(2) + '%;top:' + (rand() * 100).toFixed(2) + '%;' +
+      'width:' + size + 'px;height:' + size + 'px;' +
+      'background:' + colors[Math.floor(rand() * colors.length)] + ';' +
+      'animation:twinkle ' + (2 + rand() * 3).toFixed(1) + 's ease-in-out ' + (rand() * 3).toFixed(1) + 's infinite;';
+    frag.appendChild(d);
+  }
+  host.appendChild(frag);
+})();
+</script>
+</body>
+</html>
