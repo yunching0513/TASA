@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>臺灣太空法規總覽 — Taiwan Space Law &amp; Regulations</title>
+<meta name="description" content="臺灣太空法規及相關條例易讀總覽:太空發展法、國家太空中心設置條例、四項授權子法、審查基準與收費標準,含法制沿革時間軸與官方法規連結。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%23FFC53D'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Space+Grotesk:wght@300;400;500;700&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #262624;          /* 星塵灰 */
+    --bg-2: #30302E;        /* 卡片底 */
+    --bg-3: #3A3936;        /* 隕石灰 */
+    --border: #464540;      /* 星圖邊框 */
+    --border-soft: #3B3A37;
+    --text: #ECEAE5;        /* 玉山雪白 */
+    --text-2: #CBC8C1;
+    --text-3: #ABA79E;
+    --muted: #8F8C84;
+    --blue: #4C74D9;
+    --cyan: #6FD4FF;        /* 冰晶藍 */
+    --cyan-2: #A8E6FF;
+    --gold: #FFC53D;        /* 曙光金 */
+    --coral: #FF7A5C;       /* 珊瑚橘 */
+    --green: #35D0A0;       /* 青嶼綠 */
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; padding: 0; background: var(--bg); }
+  body { font-family: 'Noto Sans TC', 'Space Grotesk', sans-serif; color: var(--text); line-height: 1.85; }
+  a { color: var(--cyan); text-decoration: none; }
+  a:hover { color: var(--cyan-2); text-decoration: underline; }
+  ::selection { background: #2B5ACF; color: #fff; }
+  @keyframes twinkle { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+  @keyframes drift { from { transform: translateY(0); } to { transform: translateY(-12px); } }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+
+  .starfield { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .page { position: relative; z-index: 1; }
+
+  /* ===== nav ===== */
+  .topnav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(38, 38, 36, 0.88); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-soft);
+    padding: 14px 5vw; display: flex; align-items: center; gap: 24px; flex-wrap: wrap;
+  }
+  .topnav .brand { display: flex; align-items: center; gap: 10px; margin-right: auto; font-weight: 700; font-size: 16px; color: var(--text); }
+  .topnav .orb { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--blue); display: grid; place-items: center; flex: none; }
+  .topnav .orb i { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+  .topnav a.navlink { font-size: 14.5px; color: var(--text-2); padding: 4px 2px; border-bottom: 2px solid transparent; }
+  .topnav a.navlink:hover { color: var(--cyan); text-decoration: none; border-bottom-color: var(--cyan); }
+
+  /* ===== hero ===== */
+  .hero { position: relative; overflow: hidden; padding: 110px 8vw 130px; border-bottom: 1px solid var(--border-soft); }
+  .hero .kicker { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
+  .hero .kicker span { font-family: 'Space Grotesk'; letter-spacing: 0.25em; font-size: 12.5px; color: var(--blue); text-transform: uppercase; }
+  .hero h1 { font-family: 'Noto Serif TC', serif; font-weight: 600; font-size: clamp(40px, 6vw, 76px); line-height: 1.16; margin: 0 0 14px; letter-spacing: 0.1em; }
+  .hero .sub { font-family: 'Space Grotesk'; font-size: clamp(17px, 2vw, 24px); font-weight: 300; color: var(--text-3); margin: 0 0 30px; letter-spacing: 0.04em; }
+  .hero .lede { max-width: 640px; font-size: 16.5px; color: var(--text-2); margin: 0 0 18px; }
+  .hero .note { max-width: 640px; font-size: 14.5px; color: var(--text-3); margin: 0; border-left: 2px solid var(--gold); padding-left: 18px; }
+  .hero .cross { position: absolute; right: 9vw; top: 80px; width: clamp(110px, 13vw, 190px); pointer-events: none; }
+  .ridge { position: absolute; left: 0; right: 0; bottom: -2px; width: 100%; height: 160px; pointer-events: none; }
+
+  .stat-strip { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 40px; }
+  .stat { border: 1px solid var(--border); border-radius: 12px; padding: 14px 22px; background: rgba(48,48,46,0.6); min-width: 130px; }
+  .stat b { display: block; font-family: 'Space Grotesk'; font-size: 26px; font-weight: 500; color: var(--cyan); line-height: 1.2; }
+  .stat span { font-size: 12.5px; color: var(--muted); }
+
+  /* ===== sections ===== */
+  section.block { padding: 96px 8vw; border-bottom: 1px solid var(--border-soft); position: relative; scroll-margin-top: 70px; }
+  .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 14px; flex-wrap: wrap; }
+  .sec-head .no { font-family: 'Space Grotesk'; font-size: 15px; color: var(--gold); letter-spacing: 0.2em; }
+  .sec-head h2 { font-family: 'Noto Serif TC', serif; font-size: clamp(28px, 3.4vw, 38px); font-weight: 600; margin: 0; }
+  .sec-head h2 small { font-family: 'Space Grotesk'; font-weight: 300; font-size: 0.55em; color: var(--muted); margin-left: 10px; }
+  .sec-intro { max-width: 700px; color: var(--text-3); margin: 0 0 48px; font-size: 15.5px; }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+  .card {
+    background: linear-gradient(160deg, var(--bg-2) 0%, #2B2A28 100%);
+    border: 1px solid var(--border); border-radius: 20px; padding: 30px 30px 28px;
+    transition: border-color .25s, box-shadow .25s;
+  }
+  .card:hover { border-color: var(--cyan); box-shadow: 0 0 28px rgba(111,212,255,0.14); }
+  .card .tag { font-family: 'Space Grotesk'; font-size: 11.5px; letter-spacing: 0.16em; color: var(--gold); margin-bottom: 10px; }
+  .card h3 { font-size: 19px; font-weight: 700; margin: 0 0 4px; }
+  .card .en { font-family: 'Space Grotesk'; font-size: 12.5px; color: var(--blue); letter-spacing: 0.06em; margin: 0 0 14px; }
+  .card p, .card li { font-size: 14.5px; color: var(--text-3); margin: 0; }
+  .card ul { margin: 10px 0 0; padding-left: 18px; }
+  .card li { margin-bottom: 6px; }
+  .card .src { margin-top: 16px; font-size: 13px; }
+
+  /* pill badges */
+  .pill { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--muted); color: var(--muted); border-radius: 999px; padding: 4px 13px; font-size: 12.5px; white-space: nowrap; }
+  .pill i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .pill.gold { border-color: var(--gold); color: var(--gold); }
+  .pill.cyan { border-color: var(--cyan); color: var(--cyan); }
+  .pill.green { border-color: var(--green); color: var(--green); }
+  .pill.coral { border-color: var(--coral); color: var(--coral); }
+
+  /* ===== timeline ===== */
+  .timeline { position: relative; margin-left: 10px; padding-left: 34px; border-left: 1px dashed #2B5ACF; max-width: 780px; }
+  .tl-item { position: relative; padding-bottom: 40px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item::before {
+    content: ''; position: absolute; left: -40px; top: 7px; width: 11px; height: 11px; border-radius: 50%;
+    background: var(--text); box-shadow: 0 0 10px rgba(236,234,229,0.7);
+  }
+  .tl-item.major::before { background: var(--gold); box-shadow: 0 0 14px var(--gold); }
+  .tl-item .date { font-family: 'Space Grotesk'; font-size: 14px; color: var(--cyan); letter-spacing: 0.08em; }
+  .tl-item h3 { font-size: 18px; font-weight: 700; margin: 4px 0 6px; }
+  .tl-item p { font-size: 14.5px; color: var(--text-3); margin: 0; max-width: 620px; }
+
+  /* ===== hierarchy ===== */
+  .hier { display: grid; gap: 18px; max-width: 900px; }
+  .hier-row { display: grid; grid-template-columns: 150px 1fr; gap: 18px; align-items: start; }
+  .hier-label { font-family: 'Space Grotesk'; font-size: 12px; letter-spacing: 0.18em; color: var(--blue); padding-top: 20px; text-transform: uppercase; }
+  .hier-items { display: flex; flex-wrap: wrap; gap: 12px; }
+  .hier-node { border: 1px solid var(--border); background: var(--bg-2); border-radius: 14px; padding: 14px 20px; font-size: 14.5px; }
+  .hier-node b { display: block; font-size: 15px; color: var(--text); }
+  .hier-node span { font-size: 12.5px; color: var(--muted); }
+  .hier-node.root { border-color: var(--gold); box-shadow: 0 0 22px rgba(255,197,61,0.12); }
+  .hier-node.root b { color: var(--gold); }
+  @media (max-width: 640px) { .hier-row { grid-template-columns: 1fr; } .hier-label { padding-top: 0; } }
+
+  /* ===== definitions ===== */
+  .defs { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+  .def { border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; background: var(--bg-2); }
+  .def b { display: block; font-size: 16.5px; margin-bottom: 2px; }
+  .def .en { font-family: 'Space Grotesk'; font-size: 11.5px; color: var(--blue); letter-spacing: 0.08em; }
+  .def p { font-size: 13.5px; color: var(--text-3); margin: 8px 0 0; }
+
+  /* ===== article groups ===== */
+  .law-group { margin-bottom: 30px; border: 1px solid var(--border); border-radius: 20px; background: var(--bg-2); overflow: hidden; }
+  .law-group summary {
+    cursor: pointer; list-style: none; padding: 24px 30px; display: flex; align-items: center; gap: 16px;
+    font-size: 18px; font-weight: 700; user-select: none;
+  }
+  .law-group summary::-webkit-details-marker { display: none; }
+  .law-group summary .idx { font-family: 'Space Grotesk'; font-size: 13px; color: var(--gold); letter-spacing: 0.14em; flex: none; }
+  .law-group summary .arrow { margin-left: auto; color: var(--muted); transition: transform .25s; font-family: 'Space Grotesk'; }
+  .law-group[open] summary .arrow { transform: rotate(90deg); }
+  .law-group .body { padding: 0 30px 28px; border-top: 1px solid var(--border-soft); }
+  .law-group .body > p { color: var(--text-3); font-size: 14.5px; max-width: 720px; }
+
+  .kv { display: grid; gap: 12px; margin-top: 18px; }
+  .kv .row { display: grid; grid-template-columns: 120px 1fr; gap: 16px; padding: 14px 18px; border: 1px solid var(--border-soft); border-radius: 12px; background: rgba(38,38,36,0.5); }
+  .kv .row b { font-family: 'Space Grotesk'; font-size: 13.5px; color: var(--cyan); font-weight: 500; }
+  .kv .row div { font-size: 14.5px; color: var(--text-2); }
+  @media (max-width: 560px) { .kv .row { grid-template-columns: 1fr; gap: 4px; } }
+
+  /* ===== penalty table ===== */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 16px; }
+  table.pen { border-collapse: collapse; width: 100%; min-width: 640px; background: var(--bg-2); }
+  table.pen th, table.pen td { text-align: left; padding: 16px 20px; border-bottom: 1px solid var(--border-soft); font-size: 14.5px; vertical-align: top; }
+  table.pen th { font-family: 'Space Grotesk', 'Noto Sans TC'; font-size: 12.5px; letter-spacing: 0.12em; color: var(--blue); font-weight: 500; background: rgba(38,38,36,0.6); }
+  table.pen tr:last-child td { border-bottom: none; }
+  table.pen td.amt { font-family: 'Space Grotesk', 'Noto Sans TC'; color: var(--gold); white-space: nowrap; }
+  table.pen td { color: var(--text-2); }
+
+  .disclaimer {
+    border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: 12px;
+    background: rgba(255,197,61,0.05); padding: 20px 26px; font-size: 14px; color: var(--text-3); max-width: 860px;
+  }
+
+  footer { position: relative; padding: 80px 8vw 60px; text-align: center; overflow: hidden; }
+  footer .t { font-family: 'Noto Serif TC', serif; font-weight: 600; font-size: 24px; margin-bottom: 8px; }
+  footer .s { font-family: 'Space Grotesk'; font-size: 12px; letter-spacing: 0.2em; color: var(--muted); }
+  footer .links { margin: 22px 0 0; font-size: 13.5px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<div class="starfield" id="starfield" aria-hidden="true"></div>
+
+<div class="page">
+
+<!-- ============ NAV ============ -->
+<nav class="topnav" aria-label="主要導覽">
+  <span class="brand"><span class="orb"><i></i></span>臺灣太空法規</span>
+  <a class="navlink" href="#timeline">法制沿革</a>
+  <a class="navlink" href="#system">法規體系</a>
+  <a class="navlink" href="#act">太空發展法</a>
+  <a class="navlink" href="#tasa">太空中心條例</a>
+  <a class="navlink" href="#sub">授權子法</a>
+  <a class="navlink" href="#admin">審查與規費</a>
+  <a class="navlink" href="#related">相關法規</a>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero">
+  <svg class="cross" viewBox="0 0 200 240" aria-label="南十字星">
+    <line x1="100" y1="30" x2="100" y2="210" stroke="#2B5ACF" stroke-width="1" stroke-dasharray="3 6" opacity="0.6"/>
+    <line x1="30" y1="120" x2="170" y2="120" stroke="#2B5ACF" stroke-width="1" stroke-dasharray="3 6" opacity="0.6"/>
+    <circle cx="100" cy="30" r="6" fill="#ECEAE5" style="animation: twinkle 3s ease-in-out infinite;"/>
+    <circle cx="100" cy="210" r="7" fill="#6FD4FF" style="animation: twinkle 2.4s ease-in-out 0.6s infinite;"/>
+    <circle cx="30" cy="120" r="5" fill="#FFC53D" style="animation: twinkle 3.4s ease-in-out 1.1s infinite;"/>
+    <circle cx="170" cy="120" r="5.5" fill="#ECEAE5" style="animation: twinkle 2.8s ease-in-out 1.6s infinite;"/>
+  </svg>
+
+  <div class="kicker">
+    <span>Taiwan Space Law &amp; Regulations</span>
+  </div>
+  <h1>臺灣太空法規<br>及相關條例</h1>
+  <p class="sub">From Formosa, Toward the Cosmos — 一頁看懂臺灣的太空法制</p>
+  <p class="lede">2021 年公布的《太空發展法》是臺灣第一部太空專法,確立太空活動的和平原則、登錄與發射許可制度,並催生了行政法人「國家太空中心 TASA」。本頁彙整母法、組織法、四項授權子法與相關行政規則,以易讀的方式呈現臺灣太空法制的全貌。</p>
+  <p class="note">本頁為便民彙整之易讀版,非官方文件;正式條文以<a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160078" target="_blank" rel="noopener">全國法規資料庫</a>及<a href="https://law.nstc.gov.tw/" target="_blank" rel="noopener">國科會主管法規系統</a>公布者為準。</p>
+
+  <div class="stat-strip">
+    <div class="stat"><b>2021</b><span>太空發展法公布</span></div>
+    <div class="stat"><b>6 章 22 條</b><span>母法架構(2023 年增訂 2 條)</span></div>
+    <div class="stat"><b>4 項</b><span>授權子法同步施行</span></div>
+    <div class="stat"><b>100 km</b><span>法定「太空」之起點高度</span></div>
+    <div class="stat"><b>2023</b><span>TASA 改制行政法人</span></div>
+  </div>
+
+  <svg class="ridge" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,180 L0,120 C120,110 200,70 320,64 C420,60 470,30 560,26 C640,22 700,52 800,58 C900,64 980,40 1080,48 C1200,58 1300,100 1440,108 L1440,180 Z" fill="#454440" opacity="0.55"/>
+    <path d="M0,180 L0,146 C160,138 260,104 380,100 C480,96 540,72 620,70 C710,68 780,92 880,96 C1000,101 1120,84 1240,96 C1320,104 1390,118 1440,124 L1440,180 Z" fill="#262624"/>
+  </svg>
+</header>
+
+<!-- ============ 01 法制沿革 ============ -->
+<section class="block" id="timeline">
+  <div class="sec-head"><span class="no">01</span><h2>法制沿革<small>Timeline</small></h2></div>
+  <p class="sec-intro">從第一部太空專法三讀,到國家太空中心改制行政法人——臺灣太空法制的關鍵時刻。</p>
+  <div class="timeline">
+    <div class="tl-item major">
+      <span class="date">2021.05.31</span>
+      <h3>立法院三讀通過《太空發展法》</h3>
+      <p>臺灣第一部太空專法完成立法,揭示促進太空活動與太空產業發展、提升國民生活福祉的立法目的。</p>
+    </div>
+    <div class="tl-item major">
+      <span class="date">2021.06.16</span>
+      <h3>總統公布《太空發展法》</h3>
+      <p>全文 6 章 22 條,施行日期由行政院另定。</p>
+    </div>
+    <div class="tl-item">
+      <span class="date">2022.01.18</span>
+      <h3>四項授權子法發布</h3>
+      <p>科技部(現國科會)發布登錄作業、發射許可及太空事故處理、發射場域、民間資訊提供等四項辦法。</p>
+    </div>
+    <div class="tl-item major">
+      <span class="date">2022.01.20</span>
+      <h3>《太空發展法》及四項子法正式施行</h3>
+      <p>臺灣太空活動自此正式納入法制管理,開啟太空科技發展的新頁。</p>
+    </div>
+    <div class="tl-item">
+      <span class="date">2022.05.04</span>
+      <h3>總統公布《國家太空中心設置條例》</h3>
+      <p>全文 33 條,為國家太空中心改制行政法人建立法源,施行日期由行政院定之。</p>
+    </div>
+    <div class="tl-item major">
+      <span class="date">2023.01.01</span>
+      <h3>國家太空中心(TASA)改制為行政法人</h3>
+      <p>脫離國研院體系成為獨立行政法人,監督機關為國家科學及技術委員會,肩負國家太空計畫的執行。</p>
+    </div>
+    <div class="tl-item">
+      <span class="date">2023.06.28</span>
+      <h3>《太空發展法》第一次修正</h3>
+      <p>修正公布第 2、22 條並增訂第 18-1、18-2 條;配合行政院組織改造,主管機關由科技部改為國家科學及技術委員會。</p>
+    </div>
+    <div class="tl-item">
+      <span class="date">2024.10.23</span>
+      <h3>登錄與發射許可規費收費標準訂定</h3>
+      <p>發布《發射載具及太空載具申請登錄收費標準》等規費標準,使用者付費制度到位。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 法規體系 ============ -->
+<section class="block" id="system">
+  <div class="sec-head"><span class="no">02</span><h2>法規體系<small>Legal Framework</small></h2></div>
+  <p class="sec-intro">臺灣太空法制採「母法 — 授權子法 — 行政規則」三層架構,另以《國家太空中心設置條例》作為專責機構的組織法。</p>
+  <div class="hier">
+    <div class="hier-row">
+      <div class="hier-label">母法 Act</div>
+      <div class="hier-items">
+        <div class="hier-node root"><b>太空發展法</b><span>2021 公布 · 2023 修正 · 6 章 22 條+增訂 2 條</span></div>
+      </div>
+    </div>
+    <div class="hier-row">
+      <div class="hier-label">組織法 Statute</div>
+      <div class="hier-items">
+        <div class="hier-node"><b>國家太空中心設置條例</b><span>2022 公布 · 全文 33 條 · 行政法人 TASA 之法源</span></div>
+      </div>
+    </div>
+    <div class="hier-row">
+      <div class="hier-label">授權子法 Regulations</div>
+      <div class="hier-items">
+        <div class="hier-node"><b>發射載具及太空載具登錄作業辦法</b><span>登錄制度</span></div>
+        <div class="hier-node"><b>發射載具發射許可及太空事故處理辦法</b><span>發射許可・事故處理</span></div>
+        <div class="hier-node"><b>發射場域土地之選址設置營運管理補償及回饋辦法</b><span>國家發射場域</span></div>
+        <div class="hier-node"><b>民間太空載具資訊提供及補償辦法</b><span>資訊提供・補償</span></div>
+      </div>
+    </div>
+    <div class="hier-row">
+      <div class="hier-label">行政規則 · 規費</div>
+      <div class="hier-items">
+        <div class="hier-node"><b>發射載具技術規範及發射許可審查基準</b><span>技術審查</span></div>
+        <div class="hier-node"><b>太空載具登錄審查基準</b><span>登錄審查</span></div>
+        <div class="hier-node"><b>申請登錄/發射許可收費標準</b><span>規費</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 太空發展法 ============ -->
+<section class="block" id="act">
+  <div class="sec-head"><span class="no">03</span><h2>太空發展法<small>Space Development Act</small></h2></div>
+  <p class="sec-intro">
+    <span class="pill gold" style="margin-right:8px;"><i></i>母法</span>
+    <span class="pill cyan"><i></i>主管機關:國家科學及技術委員會</span><br><br>
+    2021 年 6 月 16 日公布、2022 年 1 月 20 日施行;2023 年 6 月 28 日修正公布第 2、22 條並增訂第 18-1、18-2 條。以下依主題整理重點,官方全文請見
+    <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160078" target="_blank" rel="noopener">全國法規資料庫</a>。
+  </p>
+
+  <details class="law-group" open>
+    <summary><span class="idx">3.1</span>立法目的與基本原則<span class="arrow">→</span></summary>
+    <div class="body">
+      <p>為促進我國太空活動及太空產業之發展,提高國民生活福祉,並協助人類社會之永續與和平發展而制定。太空發展應遵循的核心原則包括:</p>
+      <div class="cards" style="margin-top:18px;">
+        <div class="card"><div class="tag">PRINCIPLE 01</div><h3>和平使用</h3><p class="en">Peaceful Use</p><p>太空活動本於和平使用之目的,並遵循相關國際公約與慣例之精神。</p></div>
+        <div class="card"><div class="tag">PRINCIPLE 02</div><h3>永續與環境保護</h3><p class="en">Sustainability</p><p>重視太空環境保護、減緩太空碎片(太空垃圾)之產生,兼顧地球環境永續。</p></div>
+        <div class="card"><div class="tag">PRINCIPLE 03</div><h3>資訊公開與產業自主</h3><p class="en">Transparency &amp; Autonomy</p><p>資訊公開透明、扶植國內太空產業自主能量,並促進國際合作與接軌。</p></div>
+      </div>
+    </div>
+  </details>
+
+  <details class="law-group" open>
+    <summary><span class="idx">3.2</span>關鍵名詞定義<span class="arrow">→</span></summary>
+    <div class="body">
+      <p>本法第 3 條就太空活動的核心概念設有定義,以下為白話摘要:</p>
+      <div class="defs" style="margin-top:18px;">
+        <div class="def"><b>太空</b><span class="en">OUTER SPACE</span><p>距離海平面 100 公里以上之空間——這是臺灣法制上「太空」的起點。</p></div>
+        <div class="def"><b>太空活動</b><span class="en">SPACE ACTIVITY</span><p>在太空從事的探索、開發、利用行為,及發射載具與太空載具之發射、操作等相關活動。</p></div>
+        <div class="def"><b>發射載具</b><span class="en">LAUNCH VEHICLE</span><p>用以將太空載具送入太空的運載工具,例如運載火箭。</p></div>
+        <div class="def"><b>太空載具</b><span class="en">SPACE VEHICLE</span><p>在太空運行、執行任務的載具,例如人造衛星、太空船。</p></div>
+        <div class="def"><b>發射場域</b><span class="en">LAUNCH SITE</span><p>供發射載具進行發射活動之場地及其必要設施。</p></div>
+        <div class="def"><b>太空事故</b><span class="en">SPACE ACCIDENT</span><p>因太空活動造成人員傷亡、財產損害或環境污染等事故。</p></div>
+      </div>
+    </div>
+  </details>
+
+  <details class="law-group">
+    <summary><span class="idx">3.3</span>登錄制度 — 火箭與衛星都要「上戶口」<span class="arrow">→</span></summary>
+    <div class="body">
+      <p>太空活動所運用之發射載具或太空載具,凡預定於我國境內發射,或由政府補助、委託、出資,或公立研究機關(構)依法編列預算研發者,應向主管機關辦理登錄。登錄制度使國家能夠掌握太空物體的所有權與責任歸屬,也是履行國際太空物體登記慣例的基礎。</p>
+      <div class="kv">
+        <div class="row"><b>誰要登錄</b><div>境內發射者、政府補助/委託/出資研發者、公立研究機關(構)編列預算研發者</div></div>
+        <div class="row"><b>向誰登錄</b><div>國家科學及技術委員會(得委託國家太空中心辦理審查)</div></div>
+        <div class="row"><b>細節規定</b><div>《發射載具及太空載具登錄作業辦法》及《太空載具登錄審查基準》</div></div>
+      </div>
+    </div>
+  </details>
+
+  <details class="law-group">
+    <summary><span class="idx">3.4</span>發射許可 — 發射前六個月提出申請<span class="arrow">→</span></summary>
+    <div class="body">
+      <p>於我國境內發射發射載具,應於預定發射日六個月前檢附登錄文件、飛行計畫等資料,向主管機關申請發射許可;未經許可不得發射。發射活動並應於國家發射場域為之。申請程序、應備文件與廢止許可事由,由主管機關會商相關中央機關定之。</p>
+      <div class="kv">
+        <div class="row"><b>申請時點</b><div>預定發射日 6 個月前</div></div>
+        <div class="row"><b>發射地點</b><div>應於國家發射場域進行</div></div>
+        <div class="row"><b>審查依據</b><div>《發射載具發射許可及太空事故處理辦法》、《發射載具技術規範及發射許可審查基準》</div></div>
+      </div>
+    </div>
+  </details>
+
+  <details class="law-group">
+    <summary><span class="idx">3.5</span>國家發射場域<span class="arrow">→</span></summary>
+    <div class="body">
+      <p>政府應設置國家發射場域,其選址、設置、營運管理,以及對在地居民的補償與回饋機制,均依授權子法辦理。國家太空中心負責發射場域的選址、初步規劃與受託營運管理。場域設置強調與在地社區(包括原住民族地區)的溝通、補償及回饋。</p>
+    </div>
+  </details>
+
+  <details class="law-group">
+    <summary><span class="idx">3.6</span>太空事故處理與損害賠償<span class="arrow">→</span></summary>
+    <div class="body">
+      <p>發生太空事故時,相關人員負有通報義務,主管機關得成立調查機制釐清原因。太空活動造成他人損害者,應負賠償責任;從事發射活動者並應投保責任保險或提出財務擔保,確保受害者能獲得填補。此設計呼應 1972 年《太空物體所致損害之國際責任公約》由發射國承擔賠償責任的國際法精神。</p>
+    </div>
+  </details>
+
+  <details class="law-group">
+    <summary><span class="idx">3.7</span>太空產業之促進<span class="arrow">→</span></summary>
+    <div class="body">
+      <p>主管機關應會同經濟部等相關機關,推動下列事項:鼓勵民間投資太空事業、推動高附加價值太空技術產業應用及必要之獎勵措施、協助關聯產業發展與國際接軌、培育太空產業人才,以及輔導新興太空事業。太空產業範疇涵蓋太空載具發射、太空科學研究、太空相關與地面接收設備製造、衛星應用服務(含營運)及太空活動衍生之新型態服務。2023 年修法增訂第 18-1、18-2 條,進一步充實推動機制(詳見官方條文)。</p>
+    </div>
+  </details>
+
+  <details class="law-group">
+    <summary><span class="idx">3.8</span>罰則<span class="arrow">→</span></summary>
+    <div class="body">
+      <p>違反本法管理制度者,依情節分別課以刑事責任或行政罰鍰:</p>
+      <div class="tablewrap" style="margin-top:18px;">
+        <table class="pen">
+          <thead><tr><th>違反行為</th><th>法律效果</th><th>金額(新臺幣)</th></tr></thead>
+          <tbody>
+            <tr><td>未經許可於我國境內發射發射載具</td><td>5 年以下有期徒刑,得併科罰金</td><td class="amt">100 萬 – 1,000 萬(罰金)</td></tr>
+            <tr><td>經主管機關要求限期提供資訊而未履行</td><td>行政罰鍰</td><td class="amt">50 萬 – 500 萬</td></tr>
+            <tr><td>應辦理登錄而未登錄</td><td>行政罰鍰</td><td class="amt">20 萬 – 200 萬</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:14px; font-size:13px; color:var(--muted);">※ 完整罰則(含其他違反態樣、按次處罰等)請以官方條文為準。</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ 04 國家太空中心設置條例 ============ -->
+<section class="block" id="tasa">
+  <div class="sec-head"><span class="no">04</span><h2>國家太空中心設置條例<small>TASA Act</small></h2></div>
+  <p class="sec-intro">
+    <span class="pill cyan" style="margin-right:8px;"><i></i>組織法 · 全文 33 條</span>
+    <span class="pill green"><i></i>2023.01.01 起 TASA 為行政法人</span><br><br>
+    2022 年 5 月 4 日公布,為《太空發展法》第 5 條「政府應設專責法人」的具體實踐。國家太空中心(Taiwan Space Agency, TASA)自 2023 年 1 月 1 日起由國研院轄下單位改制為獨立行政法人,監督機關為國家科學及技術委員會。官方全文請見
+    <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160083" target="_blank" rel="noopener">全國法規資料庫</a>。
+  </p>
+  <div class="cards">
+    <div class="card">
+      <div class="tag">MANDATE</div>
+      <h3>業務範圍</h3>
+      <p class="en">Scope of Business</p>
+      <ul>
+        <li>國家太空科技計畫之規劃與執行</li>
+        <li>太空科技研發、發射載具與衛星系統研製</li>
+        <li>受託辦理登錄及發射許可之審查</li>
+        <li>國家發射場域之選址、規劃與營運管理</li>
+        <li>太空產業推動、國際合作交流</li>
+        <li>太空科技人才培育與法制研究</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="tag">GOVERNANCE</div>
+      <h3>組織治理</h3>
+      <p class="en">Governance</p>
+      <ul>
+        <li>設董事會,置董事 11 至 15 人</li>
+        <li>置監事 3 至 5 人</li>
+        <li>董事長對外代表中心,綜理業務</li>
+        <li>監督機關:國家科學及技術委員會</li>
+        <li>經費來源含政府核撥、受託收入、捐贈等</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="tag">EVOLUTION</div>
+      <h3>機構沿革</h3>
+      <p class="en">History</p>
+      <ul>
+        <li>1991 年:國家太空計畫室籌備處成立</li>
+        <li>2005 年:改為國研院轄下「國家太空中心」</li>
+        <li>2023 年:依本條例改制為行政法人 TASA</li>
+        <li>改制後更具人事與財務彈性,加速任務執行與產業鏈結</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 授權子法 ============ -->
+<section class="block" id="sub">
+  <div class="sec-head"><span class="no">05</span><h2>四項授權子法<small>Subsidiary Regulations</small></h2></div>
+  <p class="sec-intro">依《太空發展法》授權訂定,2022 年 1 月 18 日發布、1 月 20 日與母法同步施行,構成太空活動管理的操作細節。</p>
+  <div class="cards">
+    <div class="card">
+      <div class="tag">REGULATION 01</div>
+      <h3>發射載具及太空載具登錄作業辦法</h3>
+      <p class="en">Registration Regulations</p>
+      <ul>
+        <li>明定應辦理登錄之情形與申請文件(含營運計畫)</li>
+        <li>設置審查小組進行載具審查</li>
+        <li>可重複使用載具應載明飛行序列與返回路徑</li>
+        <li>登錄事項變更、廢止之程序</li>
+      </ul>
+      <p class="src"><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160079" target="_blank" rel="noopener">官方條文 →</a></p>
+    </div>
+    <div class="card">
+      <div class="tag">REGULATION 02</div>
+      <h3>發射載具發射許可及太空事故處理辦法</h3>
+      <p class="en">Launch Permit &amp; Accident Regulations</p>
+      <ul>
+        <li>發射許可之申請程序與審查要件</li>
+        <li>飛行安全與風險評估要求</li>
+        <li>太空事故之通報、應變與調查程序</li>
+        <li>廢止發射許可之事由</li>
+      </ul>
+      <p class="src"><a href="https://law.nstc.gov.tw/LawContent.aspx?id=GL000459" target="_blank" rel="noopener">官方條文 →</a></p>
+    </div>
+    <div class="card">
+      <div class="tag">REGULATION 03</div>
+      <h3>發射場域土地之選址設置營運管理補償及回饋辦法</h3>
+      <p class="en">Launch Site Regulations</p>
+      <ul>
+        <li>國家發射場域之選址評估程序</li>
+        <li>場域設置與營運管理規範</li>
+        <li>對在地居民之補償機制</li>
+        <li>回饋地方之具體作法</li>
+      </ul>
+      <p class="src"><a href="https://law.nstc.gov.tw/LawQuery.aspx" target="_blank" rel="noopener">官方條文 →</a></p>
+    </div>
+    <div class="card">
+      <div class="tag">REGULATION 04</div>
+      <h3>民間太空載具資訊提供及補償辦法</h3>
+      <p class="en">Information Provision Regulations</p>
+      <ul>
+        <li>政府基於公益或安全需要,得請民間提供太空載具資訊</li>
+        <li>資訊提供之範圍與程序</li>
+        <li>對提供者之合理補償機制</li>
+      </ul>
+      <p class="src"><a href="https://law.nstc.gov.tw/LawQuery.aspx" target="_blank" rel="noopener">官方條文 →</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 審查基準與規費 ============ -->
+<section class="block" id="admin">
+  <div class="sec-head"><span class="no">06</span><h2>審查基準與收費標準<small>Standards &amp; Fees</small></h2></div>
+  <p class="sec-intro">國科會另以公告與規費標準補充操作層次的技術與費用規範。</p>
+  <div class="cards">
+    <div class="card">
+      <div class="tag">STANDARD</div>
+      <h3>發射載具技術規範及發射許可審查基準</h3>
+      <p class="en">Technical Standards for Launch Vehicles</p>
+      <p>發射載具之技術規範與發射許可審查之具體基準,參照國際標準訂定,是火箭業者申請發射許可的技術門檻。</p>
+      <p class="src"><a href="https://law.nstc.gov.tw/LawContent.aspx?id=GL000538" target="_blank" rel="noopener">官方內容 →</a></p>
+    </div>
+    <div class="card">
+      <div class="tag">STANDARD</div>
+      <h3>太空載具登錄審查基準</h3>
+      <p class="en">Review Standards for Registration</p>
+      <p>太空載具(衛星等)申請登錄之審查基準,規定申請書表、身分證明文件及其他應備資料與審查流程。</p>
+      <p class="src"><a href="https://law.nstc.gov.tw/LawQuery.aspx" target="_blank" rel="noopener">官方內容 →</a></p>
+    </div>
+    <div class="card">
+      <div class="tag">FEE</div>
+      <h3>申請登錄/發射許可收費標準</h3>
+      <p class="en">Fee Standards</p>
+      <p>2024 年訂定《發射載具及太空載具申請登錄收費標準》與《發射載具申請發射許可收費標準》,確立規費之使用者付費制度。</p>
+      <p class="src"><a href="https://law.nstc.gov.tw/LawQuery.aspx" target="_blank" rel="noopener">官方內容 →</a></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 07 相關法規 ============ -->
+<section class="block" id="related">
+  <div class="sec-head"><span class="no">07</span><h2>其他相關法規<small>Related Laws</small></h2></div>
+  <p class="sec-intro">太空活動亦涉及頻譜、空域、出口管制等領域,實務上須一併注意下列法規:</p>
+  <div class="cards">
+    <div class="card">
+      <div class="tag">TELECOM</div>
+      <h3>電信管理法</h3>
+      <p class="en">Telecommunications Management Act</p>
+      <p>衛星通訊之無線電頻率使用、衛星地面站與相關執照,由國家通訊傳播委員會(NCC)依本法管理。低軌衛星通訊服務亦適用。</p>
+      <p class="src"><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=K0060111" target="_blank" rel="noopener">官方條文 →</a></p>
+    </div>
+    <div class="card">
+      <div class="tag">AVIATION</div>
+      <h3>民用航空法</h3>
+      <p class="en">Civil Aviation Act</p>
+      <p>發射載具穿越航空器活動空域時,涉及飛航安全與空域協調,由交通部民用航空局主管。</p>
+      <p class="src"><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=K0090001" target="_blank" rel="noopener">官方條文 →</a></p>
+    </div>
+    <div class="card">
+      <div class="tag">EXPORT</div>
+      <h3>貿易法(戰略性高科技貨品管理)</h3>
+      <p class="en">Foreign Trade Act</p>
+      <p>火箭、衛星關鍵零組件多屬戰略性高科技貨品,其輸出入受出口管制規範,由經濟部國際貿易署主管。</p>
+      <p class="src"><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=J0090004" target="_blank" rel="noopener">官方條文 →</a></p>
+    </div>
+    <div class="card">
+      <div class="tag">INTERNATIONAL</div>
+      <h3>國際太空法脈絡</h3>
+      <p class="en">International Space Law</p>
+      <p>臺灣雖非聯合國會員,《太空發展法》仍明定遵循 1967 年《外太空條約》等國際公約與慣例之精神——和平使用、國家責任與損害賠償等原則皆已內國法化。</p>
+    </div>
+  </div>
+
+  <div class="disclaimer" style="margin-top:48px;">
+    <b style="color:var(--gold);">資料說明</b><br>
+    本頁內容彙整自<a href="https://law.moj.gov.tw/" target="_blank" rel="noopener">全國法規資料庫</a>、<a href="https://law.nstc.gov.tw/" target="_blank" rel="noopener">國科會主管法規共用系統</a>、<a href="https://www.nstc.gov.tw/" target="_blank" rel="noopener">國科會</a>與<a href="https://www.tasa.org.tw/" target="_blank" rel="noopener">國家太空中心 TASA</a>之公開資訊,為方便閱讀經過摘要與白話改寫,不具法律效力。引用條文請以主管機關公布之正式文本為準。資料整理時間:2026 年 7 月。
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="t">從福爾摩沙望向宇宙</div>
+  <div class="s">TAIWAN SPACE LAW &amp; REGULATIONS · FROM FORMOSA, TOWARD THE COSMOS</div>
+  <div class="links">
+    <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160078" target="_blank" rel="noopener">太空發展法</a> ·
+    <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160083" target="_blank" rel="noopener">國家太空中心設置條例</a> ·
+    <a href="https://www.tasa.org.tw/" target="_blank" rel="noopener">TASA 國家太空中心</a>
+  </div>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var host = document.getElementById('starfield');
+  var colors = ['#ECEAE5', '#ECEAE5', '#6FD4FF', '#FFC53D'];
+  var s = 42;
+  function rand() { s = (s * 16807) % 2147483647; return s / 2147483647; }
+  var frag = document.createDocumentFragment();
+  for (var i = 0; i < 110; i++) {
+    var d = document.createElement('div');
+    var size = rand() < 0.15 ? 2.5 : rand() < 0.5 ? 1.5 : 1;
+    d.style.cssText = 'position:absolute;border-radius:50%;' +
+      'left:' + (rand() * 100).toFixed(2) + '%;top:' + (rand() * 100).toFixed(2) + '%;' +
+      'width:' + size + 'px;height:' + size + 'px;' +
+      'background:' + colors[Math.floor(rand() * colors.length)] + ';' +
+      'animation:twinkle ' + (2 + rand() * 3).toFixed(1) + 's ease-in-out ' + (rand() * 3).toFixed(1) + 's infinite;';
+    frag.appendChild(d);
+  }
+  host.appendChild(frag);
+})();
+</script>
+</body>
+</html>
