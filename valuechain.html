@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Space+Grotesk:wght@300;400;500;700&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
 <style>
   :root {
     --bg: #262624; --bg-2: #30302E; --bg-3: #3A3936;
@@ -79,22 +80,24 @@
   .seg-card .cnt { font-family: 'Space Grotesk'; font-size: 13px; color: var(--seg, var(--gold)); margin-top: 12px; }
 
   /* map layout */
-  .maparea { display: grid; grid-template-columns: minmax(300px, 480px) 1fr; gap: 34px; align-items: start; }
+  .maparea { display: grid; grid-template-columns: minmax(320px, 560px) 1fr; gap: 34px; align-items: start; }
   @media (max-width: 900px) { .maparea { grid-template-columns: 1fr; } }
-  .mapbox { border: 1px solid var(--border); border-radius: 24px; background: linear-gradient(170deg, rgba(48,48,46,0.7), rgba(38,38,36,0.4)); padding: 18px; position: relative; }
-  .mapbox svg { width: 100%; height: auto; display: block; }
-  .island { fill: #3A3936; stroke: #57554F; stroke-width: 1.2; }
-  .ridgeline { fill: none; stroke: #57554F; stroke-width: 1; stroke-dasharray: 3 5; opacity: 0.8; }
-  .gridline { stroke: #464540; stroke-width: 0.5; stroke-dasharray: 2 6; opacity: 0.5; }
-  .node { cursor: pointer; }
-  .node circle.core { stroke: #262624; stroke-width: 1.5; transition: r .2s; }
-  .node.dim { opacity: 0.25; }
-  .node text { font-family: 'Noto Sans TC'; font-size: 12.5px; fill: var(--text-2); paint-order: stroke; stroke: rgba(38,38,36,0.85); stroke-width: 3px; }
-  .node.sel text { fill: var(--gold); font-weight: 700; }
-  .node.sel circle.core { r: 8; }
-  .node .halo { fill: none; stroke: var(--gold); stroke-width: 1.2; opacity: 0; }
-  .node.sel .halo { opacity: 1; }
-  .pulse { fill: var(--coral); animation: pulse 2.2s ease-out infinite; transform-box: fill-box; }
+  .mapbox { border: 1px solid var(--border); border-radius: 24px; background: linear-gradient(170deg, rgba(48,48,46,0.7), rgba(38,38,36,0.4)); padding: 14px; position: relative; }
+  #twmap { height: 620px; border-radius: 14px; background: #1F1E1C; }
+  @media (max-width: 900px) { #twmap { height: 480px; } }
+  /* OSM tiles → deep-space dark mode */
+  #twmap .leaflet-tile-pane { filter: invert(100%) hue-rotate(190deg) brightness(0.86) contrast(0.9) saturate(0.5); }
+  #twmap .leaflet-control-attribution { background: rgba(38,38,36,0.85); color: var(--muted); font-size: 10.5px; }
+  #twmap .leaflet-control-attribution a { color: var(--cyan); }
+  #twmap .leaflet-control-zoom a { background: var(--bg-2); color: var(--text-2); border-color: var(--border); }
+  #twmap .leaflet-control-zoom a:hover { background: var(--bg-3); color: var(--cyan); }
+  .cluster-label { background: transparent; border: none; box-shadow: none; }
+  .cluster-label div {
+    font-family: 'Noto Sans TC'; font-size: 12.5px; font-weight: 700; color: var(--text);
+    text-shadow: 0 0 4px #1F1E1C, 0 0 8px #1F1E1C, 0 1px 2px #1F1E1C; white-space: nowrap;
+  }
+  .cluster-label.sel div { color: var(--gold); }
+  .mapfallback { display: grid; place-items: center; height: 100%; color: var(--muted); font-size: 14px; text-align: center; padding: 20px; }
 
   /* filters */
   .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
@@ -184,39 +187,7 @@
   <div class="filters" id="filters"></div>
   <div class="maparea">
     <div class="mapbox">
-      <svg id="twmap" viewBox="0 0 400 660" role="img" aria-label="Taiwan map">
-        <line class="gridline" x1="0" y1="110" x2="400" y2="110"/>
-        <line class="gridline" x1="0" y1="270" x2="400" y2="270"/>
-        <line class="gridline" x1="0" y1="430" x2="400" y2="430"/>
-        <line class="gridline" x1="0" y1="590" x2="400" y2="590"/>
-        <line class="gridline" x1="100" y1="0" x2="100" y2="660"/>
-        <line class="gridline" x1="230" y1="0" x2="230" y2="660"/>
-        <line class="gridline" x1="360" y1="0" x2="360" y2="660"/>
-        <path class="island" d="M274,44
-          C295,40 320,42 335,49
-          C355,58 372,64 376,75
-          C380,86 356,90 350,99
-          C346,116 353,132 352,146
-          C351,160 345,163 340,168
-          C330,196 318,222 311,250
-          C303,282 296,306 291,333
-          C280,373 258,414 236,457
-          C221,486 200,506 187,525
-          C182,552 183,580 179,603
-          C173,612 163,610 158,598
-          C152,584 152,566 151,554
-          C146,543 138,534 134,524
-          C118,513 95,504 82,491
-          C71,468 66,442 61,418
-          C58,397 58,376 58,355
-          C60,331 62,308 65,284
-          C79,255 100,226 117,197
-          C136,167 160,132 190,102
-          C205,88 222,72 238,65
-          C249,56 261,48 274,44 Z"/>
-        <path class="ridgeline" d="M300,90 C295,140 300,190 290,250 C280,320 255,390 225,450 C205,490 190,520 182,560"/>
-        <g id="nodes"></g>
-      </svg>
+      <div id="twmap" role="application" aria-label="Taiwan industry map"></div>
       <p style="font-size:11.5px;color:var(--muted);margin:10px 4px 0;line-height:1.6;" data-t="maphint"></p>
     </div>
     <div class="panel">
@@ -246,6 +217,7 @@
 </footer>
 </div>
 
+<script src="vendor/leaflet/leaflet.js"></script>
 <script>
 /* ===================== data ===================== */
 const SEGS = {
@@ -262,14 +234,15 @@ const SEGS = {
 };
 
 const CITIES = {
-  taipei:   { x: 299, y: 64,  lx: 8,   ly: -6,  zh: '臺北', en: 'Taipei' },
-  ntpc:     { x: 281, y: 82,  lx: 10,  ly: 10,  zh: '新北', en: 'New Taipei' },
-  taoyuan:  { x: 247, y: 86,  lx: -10, ly: 20,  zh: '桃園', en: 'Taoyuan', anchor: 'end' },
-  hsinchu:  { x: 199, y: 112, lx: -12, ly: 4,   zh: '新竹', en: 'Hsinchu', anchor: 'end' },
-  miaoli:   { x: 173, y: 150, lx: -12, ly: 4,   zh: '苗栗', en: 'Miaoli', anchor: 'end' },
-  taichung: { x: 150, y: 221, lx: -12, ly: 4,   zh: '臺中', en: 'Taichung', anchor: 'end' },
-  tainan:   { x: 70,  y: 416, lx: -12, ly: 4,   zh: '臺南', en: 'Tainan', anchor: 'end' },
-  pingtung: { x: 184, y: 553, lx: 14,  ly: 4,   zh: '屏東・旭海', en: 'Hsuhai, Pingtung' },
+  taipei:   { lat: 25.047, lng: 121.552, labelDir: 'right',  zh: '臺北', en: 'Taipei' },
+  ntpc:     { lat: 25.012, lng: 121.463, labelDir: 'left',   zh: '新北', en: 'New Taipei' },
+  keelung:  { lat: 25.094, lng: 121.684, labelDir: 'top',    zh: '基隆・七堵', en: 'Qidu, Keelung' },
+  taoyuan:  { lat: 24.960, lng: 121.260, labelDir: 'left',   zh: '桃園', en: 'Taoyuan' },
+  hsinchu:  { lat: 24.785, lng: 121.005, labelDir: 'right',  zh: '新竹', en: 'Hsinchu' },
+  miaoli:   { lat: 24.565, lng: 120.820, labelDir: 'left',   zh: '苗栗', en: 'Miaoli' },
+  taichung: { lat: 24.210, lng: 120.620, labelDir: 'left',   zh: '臺中', en: 'Taichung' },
+  tainan:   { lat: 23.000, lng: 120.220, labelDir: 'left',   zh: '臺南', en: 'Tainan' },
+  pingtung: { lat: 22.205, lng: 120.880, labelDir: 'right',  zh: '屏東・旭海', en: 'Hsuhai, Pingtung' },
 };
 
 const ORGS = [
@@ -324,9 +297,9 @@ const ORGS = [
   { city:'ntpc', seg:'ground', zh:'稜研科技 TMYTEK', en:'TMYTEK',
     dzh:'毫米波波束成形技術新創,低軌衛星與 5G 毫米波通訊(板橋)。',
     den:'mmWave beamforming startup for LEO satellite and 5G communications (Banqiao).' },
-  { city:'ntpc', seg:'ground', zh:'昇達科技 UMT', en:'Universal Microwave Technology',
-    dzh:'微波/毫米波被動元件,低軌衛星地面站與機上通訊供應鏈。',
-    den:'Microwave/mmWave passive components for LEO ground stations and aero-connectivity supply chains.' },
+  { city:'keelung', seg:'ground', zh:'昇達科技 UMT', en:'Universal Microwave Technology',
+    dzh:'微波/毫米波被動元件,低軌衛星地面站與機上通訊供應鏈(七堵・六堵科技園區)。',
+    den:'Microwave/mmWave passive components for LEO ground stations and aero-connectivity supply chains (Liudu Technology Park, Qidu).' },
   { city:'miaoli', seg:'launch', zh:'晉陞太空 TiSPACE', en:'TiSPACE',
     dzh:'民間火箭公司,混合式火箭「飛鼠」(Hapith)系列,苗栗設研製基地。',
     den:'Private launch company developing the hybrid-propellant Hapith rockets; based in Miaoli.' },
@@ -364,16 +337,16 @@ const I18N = {
     s1v:'NT$2,441 億', s1l:'2024 衛星地面設備產值(年增 18%)',
     s2v:'55+', s2l:'打入國際太空供應鏈的臺灣廠商',
     s3v:'NT$710 億', s3l:'第三期國家太空計畫經費(2019–2031)',
-    s4v:'8', s4l:'本頁收錄產業聚落',
+    s4v:'9', s4l:'本頁收錄產業聚落',
     sec1:'價值鏈五大環節', sec1en:'The Value Chain',
     sec1intro:'太空產業從上游到下游環環相扣。臺灣以地面設備見長,並沿著半導體與精密製造的優勢,向衛星本體、火箭與應用服務延伸。',
     sec2:'產業地圖', sec2en:'Industry Map',
     sec2intro:'點擊地圖節點檢視當地的公司與機構,或以價值鏈環節篩選。節點大小反映收錄機構數量。',
-    maphint:'※ 示意地圖,據點以總部或主要基地所在縣市標示;紅色脈動點為國家發射場域。',
+    maphint:'※ 底圖:OpenStreetMap。據點以總部或主要基地所在縣市標示;橘色節點為國家發射場域。可拖曳與縮放地圖。',
     sec3:'旗艦任務與計畫', sec3en:'Flagship Missions',
     sec3intro:'產業鏈的成果,最終在這些任務上匯聚升空。',
     foot1:'從福爾摩沙望向宇宙',
-    all:'全部', panel_all:'臺灣太空產業生態系', panel_sub_all:'收錄 {n} 個機構・8 個聚落・點擊地圖或篩選',
+    all:'全部', panel_all:'臺灣太空產業生態系', panel_sub_all:'收錄 {n} 個機構・9 個聚落・點擊地圖或篩選',
     panel_sub_city:'{n} 個機構', panel_sub_seg:'{n} 個機構・全臺',
     disc:'<b style="color:var(--gold);">資料說明</b><br>本頁為產業概覽,收錄以公開報導之代表性機構為主,未盡完整;各公司據點以總部或主要基地所在縣市標示,詳情以各公司公告為準。產值等統計數字彙整自經濟部產業發展署與公開報導(2024–2026)。資料整理時間:2026 年 7 月。',
   },
@@ -387,16 +360,16 @@ const I18N = {
     s1v:'NT$244.1B', s1l:'2024 satellite ground-equipment output (+18% YoY)',
     s2v:'55+', s2l:'Taiwanese firms in global space supply chains',
     s3v:'NT$71B', s3l:'3rd National Space Program budget (2019–2031)',
-    s4v:'8', s4l:'industry clusters on this page',
+    s4v:'9', s4l:'industry clusters on this page',
     sec1:'Five Links of the Chain', sec1en:'The Value Chain',
     sec1intro:"The space industry runs upstream to downstream. Taiwan leads in ground equipment and is extending along its semiconductor and precision-manufacturing strengths into satellites, rockets and services.",
     sec2:'Industry Map', sec2en:'Where the Industry Lives',
     sec2intro:'Click a node to see local companies and institutions, or filter by value-chain segment. Node size reflects the number of entries.',
-    maphint:'※ Schematic map. Pins mark the city of each HQ or main base; the pulsing red dot is the national launch site.',
+    maphint:'※ Base map: OpenStreetMap. Pins mark the city of each HQ or main base; the orange node is the national launch site. Drag and zoom to explore.',
     sec3:'Flagship Missions & Programs', sec3en:'Where It All Comes Together',
     sec3intro:'The value chain converges — and lifts off — in these missions.',
     foot1:'From Formosa, Toward the Cosmos',
-    all:'All', panel_all:"Taiwan's Space Ecosystem", panel_sub_all:'{n} organizations · 8 clusters · click the map or filter',
+    all:'All', panel_all:"Taiwan's Space Ecosystem", panel_sub_all:'{n} organizations · 9 clusters · click the map or filter',
     panel_sub_city:'{n} organizations', panel_sub_seg:'{n} organizations · island-wide',
     disc:'<b style="color:var(--gold);">About the data</b><br>This page is an industry overview featuring representative organizations from public reporting; it is not exhaustive. Pins mark the city of each HQ or main base — refer to company announcements for details. Output figures are compiled from Taiwan\'s Industrial Development Administration and public reports (2024–2026). Compiled July 2026.',
   }
@@ -453,52 +426,55 @@ function renderFilters() {
   });
 }
 
+/* Leaflet map over OpenStreetMap tiles */
+let map = null, markerLayer = null;
+
+function initMap() {
+  const el = document.getElementById('twmap');
+  if (typeof L === 'undefined') {
+    el.innerHTML = '<div class="mapfallback">Map library failed to load.<br>請檢查網路連線後重新整理。</div>';
+    return;
+  }
+  map = L.map('twmap', { scrollWheelZoom: false, zoomSnap: 0.25, attributionControl: true });
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
+  }).addTo(map);
+  markerLayer = L.layerGroup().addTo(map);
+  map.fitBounds([[21.85, 119.95], [25.40, 122.05]]);
+}
+
 function renderMap() {
-  const g = document.getElementById('nodes');
-  g.innerHTML = '';
+  if (!map || !markerLayer) return;
+  markerLayer.clearLayers();
   Object.entries(CITIES).forEach(([key, c]) => {
     const orgsHere = ORGS.filter(o => o.city === key);
     const match = selSeg ? orgsHere.some(o => o.seg === selSeg) : true;
-    const r = Math.min(5 + orgsHere.length * 1.4, 13);
-    const node = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    node.setAttribute('class', 'node' + (selCity === key ? ' sel' : '') + (match ? '' : ' dim'));
-    node.setAttribute('tabindex', '0');
-    node.setAttribute('role', 'button');
-    // pulse for launch site
-    if (key === 'pingtung') {
-      const p = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      p.setAttribute('cx', c.x); p.setAttribute('cy', c.y); p.setAttribute('class', 'pulse');
-      node.appendChild(p);
-    }
-    const halo = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    halo.setAttribute('cx', c.x); halo.setAttribute('cy', c.y); halo.setAttribute('r', r + 6);
-    halo.setAttribute('class', 'halo');
-    node.appendChild(halo);
-    // segment donut: colored dots around node
-    const segsHere = [...new Set(orgsHere.map(o => o.seg))];
-    segsHere.forEach((sk, i) => {
-      const ang = (i / segsHere.length) * Math.PI * 2 - Math.PI / 2;
-      const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-      dot.setAttribute('cx', c.x + Math.cos(ang) * (r + 4));
-      dot.setAttribute('cy', c.y + Math.sin(ang) * (r + 4));
-      dot.setAttribute('r', 2.4);
-      dot.setAttribute('fill', SEGS[sk].color);
-      node.appendChild(dot);
+    const isSel = selCity === key;
+    const r = Math.min(8 + orgsHere.length * 1.6, 18);
+    const baseColor = key === 'pingtung' ? '#FF7A5C' : '#6FD4FF';
+    const marker = L.circleMarker([c.lat, c.lng], {
+      radius: r,
+      color: isSel ? '#FFC53D' : '#262624',
+      weight: isSel ? 3 : 1.5,
+      fillColor: isSel ? '#FFC53D' : baseColor,
+      fillOpacity: match ? 0.85 : 0.2,
+      opacity: match ? 1 : 0.3,
     });
-    const core = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    core.setAttribute('cx', c.x); core.setAttribute('cy', c.y); core.setAttribute('r', r);
-    core.setAttribute('class', 'core');
-    core.setAttribute('fill', key === 'pingtung' ? '#FF7A5C' : '#6FD4FF');
-    core.setAttribute('fill-opacity', '0.85');
-    node.appendChild(core);
-    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    label.setAttribute('x', c.x + (c.lx || 10)); label.setAttribute('y', c.y + (c.ly || 4));
-    if (c.anchor) label.setAttribute('text-anchor', c.anchor);
-    label.textContent = lang === 'zh' ? c.zh : c.en;
-    node.appendChild(label);
-    node.addEventListener('click', () => { selCity = (selCity === key ? null : key); update(); });
-    node.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selCity = (selCity === key ? null : key); update(); } });
-    g.appendChild(node);
+    marker.on('click', () => { selCity = (selCity === key ? null : key); update(); });
+    marker.bindTooltip(
+      `<div>${lang === 'zh' ? c.zh : c.en} · ${orgsHere.length}</div>`,
+      { permanent: true, direction: c.labelDir || 'right',
+        offset: c.labelDir === 'top' ? [0, -(r + 4)] : [c.labelDir === 'left' ? -(r + 4) : (r + 4), 0],
+        className: 'cluster-label' + (isSel ? ' sel' : ''), opacity: match ? 1 : 0.35 }
+    );
+    markerLayer.addLayer(marker);
+    // glow ring for the national launch site
+    if (key === 'pingtung') {
+      markerLayer.addLayer(L.circleMarker([c.lat, c.lng], {
+        radius: r + 7, color: '#FF7A5C', weight: 1.2, fill: false, opacity: match ? 0.7 : 0.2, interactive: false,
+      }));
+    }
   });
 }
 
@@ -550,12 +526,14 @@ function update() {
   renderStatic(); renderChain(); renderFilters(); renderMap(); renderPanel(); renderMissions();
 }
 
+
 function setLang(l) {
   lang = l; localStorage.setItem('vc-lang', l);
   const url = new URL(location); url.searchParams.set('lang', l); history.replaceState(null, '', url);
   update();
 }
 
+initMap();
 update();
 
 /* starfield */
