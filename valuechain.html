@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>臺灣太空產業價值鏈地圖 — Taiwan Space Industry Value Chain Map</title>
+<meta name="description" content="以互動地圖呈現臺灣衛星、火箭與太空產業價值鏈:研究機構、火箭發射、衛星製造、地面設備與應用服務的地理聚落。中英文雙語。">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%2335D0A0'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Space+Grotesk:wght@300;400;500;700&family=Noto+Serif+TC:wght@600;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #262624; --bg-2: #30302E; --bg-3: #3A3936;
+    --border: #464540; --border-soft: #3B3A37;
+    --text: #ECEAE5; --text-2: #CBC8C1; --text-3: #ABA79E; --muted: #8F8C84;
+    --blue: #4C74D9; --cyan: #6FD4FF; --cyan-2: #A8E6FF;
+    --gold: #FFC53D; --coral: #FF7A5C; --green: #35D0A0;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; padding: 0; background: var(--bg); }
+  body { font-family: 'Noto Sans TC', 'Space Grotesk', sans-serif; color: var(--text); line-height: 1.85; }
+  a { color: var(--cyan); text-decoration: none; }
+  a:hover { color: var(--cyan-2); text-decoration: underline; }
+  ::selection { background: #2B5ACF; color: #fff; }
+  @keyframes twinkle { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+  @keyframes pulse { 0% { r: 8; opacity: 0.55; } 100% { r: 22; opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    html { scroll-behavior: auto; }
+  }
+  .starfield { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  .page { position: relative; z-index: 1; }
+
+  .topnav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(38,38,36,0.88); backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-soft);
+    padding: 14px 5vw; display: flex; align-items: center; gap: 22px; flex-wrap: wrap;
+  }
+  .topnav .brand { display: flex; align-items: center; gap: 10px; margin-right: auto; font-weight: 700; font-size: 16px; color: var(--text); }
+  .topnav .orb { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--blue); display: grid; place-items: center; flex: none; }
+  .topnav .orb i { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
+  .topnav a.navlink { font-size: 14.5px; color: var(--text-2); padding: 4px 2px; border-bottom: 2px solid transparent; }
+  .topnav a.navlink:hover { color: var(--cyan); text-decoration: none; border-bottom-color: var(--cyan); }
+  .langtoggle { display: flex; border: 1px solid var(--gold); border-radius: 999px; overflow: hidden; }
+  .langtoggle button {
+    font-family: 'Space Grotesk', 'Noto Sans TC'; background: transparent; color: var(--gold);
+    border: none; padding: 6px 16px; font-size: 13.5px; cursor: pointer; letter-spacing: 0.05em;
+  }
+  .langtoggle button.active { background: var(--gold); color: #262624; font-weight: 700; }
+
+  .hero { position: relative; overflow: hidden; padding: 100px 8vw 120px; border-bottom: 1px solid var(--border-soft); }
+  .hero .kicker span { font-family: 'Space Grotesk'; letter-spacing: 0.25em; font-size: 12.5px; color: var(--blue); text-transform: uppercase; }
+  .hero h1 { font-family: 'Noto Serif TC', serif; font-weight: 600; font-size: clamp(36px, 5.4vw, 68px); line-height: 1.18; margin: 14px 0; letter-spacing: 0.08em; }
+  .hero .sub { font-family: 'Space Grotesk'; font-size: clamp(16px, 1.9vw, 22px); font-weight: 300; color: var(--text-3); margin: 0 0 28px; letter-spacing: 0.04em; }
+  .hero .lede { max-width: 660px; font-size: 16px; color: var(--text-2); margin: 0; }
+  .ridge { position: absolute; left: 0; right: 0; bottom: -2px; width: 100%; height: 150px; pointer-events: none; }
+  .stat-strip { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 38px; }
+  .stat { border: 1px solid var(--border); border-radius: 12px; padding: 14px 22px; background: rgba(48,48,46,0.6); min-width: 140px; }
+  .stat b { display: block; font-family: 'Space Grotesk'; font-size: 24px; font-weight: 500; color: var(--cyan); line-height: 1.25; }
+  .stat span { font-size: 12.5px; color: var(--muted); }
+
+  section.block { padding: 90px 8vw; border-bottom: 1px solid var(--border-soft); position: relative; scroll-margin-top: 70px; }
+  .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 14px; flex-wrap: wrap; }
+  .sec-head .no { font-family: 'Space Grotesk'; font-size: 15px; color: var(--gold); letter-spacing: 0.2em; }
+  .sec-head h2 { font-family: 'Noto Serif TC', serif; font-size: clamp(26px, 3.2vw, 36px); font-weight: 600; margin: 0; }
+  .sec-head h2 small { font-family: 'Space Grotesk'; font-weight: 300; font-size: 0.55em; color: var(--muted); margin-left: 10px; }
+  .sec-intro { max-width: 700px; color: var(--text-3); margin: 0 0 42px; font-size: 15.5px; }
+
+  /* value chain flow */
+  .chainflow { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px; }
+  .seg-card { border: 1px solid var(--border); border-radius: 18px; padding: 26px 24px; background: linear-gradient(160deg, var(--bg-2), #2B2A28); border-top: 3px solid var(--seg, var(--gold)); }
+  .seg-card .glyph { font-size: 26px; margin-bottom: 10px; }
+  .seg-card h3 { font-size: 17px; font-weight: 700; margin: 0 0 2px; }
+  .seg-card .en { font-family: 'Space Grotesk'; font-size: 11.5px; color: var(--blue); letter-spacing: 0.06em; margin-bottom: 10px; }
+  .seg-card p { font-size: 13.5px; color: var(--text-3); margin: 0; }
+  .seg-card .cnt { font-family: 'Space Grotesk'; font-size: 13px; color: var(--seg, var(--gold)); margin-top: 12px; }
+
+  /* map layout */
+  .maparea { display: grid; grid-template-columns: minmax(300px, 480px) 1fr; gap: 34px; align-items: start; }
+  @media (max-width: 900px) { .maparea { grid-template-columns: 1fr; } }
+  .mapbox { border: 1px solid var(--border); border-radius: 24px; background: linear-gradient(170deg, rgba(48,48,46,0.7), rgba(38,38,36,0.4)); padding: 18px; position: relative; }
+  .mapbox svg { width: 100%; height: auto; display: block; }
+  .island { fill: #3A3936; stroke: #57554F; stroke-width: 1.2; }
+  .ridgeline { fill: none; stroke: #57554F; stroke-width: 1; stroke-dasharray: 3 5; opacity: 0.8; }
+  .gridline { stroke: #464540; stroke-width: 0.5; stroke-dasharray: 2 6; opacity: 0.5; }
+  .node { cursor: pointer; }
+  .node circle.core { stroke: #262624; stroke-width: 1.5; transition: r .2s; }
+  .node.dim { opacity: 0.25; }
+  .node text { font-family: 'Noto Sans TC'; font-size: 12.5px; fill: var(--text-2); paint-order: stroke; stroke: rgba(38,38,36,0.85); stroke-width: 3px; }
+  .node.sel text { fill: var(--gold); font-weight: 700; }
+  .node.sel circle.core { r: 8; }
+  .node .halo { fill: none; stroke: var(--gold); stroke-width: 1.2; opacity: 0; }
+  .node.sel .halo { opacity: 1; }
+  .pulse { fill: var(--coral); animation: pulse 2.2s ease-out infinite; transform-box: fill-box; }
+
+  /* filters */
+  .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
+  .fbtn {
+    font-family: inherit; font-size: 13.5px; cursor: pointer; border-radius: 999px; padding: 7px 16px;
+    background: transparent; border: 1px solid var(--border); color: var(--text-3);
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .fbtn i { width: 8px; height: 8px; border-radius: 50%; background: var(--seg, var(--muted)); flex: none; }
+  .fbtn.active { border-color: var(--seg, var(--text)); color: var(--text); background: rgba(255,255,255,0.04); }
+
+  /* org list panel */
+  .panel { min-height: 420px; }
+  .panel .ptitle { font-family: 'Noto Serif TC', serif; font-size: 22px; font-weight: 600; margin: 0 0 4px; }
+  .panel .psub { font-family: 'Space Grotesk'; font-size: 12.5px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 20px; }
+  .orgs { display: grid; gap: 14px; }
+  .org { border: 1px solid var(--border); border-left: 3px solid var(--seg, var(--gold)); border-radius: 14px; background: var(--bg-2); padding: 18px 22px; }
+  .org .head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .org b { font-size: 16px; }
+  .org .en { font-family: 'Space Grotesk'; font-size: 12px; color: var(--blue); }
+  .org .loc { margin-left: auto; font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .org p { font-size: 13.5px; color: var(--text-3); margin: 6px 0 0; }
+  .org .segtag { display: inline-block; font-size: 11.5px; color: var(--seg, var(--gold)); border: 1px solid var(--seg, var(--gold)); border-radius: 999px; padding: 1px 10px; margin-top: 10px; }
+
+  /* missions strip */
+  .missions { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .mission { border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; background: var(--bg-2); }
+  .mission .yr { font-family: 'Space Grotesk'; font-size: 13px; color: var(--gold); letter-spacing: 0.14em; }
+  .mission b { display: block; font-size: 16.5px; margin: 6px 0 4px; }
+  .mission p { font-size: 13px; color: var(--text-3); margin: 0; }
+
+  .disclaimer {
+    border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: 12px;
+    background: rgba(255,197,61,0.05); padding: 20px 26px; font-size: 14px; color: var(--text-3); max-width: 900px;
+  }
+  footer { position: relative; padding: 70px 8vw 55px; text-align: center; }
+  footer .t { font-family: 'Noto Serif TC', serif; font-weight: 600; font-size: 22px; margin-bottom: 8px; }
+  footer .s { font-family: 'Space Grotesk'; font-size: 12px; letter-spacing: 0.2em; color: var(--muted); }
+  footer .links { margin: 20px 0 0; font-size: 13.5px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="starfield" id="starfield" aria-hidden="true"></div>
+<div class="page">
+
+<nav class="topnav" aria-label="main">
+  <span class="brand"><span class="orb"><i></i></span><span data-t="nav_brand"></span></span>
+  <a class="navlink" href="#chain" data-t="nav_chain"></a>
+  <a class="navlink" href="#map" data-t="nav_map"></a>
+  <a class="navlink" href="#missions" data-t="nav_missions"></a>
+  <a class="navlink" href="index.html" data-t="nav_tw"></a>
+  <a class="navlink" href="international.html" data-t="nav_intl"></a>
+  <div class="langtoggle" role="group" aria-label="language">
+    <button id="btn-zh" onclick="setLang('zh')">中文</button>
+    <button id="btn-en" onclick="setLang('en')">EN</button>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="kicker"><span data-t="kicker"></span></div>
+  <h1 data-t="title"></h1>
+  <p class="sub" data-t="subtitle"></p>
+  <p class="lede" data-t="lede"></p>
+  <div class="stat-strip">
+    <div class="stat"><b data-t="s1v"></b><span data-t="s1l"></span></div>
+    <div class="stat"><b data-t="s2v"></b><span data-t="s2l"></span></div>
+    <div class="stat"><b data-t="s3v"></b><span data-t="s3l"></span></div>
+    <div class="stat"><b data-t="s4v"></b><span data-t="s4l"></span></div>
+  </div>
+  <svg class="ridge" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,180 L0,120 C120,110 200,70 320,64 C420,60 470,30 560,26 C640,22 700,52 800,58 C900,64 980,40 1080,48 C1200,58 1300,100 1440,108 L1440,180 Z" fill="#454440" opacity="0.55"/>
+    <path d="M0,180 L0,146 C160,138 260,104 380,100 C480,96 540,72 620,70 C710,68 780,92 880,96 C1000,101 1120,84 1240,96 C1320,104 1390,118 1440,124 L1440,180 Z" fill="#262624"/>
+  </svg>
+</header>
+
+<!-- 01 value chain -->
+<section class="block" id="chain">
+  <div class="sec-head"><span class="no">01</span><h2><span data-t="sec1"></span><small data-t="sec1en"></small></h2></div>
+  <p class="sec-intro" data-t="sec1intro"></p>
+  <div class="chainflow" id="chainflow"></div>
+</section>
+
+<!-- 02 map -->
+<section class="block" id="map">
+  <div class="sec-head"><span class="no">02</span><h2><span data-t="sec2"></span><small data-t="sec2en"></small></h2></div>
+  <p class="sec-intro" data-t="sec2intro"></p>
+  <div class="filters" id="filters"></div>
+  <div class="maparea">
+    <div class="mapbox">
+      <svg id="twmap" viewBox="0 0 400 660" role="img" aria-label="Taiwan map">
+        <line class="gridline" x1="0" y1="110" x2="400" y2="110"/>
+        <line class="gridline" x1="0" y1="270" x2="400" y2="270"/>
+        <line class="gridline" x1="0" y1="430" x2="400" y2="430"/>
+        <line class="gridline" x1="0" y1="590" x2="400" y2="590"/>
+        <line class="gridline" x1="100" y1="0" x2="100" y2="660"/>
+        <line class="gridline" x1="230" y1="0" x2="230" y2="660"/>
+        <line class="gridline" x1="360" y1="0" x2="360" y2="660"/>
+        <path class="island" d="M274,44
+          C295,40 320,42 335,49
+          C355,58 372,64 376,75
+          C380,86 356,90 350,99
+          C346,116 353,132 352,146
+          C351,160 345,163 340,168
+          C330,196 318,222 311,250
+          C303,282 296,306 291,333
+          C280,373 258,414 236,457
+          C221,486 200,506 187,525
+          C182,552 183,580 179,603
+          C173,612 163,610 158,598
+          C152,584 152,566 151,554
+          C146,543 138,534 134,524
+          C118,513 95,504 82,491
+          C71,468 66,442 61,418
+          C58,397 58,376 58,355
+          C60,331 62,308 65,284
+          C79,255 100,226 117,197
+          C136,167 160,132 190,102
+          C205,88 222,72 238,65
+          C249,56 261,48 274,44 Z"/>
+        <path class="ridgeline" d="M300,90 C295,140 300,190 290,250 C280,320 255,390 225,450 C205,490 190,520 182,560"/>
+        <g id="nodes"></g>
+      </svg>
+      <p style="font-size:11.5px;color:var(--muted);margin:10px 4px 0;line-height:1.6;" data-t="maphint"></p>
+    </div>
+    <div class="panel">
+      <h3 class="ptitle" id="ptitle"></h3>
+      <div class="psub" id="psub"></div>
+      <div class="orgs" id="orgs"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 03 missions -->
+<section class="block" id="missions">
+  <div class="sec-head"><span class="no">03</span><h2><span data-t="sec3"></span><small data-t="sec3en"></small></h2></div>
+  <p class="sec-intro" data-t="sec3intro"></p>
+  <div class="missions" id="missionlist"></div>
+  <div class="disclaimer" style="margin-top:44px;" id="disc"></div>
+</section>
+
+<footer>
+  <div class="t" data-t="foot1"></div>
+  <div class="s">TAIWAN SPACE INDUSTRY VALUE CHAIN · FROM FORMOSA, TOWARD THE COSMOS</div>
+  <div class="links">
+    <a href="index.html" data-t="nav_tw"></a> ·
+    <a href="international.html" data-t="nav_intl"></a> ·
+    <a href="https://www.tasa.org.tw/" target="_blank" rel="noopener">TASA</a>
+  </div>
+</footer>
+</div>
+
+<script>
+/* ===================== data ===================== */
+const SEGS = {
+  agency:    { color: '#FFC53D', glyph: '🏛', zh: '研究機構與法人', en: 'Agencies & Research',
+               dzh: '國家太空計畫、學研能量與人才的源頭。', den: 'The wellspring of national programs, R&D and talent.' },
+  launch:    { color: '#FF7A5C', glyph: '🚀', zh: '火箭與發射', en: 'Rockets & Launch',
+               dzh: '民間火箭研製與國家發射場域。', den: 'Private launch vehicles and the national launch site.' },
+  satellite: { color: '#6FD4FF', glyph: '🛰', zh: '衛星本體與零組件', en: 'Satellites & Components',
+               dzh: '衛星整合、酬載、晶片、PCB 與結構件。', den: 'Satellite integration, payloads, chips, PCBs and structures.' },
+  ground:    { color: '#35D0A0', glyph: '📡', zh: '地面設備', en: 'Ground Equipment',
+               dzh: '臺灣最強的一段:用戶終端、天線與射頻元件。', den: "Taiwan's strongest link: user terminals, antennas and RF." },
+  service:   { color: '#4C74D9', glyph: '🌐', zh: '應用與服務', en: 'Applications & Services',
+               dzh: '衛星通訊、遙測影像與資料加值應用。', den: 'Satcom services, remote-sensing imagery and data applications.' },
+};
+
+const CITIES = {
+  taipei:   { x: 299, y: 64,  lx: 8,   ly: -6,  zh: '臺北', en: 'Taipei' },
+  ntpc:     { x: 281, y: 82,  lx: 10,  ly: 10,  zh: '新北', en: 'New Taipei' },
+  taoyuan:  { x: 247, y: 86,  lx: -10, ly: 20,  zh: '桃園', en: 'Taoyuan', anchor: 'end' },
+  hsinchu:  { x: 199, y: 112, lx: -12, ly: 4,   zh: '新竹', en: 'Hsinchu', anchor: 'end' },
+  miaoli:   { x: 173, y: 150, lx: -12, ly: 4,   zh: '苗栗', en: 'Miaoli', anchor: 'end' },
+  taichung: { x: 150, y: 221, lx: -12, ly: 4,   zh: '臺中', en: 'Taichung', anchor: 'end' },
+  tainan:   { x: 70,  y: 416, lx: -12, ly: 4,   zh: '臺南', en: 'Tainan', anchor: 'end' },
+  pingtung: { x: 184, y: 553, lx: 14,  ly: 4,   zh: '屏東・旭海', en: 'Hsuhai, Pingtung' },
+};
+
+const ORGS = [
+  { city:'hsinchu', seg:'agency', zh:'國家太空中心 TASA', en:'Taiwan Space Agency (TASA)',
+    dzh:'行政法人,國家太空計畫的執行核心:衛星研製整測、發射場域營運、登錄與許可審查。位於新竹科學園區。',
+    den:'Administrative corporation executing national space programs: satellite development and integration, launch-site operations, registration and licensing review. Hsinchu Science Park.' },
+  { city:'hsinchu', seg:'agency', zh:'工業技術研究院 ITRI', en:'Industrial Technology Research Institute',
+    dzh:'太空級元件、材料與製程研發,銜接半導體與太空產業。',
+    den:'R&D on space-grade components, materials and processes, bridging semiconductors and space.' },
+  { city:'hsinchu', seg:'launch', zh:'陽明交大 ARRC 前瞻火箭研究中心', en:'NYCU ARRC Rocket Research Center',
+    dzh:'學界混合式火箭研究重鎮,HTTP 系列探空火箭與可導控技術。',
+    den:'Leading academic hybrid-rocket program; HTTP-series sounding rockets and guidance technology.' },
+  { city:'hsinchu', seg:'ground', zh:'啟碁科技 WNC', en:'Wistron NeWeb Corp. (WNC)',
+    dzh:'衛星用戶終端與網通設備大廠,低軌衛星國際供應鏈要角。',
+    den:'Major maker of satellite user terminals and networking gear; key supplier to LEO constellations.' },
+  { city:'hsinchu', seg:'ground', zh:'台揚科技 MTI', en:'Microelectronics Technology Inc. (MTI)',
+    dzh:'臺灣衛星地面站與 VSAT 設備先驅,微波通訊系統整合。',
+    den:'Pioneer of satellite ground stations and VSAT equipment in Taiwan; microwave system integration.' },
+  { city:'hsinchu', seg:'satellite', zh:'創未來科技 Tron Future', en:'Tron Future Tech',
+    dzh:'相控陣雷達與衛星通訊酬載新創,投入低軌衛星星系與太空感測。',
+    den:'Phased-array radar and satcom payload startup; building toward LEO constellations and space sensing.' },
+  { city:'taoyuan', seg:'agency', zh:'國家中山科學研究院 NCSIST', en:'NCSIST',
+    dzh:'國防航太研發法人,火箭推進與航太系統的深厚工程能量(龍潭)。',
+    den:'Defense aerospace R&D institute with deep expertise in rocket propulsion and aerospace systems (Longtan).' },
+  { city:'taoyuan', seg:'agency', zh:'中央大學太空科學與工程學系', en:'NCU Dept. of Space Science & Engineering',
+    dzh:'太空科學重鎮,飛鼠號(IDEASSat)立方衛星、電離層與太空天氣研究(中壢)。',
+    den:'Space-science hub: IDEASSat CubeSat, ionosphere and space-weather research (Zhongli).' },
+  { city:'taoyuan', seg:'satellite', zh:'穩懋半導體 WIN Semiconductors', en:'WIN Semiconductors',
+    dzh:'全球最大砷化鎵射頻晶圓代工,衛星通訊射頻晶片關鍵供應者(龍潭)。',
+    den:'World-largest GaAs RF foundry; critical supplier of RF chips for satellite communications (Longtan).' },
+  { city:'taoyuan', seg:'satellite', zh:'華通電腦 Compeq', en:'Compeq Manufacturing',
+    dzh:'高階 PCB 大廠,切入衛星與航太電路板供應鏈(蘆竹)。',
+    den:'Leading high-end PCB maker supplying satellite and aerospace boards (Luzhu).' },
+  { city:'taoyuan', seg:'satellite', zh:'同欣電子 Tong Hsing', en:'Tong Hsing Electronic',
+    dzh:'陶瓷基板與影像感測封裝,太空與航太級構裝能量(龜山)。',
+    den:'Ceramic substrates and image-sensor packaging with space/aerospace-grade capability (Guishan).' },
+  { city:'taoyuan', seg:'ground', zh:'耀登科技 Auden', en:'Auden Techno',
+    dzh:'天線設計與量測驗證,投入衛星通訊天線與模組。',
+    den:'Antenna design and test/validation; satellite communication antennas and modules.' },
+  { city:'taipei', seg:'service', zh:'中華電信', en:'Chunghwa Telecom',
+    dzh:'衛星通訊服務與國際海纜/地面站營運,參與 ST-2 通訊衛星。',
+    den:'Satcom services and ground-station operations; partner in the ST-2 communications satellite.' },
+  { city:'taipei', seg:'satellite', zh:'張量科技 Tensor Tech', en:'Tensor Tech',
+    dzh:'立方衛星姿態控制系統新創,球型馬達技術輸出國際。',
+    den:'CubeSat attitude-control startup; spherical-motor ADCS exported worldwide.' },
+  { city:'ntpc', seg:'satellite', zh:'鴻海科技集團 Foxconn', en:'Foxconn (Hon Hai)',
+    dzh:'珍珠號低軌實驗衛星(與中央大學合作),電子代工巨頭跨入太空(土城總部)。',
+    den:'PEARL LEO experimental satellites (with NCU); the electronics giant entering space (Tucheng HQ).' },
+  { city:'ntpc', seg:'ground', zh:'鐳洋科技 Rapidtek', en:'Rapidtek Technologies',
+    dzh:'相列陣天線與衛星測試方案,汐止總部、桃園青埔設衛星組裝中心。',
+    den:'Phased-array antennas and satellite test solutions; Xizhi HQ with a satellite assembly center in Qingpu, Taoyuan.' },
+  { city:'ntpc', seg:'ground', zh:'稜研科技 TMYTEK', en:'TMYTEK',
+    dzh:'毫米波波束成形技術新創,低軌衛星與 5G 毫米波通訊(板橋)。',
+    den:'mmWave beamforming startup for LEO satellite and 5G communications (Banqiao).' },
+  { city:'ntpc', seg:'ground', zh:'昇達科技 UMT', en:'Universal Microwave Technology',
+    dzh:'微波/毫米波被動元件,低軌衛星地面站與機上通訊供應鏈。',
+    den:'Microwave/mmWave passive components for LEO ground stations and aero-connectivity supply chains.' },
+  { city:'miaoli', seg:'launch', zh:'晉陞太空 TiSPACE', en:'TiSPACE',
+    dzh:'民間火箭公司,混合式火箭「飛鼠」(Hapith)系列,苗栗設研製基地。',
+    den:'Private launch company developing the hybrid-propellant Hapith rockets; based in Miaoli.' },
+  { city:'taichung', seg:'satellite', zh:'漢翔航空工業 AIDC', en:'AIDC',
+    dzh:'國家航太製造重鎮,精密結構與系統整合能量延伸至衛星零組件。',
+    den:"Taiwan's aerospace manufacturing anchor; precision structures and integration extending into satellite components." },
+  { city:'tainan', seg:'agency', zh:'成功大學航太與太空系統工程', en:'NCKU Aeronautics & Space Systems',
+    dzh:'航太工程重鎮:混合式火箭推進、鳳凰號(PHOENIX)立方衛星與太空系統人才。',
+    den:'Aerospace engineering hub: hybrid propulsion, PHOENIX CubeSat and space-systems talent.' },
+  { city:'tainan', seg:'service', zh:'經緯航太 GEOSAT', en:'GEOSAT Aerospace',
+    dzh:'航遙測與地理資訊服務,無人機與衛星影像加值應用。',
+    den:'Aerial/remote-sensing and GIS services; UAV and satellite-imagery applications.' },
+  { city:'pingtung', seg:'launch', zh:'旭海短期科研探空火箭發射場', en:'Hsuhai Sounding Rocket Launch Site',
+    dzh:'國家短期科研發射場域(牡丹鄉旭海),由 TASA 營運,學研火箭於此升空。',
+    den:'National short-term scientific launch site at Hsuhai, Mudan Township, operated by TASA for research rockets.' },
+];
+
+const MISSIONS = [
+  { yr:'2017', zh:'福衛五號', en:'FORMOSAT-5', dzh:'首顆自主研製光學遙測衛星。', den:'First fully self-developed optical remote-sensing satellite.' },
+  { yr:'2019', zh:'福衛七號', en:'FORMOSAT-7', dzh:'與美合作之掩星氣象星系(6 顆)。', den:'Six-satellite GNSS-RO weather constellation with the U.S.' },
+  { yr:'2023', zh:'獵風者 Triton', en:'Triton (Wind Hunter)', dzh:'自製 GNSS-R 海面風速觀測衛星。', den:'Homegrown GNSS-R satellite measuring sea-surface winds.' },
+  { yr:'2024–', zh:'福衛八號星系', en:'FORMOSAT-8 Constellation', dzh:'高解析光學遙測星系,首星已升空、逐年布建。', den:'High-resolution optical constellation; first satellite launched, deploying year by year.' },
+  { yr:'進行中 / Ongoing', zh:'B5G 低軌通訊衛星', en:'B5G LEO Comsat Program', dzh:'自主低軌通訊衛星與地面設備國家隊。', den:'Sovereign LEO communications satellites and the national ground-equipment team.' },
+];
+
+/* ===================== i18n ===================== */
+const I18N = {
+  zh: {
+    nav_brand:'太空產業鏈', nav_chain:'價值鏈', nav_map:'產業地圖', nav_missions:'旗艦任務',
+    nav_tw:'臺灣太空法規', nav_intl:'國際太空法',
+    kicker:'Taiwan Space Industry Value Chain',
+    title:'臺灣太空產業\n價值鏈地圖',
+    subtitle:'From Silicon Island to Space — 從矽島到太空',
+    lede:'從新竹的衛星整測廠房、桃園的射頻晶圓廠,到屏東旭海的發射場——臺灣把半導體與精密製造的實力,延伸成完整的太空產業價值鏈。點擊地圖上的聚落,探索各地的公司與機構。',
+    s1v:'NT$2,441 億', s1l:'2024 衛星地面設備產值(年增 18%)',
+    s2v:'55+', s2l:'打入國際太空供應鏈的臺灣廠商',
+    s3v:'NT$710 億', s3l:'第三期國家太空計畫經費(2019–2031)',
+    s4v:'8', s4l:'本頁收錄產業聚落',
+    sec1:'價值鏈五大環節', sec1en:'The Value Chain',
+    sec1intro:'太空產業從上游到下游環環相扣。臺灣以地面設備見長,並沿著半導體與精密製造的優勢,向衛星本體、火箭與應用服務延伸。',
+    sec2:'產業地圖', sec2en:'Industry Map',
+    sec2intro:'點擊地圖節點檢視當地的公司與機構,或以價值鏈環節篩選。節點大小反映收錄機構數量。',
+    maphint:'※ 示意地圖,據點以總部或主要基地所在縣市標示;紅色脈動點為國家發射場域。',
+    sec3:'旗艦任務與計畫', sec3en:'Flagship Missions',
+    sec3intro:'產業鏈的成果,最終在這些任務上匯聚升空。',
+    foot1:'從福爾摩沙望向宇宙',
+    all:'全部', panel_all:'臺灣太空產業生態系', panel_sub_all:'收錄 {n} 個機構・8 個聚落・點擊地圖或篩選',
+    panel_sub_city:'{n} 個機構', panel_sub_seg:'{n} 個機構・全臺',
+    disc:'<b style="color:var(--gold);">資料說明</b><br>本頁為產業概覽,收錄以公開報導之代表性機構為主,未盡完整;各公司據點以總部或主要基地所在縣市標示,詳情以各公司公告為準。產值等統計數字彙整自經濟部產業發展署與公開報導(2024–2026)。資料整理時間:2026 年 7 月。',
+  },
+  en: {
+    nav_brand:'Space Industry', nav_chain:'Value Chain', nav_map:'Industry Map', nav_missions:'Missions',
+    nav_tw:'Taiwan Space Law', nav_intl:'International Space Law',
+    kicker:'Taiwan Space Industry Value Chain',
+    title:'Taiwan Space Industry\nValue Chain Map',
+    subtitle:'From Silicon Island to Space',
+    lede:'From satellite integration halls in Hsinchu and RF wafer fabs in Taoyuan to the launch site at Hsuhai, Pingtung — Taiwan extends its semiconductor and precision-manufacturing prowess into a complete space value chain. Click a cluster on the map to explore.',
+    s1v:'NT$244.1B', s1l:'2024 satellite ground-equipment output (+18% YoY)',
+    s2v:'55+', s2l:'Taiwanese firms in global space supply chains',
+    s3v:'NT$71B', s3l:'3rd National Space Program budget (2019–2031)',
+    s4v:'8', s4l:'industry clusters on this page',
+    sec1:'Five Links of the Chain', sec1en:'The Value Chain',
+    sec1intro:"The space industry runs upstream to downstream. Taiwan leads in ground equipment and is extending along its semiconductor and precision-manufacturing strengths into satellites, rockets and services.",
+    sec2:'Industry Map', sec2en:'Where the Industry Lives',
+    sec2intro:'Click a node to see local companies and institutions, or filter by value-chain segment. Node size reflects the number of entries.',
+    maphint:'※ Schematic map. Pins mark the city of each HQ or main base; the pulsing red dot is the national launch site.',
+    sec3:'Flagship Missions & Programs', sec3en:'Where It All Comes Together',
+    sec3intro:'The value chain converges — and lifts off — in these missions.',
+    foot1:'From Formosa, Toward the Cosmos',
+    all:'All', panel_all:"Taiwan's Space Ecosystem", panel_sub_all:'{n} organizations · 8 clusters · click the map or filter',
+    panel_sub_city:'{n} organizations', panel_sub_seg:'{n} organizations · island-wide',
+    disc:'<b style="color:var(--gold);">About the data</b><br>This page is an industry overview featuring representative organizations from public reporting; it is not exhaustive. Pins mark the city of each HQ or main base — refer to company announcements for details. Output figures are compiled from Taiwan\'s Industrial Development Administration and public reports (2024–2026). Compiled July 2026.',
+  }
+};
+
+/* ===================== state & render ===================== */
+let lang = localStorage.getItem('vc-lang') || (new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'zh');
+let selCity = null, selSeg = null;
+
+function t(k) { return I18N[lang][k] || ''; }
+
+function renderStatic() {
+  document.documentElement.lang = lang === 'zh' ? 'zh-Hant-TW' : 'en';
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const v = t(el.getAttribute('data-t'));
+    if (el.getAttribute('data-t') === 'title') el.innerHTML = v.replace('\n', '<br>');
+    else el.textContent = v;
+  });
+  document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
+  document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+  document.getElementById('disc').innerHTML = t('disc');
+}
+
+function renderChain() {
+  const el = document.getElementById('chainflow');
+  el.innerHTML = '';
+  Object.entries(SEGS).forEach(([key, s]) => {
+    const n = ORGS.filter(o => o.seg === key).length;
+    const d = document.createElement('div');
+    d.className = 'seg-card'; d.style.setProperty('--seg', s.color);
+    d.innerHTML = `<div class="glyph">${s.glyph}</div><h3>${lang==='zh'?s.zh:s.en}</h3>` +
+      `<div class="en">${lang==='zh'?s.en:s.zh}</div>` +
+      `<p>${lang==='zh'?s.dzh:s.den}</p>` +
+      `<div class="cnt">${n} ${lang==='zh'?'個機構':'entries'}</div>`;
+    el.appendChild(d);
+  });
+}
+
+function renderFilters() {
+  const el = document.getElementById('filters');
+  el.innerHTML = '';
+  const all = document.createElement('button');
+  all.className = 'fbtn' + (selSeg === null ? ' active' : '');
+  all.innerHTML = `<i style="background:var(--text-3)"></i>${t('all')}`;
+  all.onclick = () => { selSeg = null; update(); };
+  el.appendChild(all);
+  Object.entries(SEGS).forEach(([key, s]) => {
+    const b = document.createElement('button');
+    b.className = 'fbtn' + (selSeg === key ? ' active' : '');
+    b.style.setProperty('--seg', s.color);
+    b.innerHTML = `<i></i>${lang==='zh'?s.zh:s.en}`;
+    b.onclick = () => { selSeg = (selSeg === key ? null : key); selCity = null; update(); };
+    el.appendChild(b);
+  });
+}
+
+function renderMap() {
+  const g = document.getElementById('nodes');
+  g.innerHTML = '';
+  Object.entries(CITIES).forEach(([key, c]) => {
+    const orgsHere = ORGS.filter(o => o.city === key);
+    const match = selSeg ? orgsHere.some(o => o.seg === selSeg) : true;
+    const r = Math.min(5 + orgsHere.length * 1.4, 13);
+    const node = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    node.setAttribute('class', 'node' + (selCity === key ? ' sel' : '') + (match ? '' : ' dim'));
+    node.setAttribute('tabindex', '0');
+    node.setAttribute('role', 'button');
+    // pulse for launch site
+    if (key === 'pingtung') {
+      const p = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      p.setAttribute('cx', c.x); p.setAttribute('cy', c.y); p.setAttribute('class', 'pulse');
+      node.appendChild(p);
+    }
+    const halo = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    halo.setAttribute('cx', c.x); halo.setAttribute('cy', c.y); halo.setAttribute('r', r + 6);
+    halo.setAttribute('class', 'halo');
+    node.appendChild(halo);
+    // segment donut: colored dots around node
+    const segsHere = [...new Set(orgsHere.map(o => o.seg))];
+    segsHere.forEach((sk, i) => {
+      const ang = (i / segsHere.length) * Math.PI * 2 - Math.PI / 2;
+      const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      dot.setAttribute('cx', c.x + Math.cos(ang) * (r + 4));
+      dot.setAttribute('cy', c.y + Math.sin(ang) * (r + 4));
+      dot.setAttribute('r', 2.4);
+      dot.setAttribute('fill', SEGS[sk].color);
+      node.appendChild(dot);
+    });
+    const core = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    core.setAttribute('cx', c.x); core.setAttribute('cy', c.y); core.setAttribute('r', r);
+    core.setAttribute('class', 'core');
+    core.setAttribute('fill', key === 'pingtung' ? '#FF7A5C' : '#6FD4FF');
+    core.setAttribute('fill-opacity', '0.85');
+    node.appendChild(core);
+    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('x', c.x + (c.lx || 10)); label.setAttribute('y', c.y + (c.ly || 4));
+    if (c.anchor) label.setAttribute('text-anchor', c.anchor);
+    label.textContent = lang === 'zh' ? c.zh : c.en;
+    node.appendChild(label);
+    node.addEventListener('click', () => { selCity = (selCity === key ? null : key); update(); });
+    node.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selCity = (selCity === key ? null : key); update(); } });
+    g.appendChild(node);
+  });
+}
+
+function renderPanel() {
+  const title = document.getElementById('ptitle');
+  const sub = document.getElementById('psub');
+  const list = document.getElementById('orgs');
+  let orgs = ORGS;
+  if (selCity) orgs = orgs.filter(o => o.city === selCity);
+  if (selSeg) orgs = orgs.filter(o => o.seg === selSeg);
+  if (selCity) {
+    const c = CITIES[selCity];
+    title.textContent = lang === 'zh' ? c.zh : c.en;
+    sub.textContent = t('panel_sub_city').replace('{n}', orgs.length);
+  } else if (selSeg) {
+    title.textContent = lang === 'zh' ? SEGS[selSeg].zh : SEGS[selSeg].en;
+    sub.textContent = t('panel_sub_seg').replace('{n}', orgs.length);
+  } else {
+    title.textContent = t('panel_all');
+    sub.textContent = t('panel_sub_all').replace('{n}', ORGS.length);
+  }
+  list.innerHTML = '';
+  orgs.forEach(o => {
+    const s = SEGS[o.seg], c = CITIES[o.city];
+    const d = document.createElement('div');
+    d.className = 'org'; d.style.setProperty('--seg', s.color);
+    d.innerHTML = `<div class="head"><b>${lang==='zh'?o.zh:o.en}</b>` +
+      `<span class="en">${lang==='zh'?o.en:o.zh}</span>` +
+      `<span class="loc">📍 ${lang==='zh'?c.zh:c.en}</span></div>` +
+      `<p>${lang==='zh'?o.dzh:o.den}</p>` +
+      `<span class="segtag">${s.glyph} ${lang==='zh'?s.zh:s.en}</span>`;
+    list.appendChild(d);
+  });
+}
+
+function renderMissions() {
+  const el = document.getElementById('missionlist');
+  el.innerHTML = '';
+  MISSIONS.forEach(m => {
+    const d = document.createElement('div');
+    d.className = 'mission';
+    d.innerHTML = `<span class="yr">${m.yr}</span><b>${lang==='zh'?m.zh:m.en}</b>` +
+      `<p>${lang==='zh'?m.dzh:m.den}</p>`;
+    el.appendChild(d);
+  });
+}
+
+function update() {
+  renderStatic(); renderChain(); renderFilters(); renderMap(); renderPanel(); renderMissions();
+}
+
+function setLang(l) {
+  lang = l; localStorage.setItem('vc-lang', l);
+  const url = new URL(location); url.searchParams.set('lang', l); history.replaceState(null, '', url);
+  update();
+}
+
+update();
+
+/* starfield */
+(function () {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const host = document.getElementById('starfield');
+  const colors = ['#ECEAE5', '#ECEAE5', '#6FD4FF', '#FFC53D'];
+  let s = 7;
+  const rand = () => { s = (s * 16807) % 2147483647; return s / 2147483647; };
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < 100; i++) {
+    const d = document.createElement('div');
+    const size = rand() < 0.15 ? 2.5 : rand() < 0.5 ? 1.5 : 1;
+    d.style.cssText = 'position:absolute;border-radius:50%;' +
+      'left:' + (rand() * 100).toFixed(2) + '%;top:' + (rand() * 100).toFixed(2) + '%;' +
+      'width:' + size + 'px;height:' + size + 'px;' +
+      'background:' + colors[Math.floor(rand() * colors.length)] + ';' +
+      'animation:twinkle ' + (2 + rand() * 3).toFixed(1) + 's ease-in-out ' + (rand() * 3).toFixed(1) + 's infinite;';
+    frag.appendChild(d);
+  }
+  host.appendChild(frag);
+})();
+</script>
+</body>
+</html>
