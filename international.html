@@ -132,6 +132,34 @@
     background: rgba(255,197,61,0.05); padding: 20px 26px; font-size: 14px; color: var(--text-3); max-width: 860px;
   }
 
+  /* ===== COPUOS evolution table ===== */
+  .tablewrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 16px; }
+  table.evo { border-collapse: collapse; width: 100%; min-width: 720px; background: var(--bg-2); }
+  table.evo th, table.evo td { text-align: left; padding: 14px 18px; border-bottom: 1px solid var(--border-soft); font-size: 14px; vertical-align: top; }
+  table.evo th { font-family: 'Space Grotesk', 'Noto Sans TC'; font-size: 12px; letter-spacing: 0.12em; color: var(--blue); font-weight: 500; background: rgba(38,38,36,0.6); position: sticky; top: 0; }
+  table.evo tr:last-child td { border-bottom: none; }
+  table.evo td.yr { font-family: 'Space Grotesk'; color: var(--gold); white-space: nowrap; font-size: 15px; }
+  table.evo td.yr small { display: block; color: var(--muted); font-size: 11px; letter-spacing: 0.04em; }
+  table.evo td.cnt { white-space: nowrap; min-width: 150px; }
+  table.evo td.cnt b { font-family: 'Space Grotesk'; font-size: 17px; font-weight: 500; color: var(--cyan); }
+  table.evo td { color: var(--text-2); }
+  table.evo tr.milestone td { background: rgba(255,197,61,0.05); }
+  .growbar { height: 5px; border-radius: 3px; background: linear-gradient(90deg, #2B5ACF, var(--cyan)); margin-top: 7px; min-width: 4px; }
+  .fn { font-size: 12.5px; color: var(--muted); line-height: 1.8; max-width: 860px; margin-top: 14px; }
+
+  .member-groups { display: grid; gap: 20px; margin-top: 20px; }
+  .member-group .glabel { font-family: 'Space Grotesk'; font-size: 12px; letter-spacing: 0.18em; color: var(--blue); margin-bottom: 10px; text-transform: uppercase; }
+  .member-group .glabel b { color: var(--gold); font-weight: 500; margin-left: 6px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { border: 1px solid var(--border); background: var(--bg-2); color: var(--text-2); border-radius: 999px; padding: 5px 14px; font-size: 13px; white-space: nowrap; }
+  .chip.new { border-color: var(--green); color: var(--green); }
+  details.members { margin-top: 26px; border: 1px solid var(--border); border-radius: 20px; background: var(--bg-2); overflow: hidden; }
+  details.members summary { cursor: pointer; list-style: none; padding: 22px 28px; font-size: 17px; font-weight: 700; user-select: none; display: flex; align-items: center; gap: 14px; }
+  details.members summary::-webkit-details-marker { display: none; }
+  details.members summary .arrow { margin-left: auto; color: var(--muted); font-family: 'Space Grotesk'; transition: transform .25s; }
+  details.members[open] summary .arrow { transform: rotate(90deg); }
+  details.members .inner { padding: 0 28px 26px; border-top: 1px solid var(--border-soft); }
+
   .bridge {
     margin-top: 48px; border: 1px solid var(--border); border-radius: 20px; padding: 34px 36px;
     background: linear-gradient(150deg, rgba(76,116,217,0.12), rgba(38,38,36,0.4));
@@ -159,6 +187,7 @@
   <a class="navlink" href="#treaties">五大條約</a>
   <a class="navlink" href="#ost">外太空條約</a>
   <a class="navlink" href="#principles">原則宣言</a>
+  <a class="navlink" href="#copuos">COPUOS 會員國</a>
   <a class="navlink" href="#modern">當代發展</a>
   <a class="navlink" href="#significance">重要意義</a>
   <a class="switch" href="index.html">臺灣太空法規 →</a>
@@ -183,7 +212,7 @@
     <div class="stat"><b>5</b><span>聯合國核心太空條約</span></div>
     <div class="stat"><b>118</b><span>外太空條約締約國(2025.10)</span></div>
     <div class="stat"><b>68</b><span>Artemis Accords 簽署國(2026.06)</span></div>
-    <div class="stat"><b>COPUOS</b><span>聯合國和平使用外太空委員會</span></div>
+    <div class="stat"><b>110</b><span>COPUOS 會員國(2025)</span></div>
   </div>
 
   <svg class="ridge" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true">
@@ -363,9 +392,74 @@
   </div>
 </section>
 
-<!-- ============ 05 當代發展 ============ -->
+<!-- ============ 05 COPUOS 與會員演進 ============ -->
+<section class="block" id="copuos">
+  <div class="sec-head"><span class="no">05</span><h2>COPUOS 與會員演進<small>Membership Evolution</small></h2></div>
+  <p class="sec-intro">聯合國和平使用外太空委員會(COPUOS)是國際太空法的主要立法平台,採共識決,下設科學技術與法律兩個小組委員會,秘書處為維也納的 UNOOSA。1959 年以 24 國常設成立,歷經 60 餘年擴充,<b style="color:var(--cyan);">2025 年達 110 個會員國</b>,是聯合國最大的委員會之一。下表整理自 UNOOSA 官方會員演進表:</p>
+
+  <div class="tablewrap">
+    <table class="evo">
+      <thead><tr><th>年份 · 依據決議</th><th>會員數</th><th>新加入會員國</th></tr></thead>
+      <tbody>
+        <tr><td class="yr">1958<small>RES 1348 (XIII)</small></td><td class="cnt"><b>18</b><div class="growbar" style="width:16%"></div></td><td>臨時委員會成立:阿根廷、澳洲、比利時、巴西、加拿大、捷克斯洛伐克、法國、印度、伊朗、義大利、日本、墨西哥、波蘭、瑞典、蘇聯、阿拉伯聯合共和國(今埃及)、英國、美國</td></tr>
+        <tr class="milestone"><td class="yr">1959<small>RES 1472 (XIV)</small></td><td class="cnt"><b>24</b><div class="growbar" style="width:22%"></div></td><td><b>常設化</b>,新增:阿爾巴尼亞、奧地利、保加利亞、匈牙利、黎巴嫩、羅馬尼亞</td></tr>
+        <tr><td class="yr">1961<small>RES 1721 E (XVI)</small></td><td class="cnt"><b>28</b><div class="growbar" style="width:25%"></div></td><td>查德、蒙古、摩洛哥、獅子山</td></tr>
+        <tr><td class="yr">1973<small>RES 3182 (XXVIII)</small></td><td class="cnt"><b>37</b><div class="growbar" style="width:34%"></div></td><td>智利、東德、西德、印尼、肯亞、奈及利亞、巴基斯坦、蘇丹、委內瑞拉</td></tr>
+        <tr><td class="yr">1977<small>RES 32/196 B</small></td><td class="cnt"><b>47</b><div class="growbar" style="width:43%"></div></td><td>貝南、喀麥隆、哥倫比亞、厄瓜多、伊拉克、荷蘭、尼日、菲律賓、土耳其、南斯拉夫</td></tr>
+        <tr class="milestone"><td class="yr">1980<small>RES 35/16</small></td><td class="cnt"><b>53</b><div class="growbar" style="width:48%"></div></td><td><b>中國</b>、希臘 ¹、西班牙、敘利亞、上伏塔(今布吉納法索)、烏拉圭、越南</td></tr>
+        <tr><td class="yr">1994<small>RES 49/33</small></td><td class="cnt"><b>61</b><div class="growbar" style="width:55%"></div></td><td>古巴 ²、哈薩克、馬來西亞 ²、尼加拉瓜、秘魯 ²、葡萄牙、韓國 ²、塞內加爾、南非、烏克蘭 ³(兩德統一後德國以單一席位續任)</td></tr>
+        <tr><td class="yr">2001<small>RES 56/51</small></td><td class="cnt"><b>64</b><div class="growbar" style="width:58%"></div></td><td>沙烏地阿拉伯、斯洛伐克(古巴、馬來西亞、秘魯、韓國終止輪席,各取得完整席位)</td></tr>
+        <tr><td class="yr">2002<small>RES 57/116</small></td><td class="cnt"><b>65</b><div class="growbar" style="width:59%"></div></td><td>阿爾及利亞</td></tr>
+        <tr><td class="yr">2004<small>RES 59/116</small></td><td class="cnt"><b>67</b><div class="growbar" style="width:61%"></div></td><td>利比亞、泰國</td></tr>
+        <tr><td class="yr">2007<small>RES 62/217</small></td><td class="cnt"><b>69</b><div class="growbar" style="width:63%"></div></td><td>玻利維亞、瑞士</td></tr>
+        <tr><td class="yr">2010<small>RES 65/97</small></td><td class="cnt"><b>70</b><div class="growbar" style="width:64%"></div></td><td>突尼西亞</td></tr>
+        <tr><td class="yr">2011<small>RES 66/71</small></td><td class="cnt"><b>71</b><div class="growbar" style="width:65%"></div></td><td>亞塞拜然</td></tr>
+        <tr><td class="yr">2012<small>RES 67/113</small></td><td class="cnt"><b>74</b><div class="growbar" style="width:67%"></div></td><td>亞美尼亞、哥斯大黎加、約旦</td></tr>
+        <tr><td class="yr">2013<small>RES 68/75</small></td><td class="cnt"><b>76</b><div class="growbar" style="width:69%"></div></td><td>白俄羅斯、迦納</td></tr>
+        <tr><td class="yr">2014<small>RES 69/85</small></td><td class="cnt"><b>77</b><div class="growbar" style="width:70%"></div></td><td>盧森堡</td></tr>
+        <tr><td class="yr">2015<small>DEC 70/518</small></td><td class="cnt"><b>83</b><div class="growbar" style="width:75%"></div></td><td>薩爾瓦多、以色列、阿曼、卡達、斯里蘭卡、阿拉伯聯合大公國</td></tr>
+        <tr><td class="yr">2016<small>RES 71/90</small></td><td class="cnt"><b>84</b><div class="growbar" style="width:76%"></div></td><td>紐西蘭</td></tr>
+        <tr><td class="yr">2017<small>RES 72/77</small></td><td class="cnt"><b>87</b><div class="growbar" style="width:79%"></div></td><td>巴林、丹麥、挪威</td></tr>
+        <tr><td class="yr">2018<small>DEC 73/517</small></td><td class="cnt"><b>92</b><div class="growbar" style="width:84%"></div></td><td>賽普勒斯、衣索比亞、芬蘭、模里西斯、巴拉圭</td></tr>
+        <tr><td class="yr">2019<small>RES 74/82</small></td><td class="cnt"><b>95</b><div class="growbar" style="width:86%"></div></td><td>多明尼加、盧安達、新加坡</td></tr>
+        <tr class="milestone"><td class="yr">2021<small>RES 76/76</small></td><td class="cnt"><b>100</b><div class="growbar" style="width:91%"></div></td><td><b>突破 100 國</b>:安哥拉、孟加拉、科威特、巴拿馬、斯洛維尼亞</td></tr>
+        <tr><td class="yr">2022<small>RES 77/121</small></td><td class="cnt"><b>102</b><div class="growbar" style="width:93%"></div></td><td>瓜地馬拉、烏茲別克</td></tr>
+        <tr><td class="yr">2024<small>DEC 79/519 A・B</small></td><td class="cnt"><b>104</b><div class="growbar" style="width:95%"></div></td><td>吉布地、拉脫維亞</td></tr>
+        <tr class="milestone"><td class="yr">2025<small>DEC 80/516 A–D</small></td><td class="cnt"><b>110</b><div class="growbar" style="width:100%"></div></td><td><b>現行規模</b>:象牙海岸、甘比亞、宏都拉斯、馬爾地夫、馬爾他、辛巴威</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="fn">¹ 希臘與土耳其自 1980 年起每三年輪替一席;² 古巴/秘魯、馬來西亞/韓國各每兩年輪替一席;上述輪席安排分別於 1994 年(希臘、葡萄牙、西班牙、土耳其)及 2001 年(古巴、馬來西亞、秘魯、韓國)終止。³ 烏克蘭係遞補兩德統一後釋出之席位,即時生效。捷克斯洛伐克解體後由捷克續任,斯洛伐克於 2001 年另行入會;南斯拉夫解體後未由繼承國續任。RES = 聯大決議,DEC = 聯大決定。</p>
+
+  <details class="members">
+    <summary>現行 110 個會員國完整名單(2025,依地理區域)<span class="arrow">→</span></summary>
+    <div class="inner">
+      <div class="member-groups" style="margin-top:22px;">
+        <div class="member-group">
+          <div class="glabel">歐洲 Europe<b>30</b></div>
+          <div class="chips"><span class="chip">阿爾巴尼亞</span><span class="chip">奧地利</span><span class="chip">白俄羅斯</span><span class="chip">比利時</span><span class="chip">保加利亞</span><span class="chip">賽普勒斯</span><span class="chip">捷克</span><span class="chip">丹麥</span><span class="chip">芬蘭</span><span class="chip">法國</span><span class="chip">德國</span><span class="chip">希臘</span><span class="chip">匈牙利</span><span class="chip">義大利</span><span class="chip new">拉脫維亞</span><span class="chip">盧森堡</span><span class="chip new">馬爾他</span><span class="chip">荷蘭</span><span class="chip">挪威</span><span class="chip">波蘭</span><span class="chip">葡萄牙</span><span class="chip">羅馬尼亞</span><span class="chip">俄羅斯</span><span class="chip">斯洛伐克</span><span class="chip">斯洛維尼亞</span><span class="chip">西班牙</span><span class="chip">瑞典</span><span class="chip">瑞士</span><span class="chip">烏克蘭</span><span class="chip">英國</span></div>
+        </div>
+        <div class="member-group">
+          <div class="glabel">亞洲・太平洋 Asia-Pacific<b>34</b></div>
+          <div class="chips"><span class="chip">亞美尼亞</span><span class="chip">澳洲</span><span class="chip">亞塞拜然</span><span class="chip">巴林</span><span class="chip">孟加拉</span><span class="chip">中國</span><span class="chip">印度</span><span class="chip">印尼</span><span class="chip">伊朗</span><span class="chip">伊拉克</span><span class="chip">以色列</span><span class="chip">日本</span><span class="chip">約旦</span><span class="chip">哈薩克</span><span class="chip">韓國</span><span class="chip">科威特</span><span class="chip">黎巴嫩</span><span class="chip new">馬爾地夫</span><span class="chip">馬來西亞</span><span class="chip">蒙古</span><span class="chip">紐西蘭</span><span class="chip">阿曼</span><span class="chip">巴基斯坦</span><span class="chip">菲律賓</span><span class="chip">卡達</span><span class="chip">沙烏地阿拉伯</span><span class="chip">新加坡</span><span class="chip">斯里蘭卡</span><span class="chip">敘利亞</span><span class="chip">泰國</span><span class="chip">土耳其</span><span class="chip">阿拉伯聯合大公國</span><span class="chip">烏茲別克</span><span class="chip">越南</span></div>
+        </div>
+        <div class="member-group">
+          <div class="glabel">非洲 Africa<b>25</b></div>
+          <div class="chips"><span class="chip">阿爾及利亞</span><span class="chip">安哥拉</span><span class="chip">貝南</span><span class="chip">布吉納法索</span><span class="chip">喀麥隆</span><span class="chip">查德</span><span class="chip new">象牙海岸</span><span class="chip new">吉布地</span><span class="chip">埃及</span><span class="chip">衣索比亞</span><span class="chip new">甘比亞</span><span class="chip">迦納</span><span class="chip">肯亞</span><span class="chip">利比亞</span><span class="chip">模里西斯</span><span class="chip">摩洛哥</span><span class="chip">尼日</span><span class="chip">奈及利亞</span><span class="chip">盧安達</span><span class="chip">塞內加爾</span><span class="chip">獅子山</span><span class="chip">南非</span><span class="chip">蘇丹</span><span class="chip">突尼西亞</span><span class="chip new">辛巴威</span></div>
+        </div>
+        <div class="member-group">
+          <div class="glabel">美洲 Americas<b>21</b></div>
+          <div class="chips"><span class="chip">阿根廷</span><span class="chip">玻利維亞</span><span class="chip">巴西</span><span class="chip">加拿大</span><span class="chip">智利</span><span class="chip">哥倫比亞</span><span class="chip">哥斯大黎加</span><span class="chip">古巴</span><span class="chip">多明尼加</span><span class="chip">厄瓜多</span><span class="chip">薩爾瓦多</span><span class="chip">瓜地馬拉</span><span class="chip new">宏都拉斯</span><span class="chip">墨西哥</span><span class="chip">尼加拉瓜</span><span class="chip">巴拿馬</span><span class="chip">巴拉圭</span><span class="chip">秘魯</span><span class="chip">烏拉圭</span><span class="chip">美國</span><span class="chip">委內瑞拉</span></div>
+        </div>
+      </div>
+      <p class="fn" style="margin-top:20px;"><span class="chip new" style="font-size:12px;">綠框</span> 為 2024–2025 年新加入之 8 國。臺灣因非聯合國會員,無法成為 COPUOS 成員——這也是《太空發展法》以國內立法接軌國際規範的背景。另有歐洲太空總署(ESA)、國際太空法學會(IISL)等政府間與非政府組織以觀察員身分參與。資料來源:<a href="https://www.unoosa.org/oosa/en/ourwork/copuos/members/evolution.html" target="_blank" rel="noopener">UNOOSA Membership Evolution</a>。</p>
+    </div>
+  </details>
+</section>
+
+<!-- ============ 06 當代發展 ============ -->
 <section class="block" id="modern">
-  <div class="sec-head"><span class="no">05</span><h2>當代發展<small>Contemporary Developments</small></h2></div>
+  <div class="sec-head"><span class="no">06</span><h2>當代發展<small>Contemporary Developments</small></h2></div>
   <p class="sec-intro">商業太空時代帶來條約制定時難以想像的課題:私人載人飛行、太空資源開採、數萬顆衛星的巨型星系。新規則正以政治承諾、國內立法與技術準則等多元形式生成。</p>
   <div class="cards">
     <div class="card">
@@ -410,7 +504,7 @@
 
 <!-- ============ 06 重要意義 ============ -->
 <section class="block" id="significance">
-  <div class="sec-head"><span class="no">06</span><h2>重要意義<small>Why It Matters</small></h2></div>
+  <div class="sec-head"><span class="no">07</span><h2>重要意義<small>Why It Matters</small></h2></div>
   <p class="sec-intro">國際太空法為何重要?它是人類第一次在進入新疆域「之前」就先立下規則的嘗試。</p>
   <div class="cards">
     <div class="card">
