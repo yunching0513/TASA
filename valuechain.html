@@ -122,6 +122,44 @@
   .org p { font-size: 13.5px; color: var(--text-3); margin: 6px 0 0; }
   .org .segtag { display: inline-block; font-size: 11.5px; color: var(--seg, var(--gold)); border: 1px solid var(--seg, var(--gold)); border-radius: 999px; padding: 1px 10px; margin-top: 10px; }
 
+  /* satellite anatomy (exploded view) */
+  .satarea { display: grid; grid-template-columns: minmax(340px, 620px) 1fr; gap: 34px; align-items: start; }
+  @media (max-width: 980px) { .satarea { grid-template-columns: 1fr; } }
+  .satbox { border: 1px solid var(--border); border-radius: 24px; background: linear-gradient(170deg, rgba(48,48,46,0.7), rgba(38,38,36,0.4)); padding: 18px; }
+  .satbox svg { width: 100%; height: auto; display: block; }
+  .sat-line { stroke: #6FA7D9; stroke-width: 1.4; fill: none; stroke-linecap: round; }
+  .sat-fill { fill: #2E3A4A; stroke: #6FA7D9; stroke-width: 1.4; }
+  .sat-panel { fill: #24405C; stroke: #6FD4FF; stroke-width: 1.2; }
+  .sat-grid { stroke: #6FD4FF; stroke-width: 0.5; opacity: 0.5; }
+  .leader { stroke: #57554F; stroke-width: 1; stroke-dasharray: 3 4; }
+  .hotspot { cursor: pointer; }
+  .hotspot circle.num { fill: #262624; stroke: var(--rc, #6FD4FF); stroke-width: 1.6; transition: all .15s; }
+  .hotspot text { font-family: 'Space Grotesk', 'Noto Sans TC'; font-size: 13px; font-weight: 700; fill: var(--rc, #6FD4FF); text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+  .hotspot:hover circle.num { fill: var(--rc, #6FD4FF); }
+  .hotspot:hover text { fill: #262624; }
+  .hotspot.sel circle.num { fill: var(--rc, #6FD4FF); r: 13; }
+  .hotspot.sel text { fill: #262624; }
+  .comp-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+  .cchip {
+    font-family: inherit; font-size: 12.5px; cursor: pointer; border-radius: 999px; padding: 6px 13px;
+    background: transparent; border: 1px solid var(--border); color: var(--text-3);
+    display: inline-flex; align-items: center; gap: 7px;
+  }
+  .cchip i { width: 8px; height: 8px; border-radius: 50%; background: var(--rc, var(--muted)); flex: none; }
+  .cchip.sel { border-color: var(--rc, var(--text)); color: var(--text); background: rgba(255,255,255,0.04); }
+  .ratelegend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 22px; font-size: 13px; color: var(--text-3); }
+  .ratelegend span { display: inline-flex; align-items: center; gap: 7px; }
+  .ratelegend i { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .comp-panel .badge { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--rc, var(--muted)); color: var(--rc, var(--muted)); border-radius: 999px; padding: 4px 14px; font-size: 12.5px; margin-bottom: 14px; }
+  .comp-panel .badge i { width: 8px; height: 8px; border-radius: 50%; background: var(--rc, var(--muted)); }
+  .comp-panel .overview { font-size: 14.5px; color: var(--text-2); margin: 0 0 18px; max-width: 640px; }
+  .firm { border: 1px solid var(--border); border-left: 3px solid var(--rc, var(--muted)); border-radius: 14px; background: var(--bg-2); padding: 15px 20px; margin-bottom: 12px; }
+  .firm b { font-size: 15px; }
+  .firm .en { font-family: 'Space Grotesk'; font-size: 11.5px; color: var(--blue); margin-left: 8px; }
+  .firm p { font-size: 13px; color: var(--text-3); margin: 4px 0 0; }
+  .gapnote { border: 1px dashed var(--coral); border-radius: 14px; padding: 14px 20px; font-size: 13px; color: var(--text-3); margin-top: 4px; }
+  .gapnote b { color: var(--coral); }
+
   /* missions strip */
   .missions { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
   .mission { border: 1px solid var(--border); border-radius: 16px; padding: 22px 24px; background: var(--bg-2); }
@@ -147,6 +185,7 @@
   <span class="brand"><span class="orb"><i></i></span><span data-t="nav_brand"></span></span>
   <a class="navlink" href="#chain" data-t="nav_chain"></a>
   <a class="navlink" href="#map" data-t="nav_map"></a>
+  <a class="navlink" href="#anatomy" data-t="nav_anatomy"></a>
   <a class="navlink" href="#missions" data-t="nav_missions"></a>
   <a class="navlink" href="index.html" data-t="nav_tw"></a>
   <a class="navlink" href="international.html" data-t="nav_intl"></a>
@@ -198,9 +237,135 @@
   </div>
 </section>
 
-<!-- 03 missions -->
+<!-- 03 satellite anatomy -->
+<section class="block" id="anatomy">
+  <div class="sec-head"><span class="no">03</span><h2><span data-t="secA"></span><small data-t="secAen"></small></h2></div>
+  <p class="sec-intro" data-t="secAintro"></p>
+  <div class="ratelegend">
+    <span><i style="background:#35D0A0"></i><span data-t="r_strong"></span></span>
+    <span><i style="background:#FFC53D"></i><span data-t="r_mid"></span></span>
+    <span><i style="background:#FF7A5C"></i><span data-t="r_gap"></span></span>
+  </div>
+  <div class="satarea">
+    <div class="satbox">
+      <svg id="satsvg" viewBox="0 0 560 500" role="img" aria-label="LEO satellite exploded view">
+        <!-- earth arc -->
+        <path d="M-20,540 Q280,430 580,540" fill="none" stroke="#2B5ACF" stroke-width="1.2" opacity="0.5"/>
+        <path d="M-20,560 Q280,455 580,560" fill="#1F2A3A" opacity="0.5"/>
+
+        <!-- left solar wing -->
+        <g id="g-solar">
+          <rect class="sat-panel" x="28" y="196" width="52" height="64" rx="3"/>
+          <rect class="sat-panel" x="86" y="196" width="52" height="64" rx="3"/>
+          <rect class="sat-panel" x="144" y="196" width="52" height="64" rx="3"/>
+          <line class="sat-grid" x1="54" y1="196" x2="54" y2="260"/><line class="sat-grid" x1="112" y1="196" x2="112" y2="260"/><line class="sat-grid" x1="170" y1="196" x2="170" y2="260"/>
+          <line class="sat-grid" x1="28" y1="228" x2="196" y2="228"/>
+          <line class="sat-line" x1="196" y1="228" x2="238" y2="228"/>
+          <!-- right solar wing -->
+          <rect class="sat-panel" x="364" y="196" width="52" height="64" rx="3"/>
+          <rect class="sat-panel" x="422" y="196" width="52" height="64" rx="3"/>
+          <rect class="sat-panel" x="480" y="196" width="52" height="64" rx="3"/>
+          <line class="sat-grid" x1="390" y1="196" x2="390" y2="260"/><line class="sat-grid" x1="448" y1="196" x2="448" y2="260"/><line class="sat-grid" x1="506" y1="196" x2="506" y2="260"/>
+          <line class="sat-grid" x1="364" y1="228" x2="532" y2="228"/>
+          <line class="sat-line" x1="322" y1="228" x2="364" y2="228"/>
+        </g>
+
+        <!-- bus -->
+        <g id="g-bus">
+          <rect class="sat-fill" x="238" y="176" width="84" height="104" rx="6"/>
+          <line class="sat-grid" x1="238" y1="176" x2="322" y2="280"/>
+          <line class="sat-grid" x1="322" y1="176" x2="238" y2="280"/>
+          <line class="sat-grid" x1="238" y1="228" x2="322" y2="228"/>
+        </g>
+
+        <!-- 3 payload dish -->
+        <g id="g-dish">
+          <path class="sat-fill" d="M244,96 Q280,66 316,96 Q280,120 244,96 Z"/>
+          <line class="sat-line" x1="280" y1="96" x2="280" y2="128"/>
+          <circle class="sat-fill" cx="280" cy="88" r="5"/>
+          <line class="leader" x1="280" y1="128" x2="280" y2="176"/>
+        </g>
+
+        <!-- 2 ADCS cluster -->
+        <g id="g-adcs">
+          <rect class="sat-fill" x="164" y="108" width="26" height="22" rx="3"/>
+          <rect class="sat-fill" x="196" y="118" width="22" height="26" rx="3"/>
+          <circle class="sat-line" cx="177" cy="150" r="10" fill="none"/>
+          <line class="leader" x1="208" y1="146" x2="240" y2="180"/>
+        </g>
+
+        <!-- 5 TT&C -->
+        <g id="g-ttc">
+          <line class="sat-line" x1="336" y1="150" x2="352" y2="128"/>
+          <circle class="sat-fill" cx="354" cy="125" r="4"/>
+          <line class="sat-line" x1="350" y1="158" x2="368" y2="142"/>
+          <circle class="sat-fill" cx="371" cy="139" r="4"/>
+          <line class="leader" x1="340" y1="154" x2="322" y2="180"/>
+        </g>
+
+        <!-- 6 PMAD battery -->
+        <g id="g-pmad">
+          <rect class="sat-fill" x="356" y="286" width="40" height="24" rx="4"/>
+          <line class="sat-grid" x1="366" y1="286" x2="366" y2="310"/>
+          <line class="sat-grid" x1="376" y1="286" x2="376" y2="310"/>
+          <line class="sat-grid" x1="386" y1="286" x2="386" y2="310"/>
+          <line class="leader" x1="356" y1="296" x2="322" y2="268"/>
+        </g>
+
+        <!-- 8 thermal radiator -->
+        <g id="g-thermal">
+          <rect class="sat-fill" x="408" y="300" width="46" height="34" rx="3"/>
+          <line class="sat-grid" x1="408" y1="309" x2="454" y2="309"/>
+          <line class="sat-grid" x1="408" y1="318" x2="454" y2="318"/>
+          <line class="sat-grid" x1="408" y1="327" x2="454" y2="327"/>
+          <line class="leader" x1="408" y1="314" x2="322" y2="262"/>
+        </g>
+
+        <!-- 7 OBC -->
+        <g id="g-obc">
+          <rect class="sat-fill" x="168" y="300" width="44" height="30" rx="3"/>
+          <rect class="sat-line" x="176" y="307" width="12" height="10" fill="none"/>
+          <line class="sat-grid" x1="194" y1="307" x2="206" y2="307"/>
+          <line class="sat-grid" x1="194" y1="313" x2="206" y2="313"/>
+          <line class="sat-grid" x1="194" y1="319" x2="206" y2="319"/>
+          <line class="leader" x1="212" y1="308" x2="240" y2="276"/>
+        </g>
+
+        <!-- 4 propulsion -->
+        <g id="g-prop">
+          <circle class="sat-fill" cx="280" cy="330" r="16"/>
+          <path class="sat-line" d="M266,352 L262,366 M280,350 L280,366 M294,352 L298,366"/>
+          <path class="sat-fill" d="M258,366 L266,366 L262,376 Z M276,366 L284,366 L280,378 Z M294,366 L302,366 L298,376 Z"/>
+          <line class="leader" x1="280" y1="314" x2="280" y2="282"/>
+        </g>
+
+        <!-- 9 imaging payload -->
+        <g id="g-imaging">
+          <rect class="sat-fill" x="330" y="342" width="30" height="26" rx="4"/>
+          <circle class="sat-line" cx="345" cy="380" r="9" fill="none"/>
+          <circle class="sat-fill" cx="345" cy="380" r="4"/>
+          <line class="leader" x1="340" y1="342" x2="318" y2="282"/>
+        </g>
+
+        <!-- numbered hotspots (positions near each part) -->
+        <g id="hotspots"></g>
+      </svg>
+      <div class="comp-chips" id="compchips"></div>
+      <p style="font-size:11.5px;color:var(--muted);margin:12px 4px 0;line-height:1.6;" data-t="satHint"></p>
+    </div>
+    <div class="comp-panel">
+      <h3 class="ptitle" id="ctitle"></h3>
+      <div class="psub" id="csub"></div>
+      <div id="cbadge"></div>
+      <p class="overview" id="coverview"></p>
+      <div id="cfirms"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 04 missions -->
 <section class="block" id="missions">
-  <div class="sec-head"><span class="no">03</span><h2><span data-t="sec3"></span><small data-t="sec3en"></small></h2></div>
+  <div class="sec-head"><span class="no">04</span><h2><span data-t="sec3"></span><small data-t="sec3en"></small></h2></div>
   <p class="sec-intro" data-t="sec3intro"></p>
   <div class="missions" id="missionlist"></div>
   <div class="disclaimer" style="margin-top:44px;" id="disc"></div>
@@ -317,6 +482,97 @@ const ORGS = [
     den:'National short-term scientific launch site at Hsuhai, Mudan Township, operated by TASA for research rockets.' },
 ];
 
+/* LEO satellite components × Taiwan supply chain */
+const RATES = {
+  strong: { color: '#35D0A0', zh: '國際供應鏈要角', en: 'Key global supplier' },
+  mid:    { color: '#FFC53D', zh: '發展中・累積飛行履歷', en: 'Developing / gaining flight heritage' },
+  gap:    { color: '#FF7A5C', zh: '缺口・仰賴進口', en: 'Gap — import-reliant' },
+};
+
+const COMPS = [
+  { id:'solar', no:1, rate:'mid', hx:170, hy:230,
+    zh:'太陽能陣列', en:'Solar Arrays',
+    ozh:'太空級三五族(GaAs)太陽能電池臺灣尚無量產,多仰賴進口;但展開機構、鉸鏈與基板結構件是精密機械強項,國家隊衛星的太陽能板整合已自主化。',
+    oen:'Taiwan does not yet mass-produce space-grade GaAs solar cells (still imported), but deployment mechanisms, hinges and substrate structures are precision-machining strengths, and panel integration for national satellites is done domestically.',
+    firms:[
+      { zh:'漢翔航空工業 AIDC・公準精密', en:'AIDC · Kung Chun Precision', dzh:'衛星結構件、展開機構與鉸鏈的精密製造。', den:'Precision manufacturing of satellite structures, deployment mechanisms and hinges.' },
+      { zh:'國家太空中心 TASA', en:'TASA', dzh:'福衛八號太陽能板整合與測試。', den:'Solar panel integration and testing for FORMOSAT-8.' },
+    ],
+    gzh:'缺口:太空級 GaAs 電池片(Azur Space、Spectrolab 等進口)。', gen:'Gap: space-grade GaAs cells (imported from Azur Space, Spectrolab, etc.).' },
+  { id:'adcs', no:2, rate:'strong', hx:150, hy:120,
+    zh:'姿態判定與控制 ADCS', en:'Attitude Determination & Control (ADCS)',
+    ozh:'臺灣最亮眼的利基之一:反應輪、磁力矩器到整套立方衛星 ADCS 皆有自主與外銷實績;星象儀由國家隊自研,陀螺儀等慣性元件仍多進口。',
+    oen:"One of Taiwan's brightest niches: reaction wheels, magnetorquers and full CubeSat ADCS are made and exported domestically; star trackers are developed by the national team, while gyroscopes remain largely imported.",
+    firms:[
+      { zh:'張量科技 Tensor Tech', en:'Tensor Tech', dzh:'全球唯一商用球型馬達反應輪,整套 ADCS 外銷國際立方衛星市場。', den:'The world\'s only commercial spherical-motor reaction wheel; full ADCS exported to the global CubeSat market.' },
+      { zh:'國家太空中心 TASA', en:'TASA', dzh:'星象儀、磁力矩器自主研製,福衛八號關鍵元件自製率逾八成。', den:'In-house star trackers and magnetorquers; over 80% domestic content of key components on FORMOSAT-8.' },
+    ],
+    gzh:'陀螺儀等高階慣性元件仍以進口為主。', gen:'High-end inertial sensors such as gyroscopes are still mostly imported.' },
+  { id:'payload_ant', no:3, rate:'strong', hx:322, hy:92,
+    zh:'通訊天線酬載', en:'Payload — Communications Antenna',
+    ozh:'直接卡位低軌通訊成長引擎:相控陣天線、SAR 酬載到毫米波波束成形,臺灣以「5G 毫米波→太空」的路徑完整布局。',
+    oen:"Squarely positioned on the LEO-broadband growth engine: phased arrays, SAR payloads and mmWave beamforming, extending Taiwan's 5G mmWave expertise into space.",
+    firms:[
+      { zh:'創未來科技 Tron Future', en:'Tron Future Tech', dzh:'相控陣天線與 SAR 衛星酬載。', den:'Phased-array antennas and SAR satellite payloads.' },
+      { zh:'鐳洋科技 Rapidtek', en:'Rapidtek', dzh:'Ku/Ka 頻段相列陣天線與衛星模組,桃園青埔衛星組裝中心。', den:'Ku/Ka-band phased arrays and satellite modules; satellite assembly center in Qingpu, Taoyuan.' },
+      { zh:'稜研科技 TMYTEK', en:'TMYTEK', dzh:'毫米波波束成形前端。', den:'mmWave beamforming front-ends.' },
+      { zh:'穩懋半導體 WIN Semi', en:'WIN Semiconductors', dzh:'上游 GaAs 功率放大器,全球最大代工。', den:'Upstream GaAs power amplifiers — the world\'s largest foundry.' },
+    ] },
+  { id:'prop', no:4, rate:'gap', hx:245, hy:355,
+    zh:'推進系統', en:'Propulsion System',
+    ozh:'最明顯的缺口:衛星用化學/電推進尚無商用產品,能量集中在學研端,短期仍靠進口,是政策「補鏈」重點。',
+    oen:'The clearest gap: no commercial satellite chemical/electric propulsion yet. Capability sits in academia and the national team; imports fill the near term — a policy priority for chain completion.',
+    firms:[
+      { zh:'成功大學', en:'NCKU', dzh:'混合式推進與燃燒研究。', den:'Hybrid propulsion and combustion research.' },
+      { zh:'國家太空中心 TASA', en:'TASA', dzh:'霍爾效應推進器研發中。', den:'Hall-effect thruster under development.' },
+    ],
+    gzh:'商用衛星推進系統(圖中噴嘴、燃料槽、管路)目前仰賴進口。', gen:'Commercial satellite propulsion (thrusters, tanks, fuel lines) currently relies on imports.' },
+  { id:'ttc', no:5, rate:'strong', hx:390, hy:130,
+    zh:'通訊與遙傳 TT&C', en:'Communication & Telemetry (TT&C)',
+    ozh:'射頻鏈路的核心零件是臺灣強項:微波被動元件、濾波器到地面站設備,天線的「太空端」與「地面端」都有據點。',
+    oen:'Core RF-chain parts are a Taiwan strength — microwave passives and filters through ground-station equipment, covering both the space and ground ends of the link.',
+    firms:[
+      { zh:'昇達科技 UMT', en:'Universal Microwave Technology', dzh:'濾波器、雙工器等微波/毫米波被動元件(基隆七堵)。', den:'Filters, duplexers and other microwave/mmWave passives (Qidu, Keelung).' },
+      { zh:'台揚科技 MTI', en:'MTI', dzh:'TT&C 地面站與衛星通訊設備。', den:'TT&C ground stations and satcom equipment.' },
+    ] },
+  { id:'pmad', no:6, rate:'mid', hx:420, hy:280,
+    zh:'電源管理與電池 PMAD', en:'Power Management & Distribution (PMAD)',
+    ozh:'高功率鋰電芯與電源模組的產業能量雄厚,「太空級」飛行履歷正在累積——是臺灣既有產業最容易升空的一塊。',
+    oen:'Deep industrial capability in high-power cells and power modules; space-grade flight heritage is accumulating — the easiest adjacent industry to lift into orbit.',
+    firms:[
+      { zh:'能元科技 Molicel', en:'Molicel', dzh:'高功率鋰電芯,已進入航空/eVTOL 級應用。', den:'High-power lithium cells already in aviation/eVTOL-grade applications.' },
+      { zh:'台達電子 Delta', en:'Delta Electronics', dzh:'電力電子與電源模組的深厚能量。', den:'Deep expertise in power electronics and modules.' },
+    ],
+    gzh:'太空級驗證與飛行履歷仍在累積中。', gen:'Space qualification and flight heritage still accumulating.' },
+  { id:'obc', no:7, rate:'strong', hx:150, hy:315,
+    zh:'星載電腦 OBC', en:'On-Board Computer (OBC)',
+    ozh:'臺灣沒有抗輻射 CPU 品牌,但新太空大量改用商規 COTS 晶片——全球先進製程晶片多出自臺灣,加上衛星級 PCB 與陶瓷封裝,OBC 從載板到晶片處處是臺灣。',
+    oen:'No rad-hard CPU brand, but New Space runs on COTS chips — mostly fabbed in Taiwan. Add satellite-grade PCBs and ceramic packaging, and the OBC is Taiwanese from substrate to silicon.',
+    firms:[
+      { zh:'台積電生態系', en:'TSMC ecosystem', dzh:'新太空 COTS SoC 的實質製造者。', den:'De-facto manufacturer of New Space COTS SoCs.' },
+      { zh:'華邦電子・旺宏電子', en:'Winbond · Macronix', dzh:'耐輻射利基型記憶體布局。', den:'Positioning in radiation-tolerant niche memory.' },
+      { zh:'華通電腦 Compeq', en:'Compeq', dzh:'衛星級高階 PCB(蘆竹)。', den:'Satellite-grade high-end PCBs (Luzhu).' },
+      { zh:'同欣電子 Tong Hsing', en:'Tong Hsing', dzh:'陶瓷基板與構裝(龜山)。', den:'Ceramic substrates and packaging (Guishan).' },
+    ] },
+  { id:'thermal', no:8, rate:'mid', hx:475, hy:317,
+    zh:'熱控系統', en:'Thermal Control System',
+    ozh:'輻射板與 MLI 多層隔熱毯以國家隊自研+進口為主;但臺灣地面散熱產業(熱管、均溫板)全球第一,轉化為太空熱控的潛力大。',
+    oen:"Radiators and MLI are national-team-built or imported today — but Taiwan's world-leading terrestrial cooling industry (heat pipes, vapor chambers) is a strong base for space thermal control.",
+    firms:[
+      { zh:'國家太空中心 TASA・工研院', en:'TASA · ITRI', dzh:'福衛系列熱控自研與太空熱管研發。', den:'In-house thermal control for FORMOSAT satellites; space heat-pipe R&D.' },
+      { zh:'臺灣散熱產業', en:'Taiwan cooling industry', dzh:'熱管/均溫板全球市占第一,技術可轉化。', den:'World-leading heat-pipe/vapor-chamber makers with transferable technology.' },
+    ],
+    gzh:'太空級 MLI 與迴路熱管仍部分仰賴進口。', gen:'Space-grade MLI and loop heat pipes remain partly imported.' },
+  { id:'imaging', no:9, rate:'strong', hx:385, hy:380,
+    zh:'影像酬載', en:'Payload Electronics — Imaging',
+    ozh:'國家隊的招牌:福衛五號光學遙測酬載與 CMOS 影像感測器即為國內自研,福衛八號再升級;感測器封裝是全球利基,從感測、封裝到影像處理整條鏈都有據點。',
+    oen:"The national team's signature: FORMOSAT-5's optical payload and CMOS image sensor were developed domestically, upgraded on FORMOSAT-8; sensor packaging is a global niche — Taiwan spans the chain from sensing to processing.",
+    firms:[
+      { zh:'國家太空中心 TASA', en:'TASA', dzh:'福五/福八光學遙測酬載與 CMOS 感測器自主研製。', den:'In-house optical payloads and CMOS sensors for FORMOSAT-5/8.' },
+      { zh:'同欣電子 Tong Hsing', en:'Tong Hsing', dzh:'影像感測器(CIS)封裝的全球利基者。', den:'Global niche leader in CMOS image-sensor packaging.' },
+    ] },
+];
+
 const MISSIONS = [
   { yr:'2017', zh:'福衛五號', en:'FORMOSAT-5', dzh:'首顆自主研製光學遙測衛星。', den:'First fully self-developed optical remote-sensing satellite.' },
   { yr:'2019', zh:'福衛七號', en:'FORMOSAT-7', dzh:'與美合作之掩星氣象星系(6 顆)。', den:'Six-satellite GNSS-RO weather constellation with the U.S.' },
@@ -328,7 +584,7 @@ const MISSIONS = [
 /* ===================== i18n ===================== */
 const I18N = {
   zh: {
-    nav_brand:'太空產業鏈', nav_chain:'價值鏈', nav_map:'產業地圖', nav_missions:'旗艦任務',
+    nav_brand:'太空產業鏈', nav_chain:'價值鏈', nav_map:'產業地圖', nav_anatomy:'衛星元件', nav_missions:'旗艦任務',
     nav_tw:'臺灣太空法規', nav_intl:'國際太空法',
     kicker:'Taiwan Space Industry Value Chain',
     title:'臺灣太空產業\n價值鏈地圖',
@@ -343,6 +599,11 @@ const I18N = {
     sec2:'產業地圖', sec2en:'Industry Map',
     sec2intro:'點擊地圖節點檢視當地的公司與機構,或以價值鏈環節篩選。節點大小反映收錄機構數量。',
     maphint:'※ 底圖:OpenStreetMap。據點以總部或主要基地所在縣市標示;橘色節點為國家發射場域。可拖曳與縮放地圖。',
+    secA:'LEO 衛星元件 × 臺灣供應鏈', secAen:'Satellite Anatomy',
+    secAintro:'一顆低軌衛星拆開來,臺灣在哪裡?點擊爆炸圖上的元件編號,檢視對應的臺灣廠商與供應鏈強度。電子含量高、可標準化量產的元件,臺灣幾乎全數卡位;缺口集中在化學與能源含量高的環節。',
+    r_strong:'國際供應鏈要角', r_mid:'發展中・累積飛行履歷', r_gap:'缺口・仰賴進口',
+    satHint:'※ 示意爆炸圖。點擊編號或下方晶片切換元件;評級為本站依公開資訊之彙整判斷。',
+    firms_t:'對應臺灣廠商與機構',
     sec3:'旗艦任務與計畫', sec3en:'Flagship Missions',
     sec3intro:'產業鏈的成果,最終在這些任務上匯聚升空。',
     foot1:'從福爾摩沙望向宇宙',
@@ -351,7 +612,7 @@ const I18N = {
     disc:'<b style="color:var(--gold);">資料說明</b><br>本頁為產業概覽,收錄以公開報導之代表性機構為主,未盡完整;各公司據點以總部或主要基地所在縣市標示,詳情以各公司公告為準。產值等統計數字彙整自經濟部產業發展署與公開報導(2024–2026)。資料整理時間:2026 年 7 月。',
   },
   en: {
-    nav_brand:'Space Industry', nav_chain:'Value Chain', nav_map:'Industry Map', nav_missions:'Missions',
+    nav_brand:'Space Industry', nav_chain:'Value Chain', nav_map:'Industry Map', nav_anatomy:'Anatomy', nav_missions:'Missions',
     nav_tw:'Taiwan Space Law', nav_intl:'International Space Law',
     kicker:'Taiwan Space Industry Value Chain',
     title:'Taiwan Space Industry\nValue Chain Map',
@@ -366,6 +627,11 @@ const I18N = {
     sec2:'Industry Map', sec2en:'Where the Industry Lives',
     sec2intro:'Click a node to see local companies and institutions, or filter by value-chain segment. Node size reflects the number of entries.',
     maphint:'※ Base map: OpenStreetMap. Pins mark the city of each HQ or main base; the orange node is the national launch site. Drag and zoom to explore.',
+    secA:'LEO Satellite × Taiwan Supply Chain', secAen:'Satellite Anatomy',
+    secAintro:'Take a LEO satellite apart — where is Taiwan? Click a numbered component in the exploded view to see the matching Taiwanese suppliers and chain strength. Taiwan holds nearly every electronics-heavy, mass-producible part; the gaps cluster in chemistry- and energy-heavy subsystems.',
+    r_strong:'Key global supplier', r_mid:'Developing / gaining flight heritage', r_gap:'Gap — import-reliant',
+    satHint:'※ Schematic exploded view. Click a number or a chip below to switch components; ratings are this site\'s synthesis of public information.',
+    firms_t:'Matching Taiwanese players',
     sec3:'Flagship Missions & Programs', sec3en:'Where It All Comes Together',
     sec3intro:'The value chain converges — and lifts off — in these missions.',
     foot1:'From Formosa, Toward the Cosmos',
@@ -510,6 +776,67 @@ function renderPanel() {
   });
 }
 
+/* satellite anatomy */
+let selComp = 'adcs';
+
+function renderAnatomy() {
+  const hs = document.getElementById('hotspots');
+  hs.innerHTML = '';
+  COMPS.forEach(c => {
+    const rc = RATES[c.rate].color;
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    g.setAttribute('class', 'hotspot' + (selComp === c.id ? ' sel' : ''));
+    g.setAttribute('style', `--rc:${rc}`);
+    g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button');
+    const circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    circ.setAttribute('cx', c.hx); circ.setAttribute('cy', c.hy); circ.setAttribute('r', 11);
+    circ.setAttribute('class', 'num');
+    g.appendChild(circ);
+    const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    txt.setAttribute('x', c.hx); txt.setAttribute('y', c.hy);
+    txt.textContent = c.no;
+    g.appendChild(txt);
+    const pick = () => { selComp = c.id; update(); };
+    g.addEventListener('click', pick);
+    g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
+    hs.appendChild(g);
+  });
+
+  const chips = document.getElementById('compchips');
+  chips.innerHTML = '';
+  COMPS.forEach(c => {
+    const b = document.createElement('button');
+    b.className = 'cchip' + (selComp === c.id ? ' sel' : '');
+    b.style.setProperty('--rc', RATES[c.rate].color);
+    b.innerHTML = `<i></i>${c.no}. ${lang === 'zh' ? c.zh : c.en}`;
+    b.onclick = () => { selComp = c.id; update(); };
+    chips.appendChild(b);
+  });
+
+  const c = COMPS.find(x => x.id === selComp);
+  const rc = RATES[c.rate].color;
+  document.getElementById('ctitle').textContent = `${c.no}. ${lang === 'zh' ? c.zh : c.en}`;
+  document.getElementById('csub').textContent = lang === 'zh' ? c.en : c.zh;
+  document.getElementById('cbadge').innerHTML =
+    `<span class="badge" style="--rc:${rc}"><i></i>${lang === 'zh' ? RATES[c.rate].zh : RATES[c.rate].en}</span>`;
+  document.getElementById('coverview').textContent = lang === 'zh' ? c.ozh : c.oen;
+  const fl = document.getElementById('cfirms');
+  fl.innerHTML = `<div class="psub" style="margin-bottom:12px;">${t('firms_t')}</div>`;
+  c.firms.forEach(f => {
+    const d = document.createElement('div');
+    d.className = 'firm'; d.style.setProperty('--rc', rc);
+    d.innerHTML = `<b>${lang === 'zh' ? f.zh : f.en}</b><span class="en">${lang === 'zh' ? f.en : f.zh}</span>` +
+      `<p>${lang === 'zh' ? f.dzh : f.den}</p>`;
+    fl.appendChild(d);
+  });
+  if (c.gzh) {
+    const gp = document.createElement('div');
+    gp.className = 'gapnote';
+    gp.innerHTML = `<b>${lang === 'zh' ? '缺口' : 'Gap'}</b> — ${lang === 'zh' ? c.gzh : c.gen}`;
+    fl.appendChild(gp);
+  }
+}
+
 function renderMissions() {
   const el = document.getElementById('missionlist');
   el.innerHTML = '';
@@ -523,7 +850,7 @@ function renderMissions() {
 }
 
 function update() {
-  renderStatic(); renderChain(); renderFilters(); renderMap(); renderPanel(); renderMissions();
+  renderStatic(); renderChain(); renderFilters(); renderMap(); renderPanel(); renderAnatomy(); renderMissions();
 }
 
 
