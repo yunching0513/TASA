@@ -79,12 +79,11 @@
   .seg-card p { font-size: 13.5px; color: var(--text-3); margin: 0; }
   .seg-card .cnt { font-family: 'Space Grotesk'; font-size: 13px; color: var(--seg, var(--gold)); margin-top: 12px; }
 
-  /* map layout */
-  .maparea { display: grid; grid-template-columns: minmax(320px, 560px) 1fr; gap: 34px; align-items: start; }
-  @media (max-width: 900px) { .maparea { grid-template-columns: 1fr; } }
+  /* map layout — full width */
+  .maparea { display: block; }
   .mapbox { border: 1px solid var(--border); border-radius: 24px; background: linear-gradient(170deg, rgba(48,48,46,0.7), rgba(38,38,36,0.4)); padding: 14px; position: relative; }
   #twmap { height: 620px; border-radius: 14px; background: #1F1E1C; }
-  @media (max-width: 900px) { #twmap { height: 480px; } }
+  @media (max-width: 900px) { #twmap { height: 460px; } }
   /* OSM tiles → deep-space dark mode */
   #twmap .leaflet-tile-pane { filter: invert(100%) hue-rotate(190deg) brightness(0.86) contrast(0.9) saturate(0.5); }
   #twmap .leaflet-control-attribution { background: rgba(38,38,36,0.85); color: var(--muted); font-size: 10.5px; }
@@ -109,18 +108,24 @@
   .fbtn i { width: 8px; height: 8px; border-radius: 50%; background: var(--seg, var(--muted)); flex: none; }
   .fbtn.active { border-color: var(--seg, var(--text)); color: var(--text); background: rgba(255,255,255,0.04); }
 
-  /* org list panel */
-  .panel { min-height: 420px; }
-  .panel .ptitle { font-family: 'Noto Serif TC', serif; font-size: 22px; font-weight: 600; margin: 0 0 4px; }
-  .panel .psub { font-family: 'Space Grotesk'; font-size: 12.5px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 20px; }
-  .orgs { display: grid; gap: 14px; }
-  .org { border: 1px solid var(--border); border-left: 3px solid var(--seg, var(--gold)); border-radius: 14px; background: var(--bg-2); padding: 18px 22px; }
+  /* org list panel — full-width grid below map */
+  .panel { margin-top: 30px; }
+  .panel .ptitle { font-family: 'Noto Serif TC', serif; font-size: 24px; font-weight: 600; margin: 0 0 4px; }
+  .panel .psub { font-family: 'Space Grotesk'; font-size: 12.5px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 22px; }
+  .orgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 16px; }
+  .org { border: 1px solid var(--border); border-left: 3px solid var(--seg, var(--gold)); border-radius: 14px; background: var(--bg-2); padding: 18px 22px; display: flex; flex-direction: column; }
   .org .head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
   .org b { font-size: 16px; }
   .org .en { font-family: 'Space Grotesk'; font-size: 12px; color: var(--blue); }
   .org .loc { margin-left: auto; font-size: 12px; color: var(--muted); white-space: nowrap; }
   .org p { font-size: 13.5px; color: var(--text-3); margin: 6px 0 0; }
-  .org .segtag { display: inline-block; font-size: 11.5px; color: var(--seg, var(--gold)); border: 1px solid var(--seg, var(--gold)); border-radius: 999px; padding: 1px 10px; margin-top: 10px; }
+  .org .foot { display: flex; align-items: center; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+  .org .segtag { display: inline-block; font-size: 11.5px; color: var(--seg, var(--gold)); border: 1px solid var(--seg, var(--gold)); border-radius: 999px; padding: 1px 10px; }
+  .org .site {
+    margin-left: auto; display: inline-flex; align-items: center; gap: 5px; font-family: 'Space Grotesk', 'Noto Sans TC';
+    font-size: 12.5px; font-weight: 500; color: #262624; background: var(--gold); border-radius: 8px; padding: 5px 13px; white-space: nowrap;
+  }
+  .org .site:hover { background: #FFD666; text-decoration: none; box-shadow: 0 0 16px rgba(255,197,61,0.4); }
 
   /* satellite anatomy (exploded view) */
   .satarea { display: grid; grid-template-columns: minmax(340px, 620px) 1fr; gap: 34px; align-items: start; }
@@ -412,72 +417,95 @@ const CITIES = {
 
 const ORGS = [
   { city:'hsinchu', seg:'agency', zh:'國家太空中心 TASA', en:'Taiwan Space Agency (TASA)',
+    zhurl:'https://www.tasa.org.tw/zh-TW', enurl:'https://www.tasa.org.tw/en-US',
     dzh:'行政法人,國家太空計畫的執行核心:衛星研製整測、發射場域營運、登錄與許可審查。位於新竹科學園區。',
     den:'Administrative corporation executing national space programs: satellite development and integration, launch-site operations, registration and licensing review. Hsinchu Science Park.' },
   { city:'hsinchu', seg:'agency', zh:'工業技術研究院 ITRI', en:'Industrial Technology Research Institute',
+    zhurl:'https://www.itri.org.tw/', enurl:'https://www.itri.org.tw/english/',
     dzh:'太空級元件、材料與製程研發,銜接半導體與太空產業。',
     den:'R&D on space-grade components, materials and processes, bridging semiconductors and space.' },
   { city:'hsinchu', seg:'launch', zh:'陽明交大 ARRC 前瞻火箭研究中心', en:'NYCU ARRC Rocket Research Center',
+    zhurl:'https://arrc.tw/', enurl:'https://arrc.tw/',
     dzh:'學界混合式火箭研究重鎮,HTTP 系列探空火箭與可導控技術。',
     den:'Leading academic hybrid-rocket program; HTTP-series sounding rockets and guidance technology.' },
   { city:'hsinchu', seg:'ground', zh:'啟碁科技 WNC', en:'Wistron NeWeb Corp. (WNC)',
+    zhurl:'https://www.wnc.com.tw/', enurl:'https://www.wnc.com.tw/en',
     dzh:'衛星用戶終端與網通設備大廠,低軌衛星國際供應鏈要角。',
     den:'Major maker of satellite user terminals and networking gear; key supplier to LEO constellations.' },
   { city:'hsinchu', seg:'ground', zh:'台揚科技 MTI', en:'Microelectronics Technology Inc. (MTI)',
+    zhurl:'https://www.mtigroup.com/zh-tw', enurl:'https://www.mtigroup.com/en-us',
     dzh:'臺灣衛星地面站與 VSAT 設備先驅,微波通訊系統整合。',
     den:'Pioneer of satellite ground stations and VSAT equipment in Taiwan; microwave system integration.' },
   { city:'hsinchu', seg:'satellite', zh:'創未來科技 Tron Future', en:'Tron Future Tech',
+    zhurl:'https://www.tronfuture.com/', enurl:'https://www.tronfuture.com/',
     dzh:'相控陣雷達與衛星通訊酬載新創,投入低軌衛星星系與太空感測。',
     den:'Phased-array radar and satcom payload startup; building toward LEO constellations and space sensing.' },
   { city:'taoyuan', seg:'agency', zh:'國家中山科學研究院 NCSIST', en:'NCSIST',
+    zhurl:'https://www.ncsist.org.tw/', enurl:'https://www.ncsist.org.tw/eng/',
     dzh:'國防航太研發法人,火箭推進與航太系統的深厚工程能量(龍潭)。',
     den:'Defense aerospace R&D institute with deep expertise in rocket propulsion and aerospace systems (Longtan).' },
   { city:'taoyuan', seg:'agency', zh:'中央大學太空科學與工程學系', en:'NCU Dept. of Space Science & Engineering',
+    zhurl:'https://www.ss.ncu.edu.tw/', enurl:'https://www.ss.ncu.edu.tw/',
     dzh:'太空科學重鎮,飛鼠號(IDEASSat)立方衛星、電離層與太空天氣研究(中壢)。',
     den:'Space-science hub: IDEASSat CubeSat, ionosphere and space-weather research (Zhongli).' },
   { city:'taoyuan', seg:'satellite', zh:'穩懋半導體 WIN Semiconductors', en:'WIN Semiconductors',
+    zhurl:'https://www.winfoundry.com/zh-TW/', enurl:'https://www.winfoundry.com/en-US/',
     dzh:'全球最大砷化鎵射頻晶圓代工,衛星通訊射頻晶片關鍵供應者(龍潭)。',
     den:'World-largest GaAs RF foundry; critical supplier of RF chips for satellite communications (Longtan).' },
   { city:'taoyuan', seg:'satellite', zh:'華通電腦 Compeq', en:'Compeq Manufacturing',
+    zhurl:'https://www.compeq.com.tw/', enurl:'https://www.compeq.com.tw/',
     dzh:'高階 PCB 大廠,切入衛星與航太電路板供應鏈(蘆竹)。',
     den:'Leading high-end PCB maker supplying satellite and aerospace boards (Luzhu).' },
   { city:'taoyuan', seg:'satellite', zh:'同欣電子 Tong Hsing', en:'Tong Hsing Electronic',
+    zhurl:'https://www.theil.com/tw', enurl:'https://www.theil.com/en',
     dzh:'陶瓷基板與影像感測封裝,太空與航太級構裝能量(龜山)。',
     den:'Ceramic substrates and image-sensor packaging with space/aerospace-grade capability (Guishan).' },
   { city:'taoyuan', seg:'ground', zh:'耀登科技 Auden', en:'Auden Techno',
+    zhurl:'https://www.auden.com.tw/', enurl:'https://www.auden.com.tw/en/home-en/',
     dzh:'天線設計與量測驗證,投入衛星通訊天線與模組。',
     den:'Antenna design and test/validation; satellite communication antennas and modules.' },
   { city:'taipei', seg:'service', zh:'中華電信', en:'Chunghwa Telecom',
+    zhurl:'https://www.cht.com.tw/', enurl:'https://www.cht.com.tw/en/home/cht',
     dzh:'衛星通訊服務與國際海纜/地面站營運,參與 ST-2 通訊衛星。',
     den:'Satcom services and ground-station operations; partner in the ST-2 communications satellite.' },
   { city:'taipei', seg:'satellite', zh:'張量科技 Tensor Tech', en:'Tensor Tech',
+    zhurl:'https://tensortech.co/', enurl:'https://tensortech.co/',
     dzh:'立方衛星姿態控制系統新創,球型馬達技術輸出國際。',
     den:'CubeSat attitude-control startup; spherical-motor ADCS exported worldwide.' },
   { city:'ntpc', seg:'satellite', zh:'鴻海科技集團 Foxconn', en:'Foxconn (Hon Hai)',
+    zhurl:'https://www.honhai.com/zh-tw', enurl:'https://www.honhai.com/en-us',
     dzh:'珍珠號低軌實驗衛星(與中央大學合作),電子代工巨頭跨入太空(土城總部)。',
     den:'PEARL LEO experimental satellites (with NCU); the electronics giant entering space (Tucheng HQ).' },
   { city:'ntpc', seg:'ground', zh:'鐳洋科技 Rapidtek', en:'Rapidtek Technologies',
+    zhurl:'https://rapidtek.net/tw', enurl:'https://rapidtek.net/en',
     dzh:'相列陣天線與衛星測試方案,汐止總部、桃園青埔設衛星組裝中心。',
     den:'Phased-array antennas and satellite test solutions; Xizhi HQ with a satellite assembly center in Qingpu, Taoyuan.' },
   { city:'ntpc', seg:'ground', zh:'稜研科技 TMYTEK', en:'TMYTEK',
+    zhurl:'https://tmytek.com/', enurl:'https://tmytek.com/',
     dzh:'毫米波波束成形技術新創,低軌衛星與 5G 毫米波通訊(板橋)。',
     den:'mmWave beamforming startup for LEO satellite and 5G communications (Banqiao).' },
   { city:'keelung', seg:'ground', zh:'昇達科技 UMT', en:'Universal Microwave Technology',
+    zhurl:'https://www.umt-tw.com/tw', enurl:'https://www.umt-tw.com/en',
     dzh:'微波/毫米波被動元件,低軌衛星地面站與機上通訊供應鏈(七堵・六堵科技園區)。',
     den:'Microwave/mmWave passive components for LEO ground stations and aero-connectivity supply chains (Liudu Technology Park, Qidu).' },
   { city:'miaoli', seg:'launch', zh:'晉陞太空 TiSPACE', en:'TiSPACE',
+    zhurl:'https://www.tispace.com/zh', enurl:'https://www.tispace.com/en',
     dzh:'民間火箭公司,混合式火箭「飛鼠」(Hapith)系列,苗栗設研製基地。',
     den:'Private launch company developing the hybrid-propellant Hapith rockets; based in Miaoli.' },
   { city:'taichung', seg:'satellite', zh:'漢翔航空工業 AIDC', en:'AIDC',
+    zhurl:'https://www.aidc.com.tw/tw', enurl:'https://www.aidc.com.tw/en',
     dzh:'國家航太製造重鎮,精密結構與系統整合能量延伸至衛星零組件。',
     den:"Taiwan's aerospace manufacturing anchor; precision structures and integration extending into satellite components." },
   { city:'tainan', seg:'agency', zh:'成功大學航太與太空系統工程', en:'NCKU Aeronautics & Space Systems',
+    zhurl:'https://iaa.ncku.edu.tw/', enurl:'https://iaa.ncku.edu.tw/index.php?Lang=en',
     dzh:'航太工程重鎮:混合式火箭推進、鳳凰號(PHOENIX)立方衛星與太空系統人才。',
     den:'Aerospace engineering hub: hybrid propulsion, PHOENIX CubeSat and space-systems talent.' },
   { city:'tainan', seg:'service', zh:'經緯航太 GEOSAT', en:'GEOSAT Aerospace',
+    zhurl:'https://www.geosat.com.tw/', enurl:'https://geosat.space/',
     dzh:'航遙測與地理資訊服務,無人機與衛星影像加值應用。',
     den:'Aerial/remote-sensing and GIS services; UAV and satellite-imagery applications.' },
   { city:'pingtung', seg:'launch', zh:'旭海短期科研探空火箭發射場', en:'Hsuhai Sounding Rocket Launch Site',
+    zhurl:'https://www.tasa.org.tw/zh-TW', enurl:'https://www.tasa.org.tw/en-US',
     dzh:'國家短期科研發射場域(牡丹鄉旭海),由 TASA 營運,學研火箭於此升空。',
     den:'National short-term scientific launch site at Hsuhai, Mudan Township, operated by TASA for research rockets.' },
 ];
@@ -607,6 +635,7 @@ const I18N = {
     sec3:'旗艦任務與計畫', sec3en:'Flagship Missions',
     sec3intro:'產業鏈的成果,最終在這些任務上匯聚升空。',
     foot1:'從福爾摩沙望向宇宙',
+    site_label:'官方網站', site_aria:'的官方網站(另開新視窗)',
     all:'全部', panel_all:'臺灣太空產業生態系', panel_sub_all:'收錄 {n} 個機構・9 個聚落・點擊地圖或篩選',
     panel_sub_city:'{n} 個機構', panel_sub_seg:'{n} 個機構・全臺',
     disc:'<b style="color:var(--gold);">資料說明</b><br>本頁為產業概覽,收錄以公開報導之代表性機構為主,未盡完整;各公司據點以總部或主要基地所在縣市標示,詳情以各公司公告為準。產值等統計數字彙整自經濟部產業發展署與公開報導(2024–2026)。資料整理時間:2026 年 7 月。',
@@ -635,6 +664,7 @@ const I18N = {
     sec3:'Flagship Missions & Programs', sec3en:'Where It All Comes Together',
     sec3intro:'The value chain converges — and lifts off — in these missions.',
     foot1:'From Formosa, Toward the Cosmos',
+    site_label:'Website', site_aria:' official website (opens in a new tab)',
     all:'All', panel_all:"Taiwan's Space Ecosystem", panel_sub_all:'{n} organizations · 9 clusters · click the map or filter',
     panel_sub_city:'{n} organizations', panel_sub_seg:'{n} organizations · island-wide',
     disc:'<b style="color:var(--gold);">About the data</b><br>This page is an industry overview featuring representative organizations from public reporting; it is not exhaustive. Pins mark the city of each HQ or main base — refer to company announcements for details. Output figures are compiled from Taiwan\'s Industrial Development Administration and public reports (2024–2026). Compiled July 2026.',
@@ -707,7 +737,12 @@ function initMap() {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
   }).addTo(map);
   markerLayer = L.layerGroup().addTo(map);
-  map.fitBounds([[21.85, 119.95], [25.40, 122.05]]);
+  const fit = () => map.fitBounds([[21.85, 119.95], [25.40, 122.05]], { padding: [20, 20] });
+  fit();
+  // full-width container: recompute size after layout settles and on resize
+  requestAnimationFrame(() => { map.invalidateSize(); fit(); });
+  let rt;
+  window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { map.invalidateSize(); fit(); }, 200); });
 }
 
 function renderMap() {
@@ -767,11 +802,16 @@ function renderPanel() {
     const s = SEGS[o.seg], c = CITIES[o.city];
     const d = document.createElement('div');
     d.className = 'org'; d.style.setProperty('--seg', s.color);
-    d.innerHTML = `<div class="head"><b>${lang==='zh'?o.zh:o.en}</b>` +
+    const url = lang === 'zh' ? o.zhurl : o.enurl;
+    const name = lang === 'zh' ? o.zh : o.en;
+    const site = url
+      ? `<a class="site" href="${url}" target="_blank" rel="noopener" aria-label="${name}${t('site_aria')}">${t('site_label')} ↗</a>`
+      : '';
+    d.innerHTML = `<div class="head"><b>${name}</b>` +
       `<span class="en">${lang==='zh'?o.en:o.zh}</span>` +
       `<span class="loc">📍 ${lang==='zh'?c.zh:c.en}</span></div>` +
       `<p>${lang==='zh'?o.dzh:o.den}</p>` +
-      `<span class="segtag">${s.glyph} ${lang==='zh'?s.zh:s.en}</span>`;
+      `<div class="foot"><span class="segtag">${s.glyph} ${lang==='zh'?s.zh:s.en}</span>${site}</div>`;
     list.appendChild(d);
   });
 }
