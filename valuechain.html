@@ -63,7 +63,9 @@
   .stat b { display: block; font-family: 'Space Grotesk'; font-size: 24px; font-weight: 500; color: var(--cyan); line-height: 1.25; }
   .stat span { font-size: 12.5px; color: var(--muted); }
 
-  section.block { padding: 90px 8vw; border-bottom: 1px solid var(--border-soft); position: relative; scroll-margin-top: 70px; }
+  /* The sticky nav wraps to 2+ rows depending on width and language, so an anchor jump
+     has to clear whatever it currently measures — a fixed offset hides the heading. */
+  section.block { padding: 90px 8vw; border-bottom: 1px solid var(--border-soft); position: relative; scroll-margin-top: var(--nav-h, 70px); }
   .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 14px; flex-wrap: wrap; }
   .sec-head .no { font-family: 'Space Grotesk'; font-size: 15px; color: var(--gold); letter-spacing: 0.2em; }
   .sec-head h2 { font-family: 'Noto Serif TC', serif; font-size: clamp(26px, 3.2vw, 36px); font-weight: 600; margin: 0; }
@@ -964,6 +966,13 @@ function setLang(l) {
 
 initMap();
 update();
+
+/* Switching language changes the nav labels' length, which changes how many rows the nav
+   wraps to — so anchor targets have to track its real height, not a guessed constant. */
+const topnav = document.querySelector('.topnav');
+new ResizeObserver(() =>
+  document.documentElement.style.setProperty('--nav-h', topnav.offsetHeight + 'px')
+).observe(topnav);
 
 /* starfield */
 (function () {

@@ -57,6 +57,12 @@
   .topnav a.navlink:hover { color: var(--cyan); text-decoration: none; border-bottom-color: var(--cyan); }
   .topnav a.switch { border: 1px solid var(--gold); color: var(--gold); border-radius: 999px; padding: 5px 16px; font-size: 13.5px; }
   .topnav a.switch:hover { background: rgba(255,197,61,0.1); text-decoration: none; }
+  .langtoggle { display: flex; border: 1px solid var(--gold); border-radius: 999px; overflow: hidden; }
+  .langtoggle button {
+    font-family: 'Space Grotesk', 'Noto Sans TC'; background: transparent; color: var(--gold);
+    border: none; padding: 6px 16px; font-size: 13.5px; cursor: pointer; letter-spacing: 0.05em;
+  }
+  .langtoggle button.active { background: var(--gold); color: #262624; font-weight: 700; }
 
   .hero { position: relative; overflow: hidden; padding: 110px 8vw 130px; border-bottom: 1px solid var(--border-soft); }
   .hero .kicker { display: flex; align-items: center; gap: 14px; margin-bottom: 26px; }
@@ -78,7 +84,9 @@
   .stat b { display: block; font-family: 'Space Grotesk'; font-size: 26px; font-weight: 500; color: var(--cyan); line-height: 1.2; }
   .stat span { font-size: 12.5px; color: var(--muted); }
 
-  section.block { padding: 96px 8vw; border-bottom: 1px solid var(--border-soft); position: relative; scroll-margin-top: 70px; }
+  /* The sticky nav wraps to 2–5 rows depending on width and language, so an anchor jump
+     has to clear whatever it currently measures — a fixed offset hides the heading. */
+  section.block { padding: 96px 8vw; border-bottom: 1px solid var(--border-soft); position: relative; scroll-margin-top: var(--nav-h, 70px); }
   .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 14px; flex-wrap: wrap; }
   .sec-head .no { font-family: 'Space Grotesk'; font-size: 15px; color: var(--gold); letter-spacing: 0.2em; }
   .sec-head h2 { font-family: 'Noto Serif TC', serif; font-size: clamp(28px, 3.4vw, 38px); font-weight: 600; margin: 0; }
@@ -182,16 +190,20 @@
 
 <!-- ============ NAV ============ -->
 <nav class="topnav" aria-label="主要導覽">
-  <span class="brand"><span class="orb"><i></i></span>國際太空法</span>
-  <a class="navlink" href="#timeline">法制沿革</a>
-  <a class="navlink" href="#treaties">五大條約</a>
-  <a class="navlink" href="#ost">外太空條約</a>
-  <a class="navlink" href="#principles">原則宣言</a>
-  <a class="navlink" href="#copuos">COPUOS 會員國</a>
-  <a class="navlink" href="#modern">當代發展</a>
-  <a class="navlink" href="#significance">重要意義</a>
-  <a class="navlink" href="valuechain.html">產業鏈地圖</a>
-  <a class="switch" href="index.html">臺灣太空法規 →</a>
+  <span class="brand"><span class="orb"><i></i></span><span data-t="nav_brand">國際太空法</span></span>
+  <a class="navlink" href="#timeline" data-t="nav_timeline">法制沿革</a>
+  <a class="navlink" href="#treaties" data-t="nav_treaties">五大條約</a>
+  <a class="navlink" href="#ost" data-t="nav_ost">外太空條約</a>
+  <a class="navlink" href="#principles" data-t="nav_principles">原則宣言</a>
+  <a class="navlink" href="#copuos" data-t="nav_copuos">COPUOS 會員國</a>
+  <a class="navlink" href="#modern" data-t="nav_modern">當代發展</a>
+  <a class="navlink" href="#significance" data-t="nav_significance">重要意義</a>
+  <a class="navlink" href="valuechain.html" data-t="nav_valuechain">產業鏈地圖</a>
+  <a class="switch" href="index.html" data-t="nav_switch">臺灣太空法規 →</a>
+  <div class="langtoggle" role="group" aria-label="language">
+    <button id="btn-zh" onclick="setLang('zh')">中文</button>
+    <button id="btn-en" onclick="setLang('en')">EN</button>
+  </div>
 </nav>
 
 <!-- ============ HERO ============ -->
@@ -202,18 +214,18 @@
     <div class="earth"></div>
   </div>
 
-  <div class="kicker"><span>International Space Law</span></div>
-  <h1>國際太空法</h1>
-  <p class="sub">The Law of Outer Space — 全人類的太空秩序</p>
-  <p class="lede">自 1957 年史普尼克一號升空以來,人類在聯合國架構下逐步建立太空活動的法律秩序:以 1967 年《外太空條約》為憲章,輔以四項條約與多項原則宣言,確立太空「不得據為己有、限於和平目的、全人類共同利益」的基本規範。本頁彙整國際太空法的沿革、五大條約與當代發展。</p>
-  <p class="note">本頁為便民彙整之易讀版;條約正式文本與締約狀況以<a href="https://www.unoosa.org/oosa/en/ourwork/spacelaw/treaties.html" target="_blank" rel="noopener">聯合國外太空事務廳(UNOOSA)</a>公布者為準。</p>
+  <div class="kicker"><span data-t="kicker">International Space Law</span></div>
+  <h1 data-t="title">國際太空法</h1>
+  <p class="sub" data-t="sub">The Law of Outer Space — 全人類的太空秩序</p>
+  <p class="lede" data-t="lede">自 1957 年史普尼克一號升空以來,人類在聯合國架構下逐步建立太空活動的法律秩序:以 1967 年《外太空條約》為憲章,輔以四項條約與多項原則宣言,確立太空「不得據為己有、限於和平目的、全人類共同利益」的基本規範。本頁彙整國際太空法的沿革、五大條約與當代發展。</p>
+  <p class="note" data-t="note">本頁為便民彙整之易讀版;條約正式文本與締約狀況以<a href="https://www.unoosa.org/oosa/en/ourwork/spacelaw/treaties.html" target="_blank" rel="noopener">聯合國外太空事務廳(UNOOSA)</a>公布者為準。</p>
 
   <div class="stat-strip">
-    <div class="stat"><b>1967</b><span>外太空條約生效</span></div>
-    <div class="stat"><b>5</b><span>聯合國核心太空條約</span></div>
-    <div class="stat"><b>118</b><span>外太空條約締約國(2025.10)</span></div>
-    <div class="stat"><b>68</b><span>Artemis Accords 簽署國(2026.06)</span></div>
-    <div class="stat"><b>110</b><span>COPUOS 會員國(2025)</span></div>
+    <div class="stat"><b data-t="s1v">1967</b><span data-t="s1l">外太空條約生效</span></div>
+    <div class="stat"><b data-t="s2v">5</b><span data-t="s2l">聯合國核心太空條約</span></div>
+    <div class="stat"><b data-t="s3v">118</b><span data-t="s3l">外太空條約締約國(2025.10)</span></div>
+    <div class="stat"><b data-t="s4v">68</b><span data-t="s4l">Artemis Accords 簽署國(2026.06)</span></div>
+    <div class="stat"><b data-t="s5v">110</b><span data-t="s5l">COPUOS 會員國(2025)</span></div>
   </div>
 
   <svg class="ridge" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true">
@@ -224,323 +236,323 @@
 
 <!-- ============ 01 法制沿革 ============ -->
 <section class="block" id="timeline">
-  <div class="sec-head"><span class="no">01</span><h2>法制沿革<small>Timeline</small></h2></div>
-  <p class="sec-intro">冷戰太空競賽催生了人類第一批太空法律。從史普尼克的震撼到 Artemis 時代的重返月球,國際太空法始終在科技與地緣政治的張力中演進。</p>
+  <div class="sec-head"><span class="no">01</span><h2><span data-t="sec1">法制沿革</span><small data-t="sec1en">Timeline</small></h2></div>
+  <p class="sec-intro" data-t="sec1intro">冷戰太空競賽催生了人類第一批太空法律。從史普尼克的震撼到 Artemis 時代的重返月球,國際太空法始終在科技與地緣政治的張力中演進。</p>
   <div class="timeline">
     <div class="tl-item major">
-      <span class="date">1957.10.04</span>
-      <h3>史普尼克一號升空</h3>
-      <p>蘇聯發射人類第一顆人造衛星。衛星飛越各國上空卻無人抗議「侵犯領空」,意外奠定「太空自由」原則的國家實踐基礎。</p>
+      <span class="date" data-t="tl1d">1957.10.04</span>
+      <h3 data-t="tl1h">史普尼克一號升空</h3>
+      <p data-t="tl1p">蘇聯發射人類第一顆人造衛星。衛星飛越各國上空卻無人抗議「侵犯領空」,意外奠定「太空自由」原則的國家實踐基礎。</p>
     </div>
     <div class="tl-item">
-      <span class="date">1958–1959</span>
-      <h3>聯合國成立 COPUOS</h3>
-      <p>聯合國大會設立「和平使用外太空委員會」(COPUOS),1959 年成為常設機構,自此成為國際太空法的主要立法平台;其下設科學技術與法律兩個小組委員會。</p>
+      <span class="date" data-t="tl2d">1958–1959</span>
+      <h3 data-t="tl2h">聯合國成立 COPUOS</h3>
+      <p data-t="tl2p">聯合國大會設立「和平使用外太空委員會」(COPUOS),1959 年成為常設機構,自此成為國際太空法的主要立法平台;其下設科學技術與法律兩個小組委員會。</p>
     </div>
     <div class="tl-item">
-      <span class="date">1963</span>
-      <h3>法律原則宣言與部分禁止核試驗條約</h3>
-      <p>聯大通過《各國探索和利用外太空活動的法律原則宣言》,揭示日後外太空條約的核心內容;同年《部分禁止核試驗條約》禁止在外太空進行核試爆。</p>
+      <span class="date" data-t="tl3d">1963</span>
+      <h3 data-t="tl3h">法律原則宣言與部分禁止核試驗條約</h3>
+      <p data-t="tl3p">聯大通過《各國探索和利用外太空活動的法律原則宣言》,揭示日後外太空條約的核心內容;同年《部分禁止核試驗條約》禁止在外太空進行核試爆。</p>
     </div>
     <div class="tl-item major">
-      <span class="date">1967.10.10</span>
-      <h3>《外太空條約》生效 — 太空的憲章</h3>
-      <p>正式名稱《關於各國探索和利用包括月球和其他天體在內外太空活動的原則條約》,確立太空法制的憲法性框架,被譽為「太空大憲章」。</p>
+      <span class="date" data-t="tl4d">1967.10.10</span>
+      <h3 data-t="tl4h">《外太空條約》生效 — 太空的憲章</h3>
+      <p data-t="tl4p">正式名稱《關於各國探索和利用包括月球和其他天體在內外太空活動的原則條約》,確立太空法制的憲法性框架,被譽為「太空大憲章」。</p>
     </div>
     <div class="tl-item">
-      <span class="date">1968</span>
-      <h3>《營救協定》</h3>
-      <p>太空人是「人類派往外太空的使者」——各國有義務援救遇難太空人並歸還太空物體。</p>
+      <span class="date" data-t="tl5d">1968</span>
+      <h3 data-t="tl5h">《營救協定》</h3>
+      <p data-t="tl5p">太空人是「人類派往外太空的使者」——各國有義務援救遇難太空人並歸還太空物體。</p>
     </div>
     <div class="tl-item">
-      <span class="date">1972</span>
-      <h3>《責任公約》</h3>
-      <p>確立「發射國」的損害賠償責任:太空物體對地表或飛行中航空器造成損害採絕對責任,在太空中相撞則採過失責任。</p>
+      <span class="date" data-t="tl6d">1972</span>
+      <h3 data-t="tl6h">《責任公約》</h3>
+      <p data-t="tl6p">確立「發射國」的損害賠償責任:太空物體對地表或飛行中航空器造成損害採絕對責任,在太空中相撞則採過失責任。</p>
     </div>
     <div class="tl-item">
-      <span class="date">1975</span>
-      <h3>《登記公約》</h3>
-      <p>發射國應將太空物體登載於本國登記冊,並向聯合國秘書長通報,建立太空物體的「國際戶籍」制度。</p>
+      <span class="date" data-t="tl7d">1975</span>
+      <h3 data-t="tl7h">《登記公約》</h3>
+      <p data-t="tl7p">發射國應將太空物體登載於本國登記冊,並向聯合國秘書長通報,建立太空物體的「國際戶籍」制度。</p>
     </div>
     <div class="tl-item">
-      <span class="date">1979</span>
-      <h3>《月球協定》</h3>
-      <p>宣示月球及其自然資源為「人類共同繼承財產」,但美、俄、中等主要太空國家均未加入,締約國不到二十個,實際影響有限。</p>
+      <span class="date" data-t="tl8d">1979</span>
+      <h3 data-t="tl8h">《月球協定》</h3>
+      <p data-t="tl8p">宣示月球及其自然資源為「人類共同繼承財產」,但美、俄、中等主要太空國家均未加入,締約國不到二十個,實際影響有限。</p>
     </div>
     <div class="tl-item">
-      <span class="date">1982–1996</span>
-      <h3>四項原則宣言時代</h3>
-      <p>條約立法趨緩,聯大改以決議形式通過直播衛星(1982)、遙感探測(1986)、核動力源(1992)與太空利益宣言(1996)等原則。</p>
+      <span class="date" data-t="tl9d">1982–1996</span>
+      <h3 data-t="tl9h">四項原則宣言時代</h3>
+      <p data-t="tl9p">條約立法趨緩,聯大改以決議形式通過直播衛星(1982)、遙感探測(1986)、核動力源(1992)與太空利益宣言(1996)等原則。</p>
     </div>
     <div class="tl-item">
-      <span class="date">2007–2019</span>
-      <h3>太空碎片減緩與長期永續準則</h3>
-      <p>COPUOS 於 2007 年採認太空碎片減緩準則,2019 年通過外太空活動長期永續性(LTS)21 項準則,回應軌道日益擁擠的現實。</p>
+      <span class="date" data-t="tl10d">2007–2019</span>
+      <h3 data-t="tl10h">太空碎片減緩與長期永續準則</h3>
+      <p data-t="tl10p">COPUOS 於 2007 年採認太空碎片減緩準則,2019 年通過外太空活動長期永續性(LTS)21 項準則,回應軌道日益擁擠的現實。</p>
     </div>
     <div class="tl-item major">
-      <span class="date">2020</span>
-      <h3>Artemis Accords 簽署</h3>
-      <p>美國主導的重返月球計畫配套政治承諾,重申外太空條約原則並就透明、互操作性、太空資源利用、安全區等訂立行為準則;至 2026 年 6 月已有 68 國簽署。</p>
+      <span class="date" data-t="tl11d">2020</span>
+      <h3 data-t="tl11h">Artemis Accords 簽署</h3>
+      <p data-t="tl11p">美國主導的重返月球計畫配套政治承諾,重申外太空條約原則並就透明、互操作性、太空資源利用、安全區等訂立行為準則;至 2026 年 6 月已有 68 國簽署。</p>
     </div>
     <div class="tl-item">
-      <span class="date">2022</span>
-      <h3>反衛星試驗禁令倡議</h3>
-      <p>聯大通過決議,呼籲各國承諾不進行破壞性直升式反衛星(ASAT)飛彈試驗,以減少太空碎片、維護太空安全。</p>
+      <span class="date" data-t="tl12d">2022</span>
+      <h3 data-t="tl12h">反衛星試驗禁令倡議</h3>
+      <p data-t="tl12p">聯大通過決議,呼籲各國承諾不進行破壞性直升式反衛星(ASAT)飛彈試驗,以減少太空碎片、維護太空安全。</p>
     </div>
     <div class="tl-item">
-      <span class="date">現在進行式</span>
-      <h3>太空資源、太空交通管理與新規則</h3>
-      <p>太空資源開採的法律地位、巨型星系(mega-constellation)的軌道與頻譜管理、太空交通管理(STM)等議題,正於 COPUOS 及各國國內立法中持續發展。</p>
+      <span class="date" data-t="tl13d">現在進行式</span>
+      <h3 data-t="tl13h">太空資源、太空交通管理與新規則</h3>
+      <p data-t="tl13p">太空資源開採的法律地位、巨型星系(mega-constellation)的軌道與頻譜管理、太空交通管理(STM)等議題,正於 COPUOS 及各國國內立法中持續發展。</p>
     </div>
   </div>
 </section>
 
 <!-- ============ 02 五大條約 ============ -->
 <section class="block" id="treaties">
-  <div class="sec-head"><span class="no">02</span><h2>聯合國五大太空條約<small>The Five UN Treaties</small></h2></div>
-  <p class="sec-intro">國際太空法的骨幹,皆於 COPUOS 架構下談判完成。締約國數為概數,最新狀況請見 <a href="https://www.unoosa.org/oosa/en/ourwork/spacelaw/treaties/status/index.html" target="_blank" rel="noopener">UNOOSA 條約狀態頁</a>。</p>
+  <div class="sec-head"><span class="no">02</span><h2><span data-t="sec2">聯合國五大太空條約</span><small data-t="sec2en">The Five UN Treaties</small></h2></div>
+  <p class="sec-intro" data-t="sec2intro">國際太空法的骨幹,皆於 COPUOS 架構下談判完成。締約國數為概數,最新狀況請見 <a href="https://www.unoosa.org/oosa/en/ourwork/spacelaw/treaties/status/index.html" target="_blank" rel="noopener">UNOOSA 條約狀態頁</a>。</p>
   <div class="cards">
     <div class="card">
-      <div class="tag">TREATY 01 · 1967</div>
-      <h3>外太空條約</h3>
-      <p class="en">Outer Space Treaty (OST)</p>
-      <p>太空法制的憲章:太空探索為全人類福祉、不得主權據有、禁止大規模毀滅性武器入軌、國家對太空活動負國際責任。幾乎所有太空活動國家皆為締約國。</p>
-      <div class="meta"><span class="pill gold"><i></i>締約國 118(2025.10)</span><span class="pill cyan"><i></i>太空憲章</span></div>
+      <div class="tag" data-t="t1tag">TREATY 01 · 1967</div>
+      <h3 data-t="t1h">外太空條約</h3>
+      <p class="en" data-t="t1en">Outer Space Treaty (OST)</p>
+      <p data-t="t1p">太空法制的憲章:太空探索為全人類福祉、不得主權據有、禁止大規模毀滅性武器入軌、國家對太空活動負國際責任。幾乎所有太空活動國家皆為締約國。</p>
+      <div class="meta"><span class="pill gold" data-t="t1pill1"><i></i>締約國 118(2025.10)</span><span class="pill cyan" data-t="t1pill2"><i></i>太空憲章</span></div>
     </div>
     <div class="card">
-      <div class="tag">TREATY 02 · 1968</div>
-      <h3>營救協定</h3>
-      <p class="en">Rescue Agreement (ARRA)</p>
-      <p>太空人遇難時,各國應盡力援救並安全送還;落入他國境內的太空物體應歸還發射當局。將 OST 第 5 條的人道義務具體化。</p>
-      <div class="meta"><span class="pill"><i></i>締約國約百國</span></div>
+      <div class="tag" data-t="t2tag">TREATY 02 · 1968</div>
+      <h3 data-t="t2h">營救協定</h3>
+      <p class="en" data-t="t2en">Rescue Agreement (ARRA)</p>
+      <p data-t="t2p">太空人遇難時,各國應盡力援救並安全送還;落入他國境內的太空物體應歸還發射當局。將 OST 第 5 條的人道義務具體化。</p>
+      <div class="meta"><span class="pill" data-t="t2pill1"><i></i>締約國約百國</span></div>
     </div>
     <div class="card">
-      <div class="tag">TREATY 03 · 1972</div>
-      <h3>責任公約</h3>
-      <p class="en">Liability Convention (LIAB)</p>
-      <p>「發射國」對太空物體造成的損害負賠償責任:對地表及飛行中航空器採<b style="color:var(--gold);">絕對責任</b>,太空物體之間則採過失責任。1978 年蘇聯核動力衛星 Cosmos 954 墜毀加拿大即援用本公約求償。</p>
-      <div class="meta"><span class="pill"><i></i>締約國約百國</span></div>
+      <div class="tag" data-t="t3tag">TREATY 03 · 1972</div>
+      <h3 data-t="t3h">責任公約</h3>
+      <p class="en" data-t="t3en">Liability Convention (LIAB)</p>
+      <p data-t="t3p">「發射國」對太空物體造成的損害負賠償責任:對地表及飛行中航空器採<b style="color:var(--gold);">絕對責任</b>,太空物體之間則採過失責任。1978 年蘇聯核動力衛星 Cosmos 954 墜毀加拿大即援用本公約求償。</p>
+      <div class="meta"><span class="pill" data-t="t3pill1"><i></i>締約國約百國</span></div>
     </div>
     <div class="card">
-      <div class="tag">TREATY 04 · 1975</div>
-      <h3>登記公約</h3>
-      <p class="en">Registration Convention (REG)</p>
-      <p>發射國應設置太空物體登記冊,並向聯合國秘書長提供軌道參數等資訊,使太空物體的管轄與責任有跡可循——各國國內登錄制度(含臺灣)的國際源頭。</p>
-      <div class="meta"><span class="pill gold"><i></i>締約國 78(2026.01)</span></div>
+      <div class="tag" data-t="t4tag">TREATY 04 · 1975</div>
+      <h3 data-t="t4h">登記公約</h3>
+      <p class="en" data-t="t4en">Registration Convention (REG)</p>
+      <p data-t="t4p">發射國應設置太空物體登記冊,並向聯合國秘書長提供軌道參數等資訊,使太空物體的管轄與責任有跡可循——各國國內登錄制度(含臺灣)的國際源頭。</p>
+      <div class="meta"><span class="pill gold" data-t="t4pill1"><i></i>締約國 78(2026.01)</span></div>
     </div>
     <div class="card">
-      <div class="tag">TREATY 05 · 1979</div>
-      <h3>月球協定</h3>
-      <p class="en">Moon Agreement</p>
-      <p>宣示月球及其資源為「人類共同繼承財產」,開發應設立國際制度分享利益。因主要太空國家均拒絕加入(締約國不到二十個),被視為國際太空立法由盛轉衰的分水嶺。</p>
-      <div class="meta"><span class="pill coral"><i></i>主要太空國家未加入</span></div>
+      <div class="tag" data-t="t5tag">TREATY 05 · 1979</div>
+      <h3 data-t="t5h">月球協定</h3>
+      <p class="en" data-t="t5en">Moon Agreement</p>
+      <p data-t="t5p">宣示月球及其資源為「人類共同繼承財產」,開發應設立國際制度分享利益。因主要太空國家均拒絕加入(締約國不到二十個),被視為國際太空立法由盛轉衰的分水嶺。</p>
+      <div class="meta"><span class="pill coral" data-t="t5pill1"><i></i>主要太空國家未加入</span></div>
     </div>
   </div>
 </section>
 
 <!-- ============ 03 外太空條約核心原則 ============ -->
 <section class="block" id="ost">
-  <div class="sec-head"><span class="no">03</span><h2>外太空條約核心原則<small>OST Principles</small></h2></div>
-  <p class="sec-intro">《外太空條約》僅 17 條,卻奠定了此後六十年太空秩序的基石。以下為主要條文的白話摘要:</p>
+  <div class="sec-head"><span class="no">03</span><h2><span data-t="sec3">外太空條約核心原則</span><small data-t="sec3en">OST Principles</small></h2></div>
+  <p class="sec-intro" data-t="sec3intro">《外太空條約》僅 17 條,卻奠定了此後六十年太空秩序的基石。以下為主要條文的白話摘要:</p>
   <div class="defs">
-    <div class="def"><span class="art">ART. I</span><b>全人類的疆域</b><span class="en">PROVINCE OF ALL MANKIND</span><p>太空探索與利用應為所有國家謀福利,太空對各國一律自由開放,不受歧視。</p></div>
-    <div class="def"><span class="art">ART. II</span><b>不得據為己有</b><span class="en">NON-APPROPRIATION</span><p>任何國家不得以主權主張、使用、占領或任何方式,將太空及天體據為己有。</p></div>
-    <div class="def"><span class="art">ART. III</span><b>國際法適用</b><span class="en">INTERNATIONAL LAW APPLIES</span><p>太空活動應遵守國際法(含聯合國憲章),以維護國際和平與安全。</p></div>
-    <div class="def"><span class="art">ART. IV</span><b>限制軍事化</b><span class="en">PARTIAL DEMILITARIZATION</span><p>禁止在軌道部署核武器等大規模毀滅性武器;月球與天體應專用於和平目的,禁止設置軍事基地與試驗武器。</p></div>
-    <div class="def"><span class="art">ART. V</span><b>太空人為人類使者</b><span class="en">ENVOYS OF MANKIND</span><p>各國應視太空人為人類派往外太空的使者,遇難時盡力援救。</p></div>
-    <div class="def"><span class="art">ART. VI</span><b>國家責任</b><span class="en">STATE RESPONSIBILITY</span><p>國家對其太空活動負國際責任——包括民間企業的活動,須經國家授權並持續監督。這是各國制定國內太空法(含臺灣《太空發展法》)的直接動因。</p></div>
-    <div class="def"><span class="art">ART. VII</span><b>損害賠償</b><span class="en">LIABILITY</span><p>發射國對太空物體造成之損害負賠償責任,細節由 1972 年責任公約補充。</p></div>
-    <div class="def"><span class="art">ART. VIII</span><b>管轄與控制</b><span class="en">JURISDICTION &amp; CONTROL</span><p>登記國對其太空物體及其上人員保有管轄權與控制權,所有權不因位處太空而改變。</p></div>
-    <div class="def"><span class="art">ART. IX</span><b>適當顧及原則</b><span class="en">DUE REGARD</span><p>從事太空活動應顧及他國利益,避免對太空與天體造成有害污染,必要時應進行國際磋商。</p></div>
+    <div class="def"><span class="art">ART. I</span><b data-t="ost1b">全人類的疆域</b><span class="en" data-t="ost1en">PROVINCE OF ALL MANKIND</span><p data-t="ost1p">太空探索與利用應為所有國家謀福利,太空對各國一律自由開放,不受歧視。</p></div>
+    <div class="def"><span class="art">ART. II</span><b data-t="ost2b">不得據為己有</b><span class="en" data-t="ost2en">NON-APPROPRIATION</span><p data-t="ost2p">任何國家不得以主權主張、使用、占領或任何方式,將太空及天體據為己有。</p></div>
+    <div class="def"><span class="art">ART. III</span><b data-t="ost3b">國際法適用</b><span class="en" data-t="ost3en">INTERNATIONAL LAW APPLIES</span><p data-t="ost3p">太空活動應遵守國際法(含聯合國憲章),以維護國際和平與安全。</p></div>
+    <div class="def"><span class="art">ART. IV</span><b data-t="ost4b">限制軍事化</b><span class="en" data-t="ost4en">PARTIAL DEMILITARIZATION</span><p data-t="ost4p">禁止在軌道部署核武器等大規模毀滅性武器;月球與天體應專用於和平目的,禁止設置軍事基地與試驗武器。</p></div>
+    <div class="def"><span class="art">ART. V</span><b data-t="ost5b">太空人為人類使者</b><span class="en" data-t="ost5en">ENVOYS OF MANKIND</span><p data-t="ost5p">各國應視太空人為人類派往外太空的使者,遇難時盡力援救。</p></div>
+    <div class="def"><span class="art">ART. VI</span><b data-t="ost6b">國家責任</b><span class="en" data-t="ost6en">STATE RESPONSIBILITY</span><p data-t="ost6p">國家對其太空活動負國際責任——包括民間企業的活動,須經國家授權並持續監督。這是各國制定國內太空法(含臺灣《太空發展法》)的直接動因。</p></div>
+    <div class="def"><span class="art">ART. VII</span><b data-t="ost7b">損害賠償</b><span class="en" data-t="ost7en">LIABILITY</span><p data-t="ost7p">發射國對太空物體造成之損害負賠償責任,細節由 1972 年責任公約補充。</p></div>
+    <div class="def"><span class="art">ART. VIII</span><b data-t="ost8b">管轄與控制</b><span class="en" data-t="ost8en">JURISDICTION &amp; CONTROL</span><p data-t="ost8p">登記國對其太空物體及其上人員保有管轄權與控制權,所有權不因位處太空而改變。</p></div>
+    <div class="def"><span class="art">ART. IX</span><b data-t="ost9b">適當顧及原則</b><span class="en" data-t="ost9en">DUE REGARD</span><p data-t="ost9p">從事太空活動應顧及他國利益,避免對太空與天體造成有害污染,必要時應進行國際磋商。</p></div>
   </div>
 </section>
 
 <!-- ============ 04 原則宣言 ============ -->
 <section class="block" id="principles">
-  <div class="sec-head"><span class="no">04</span><h2>聯合國原則宣言<small>UN Declarations</small></h2></div>
-  <p class="sec-intro">1980 年代後條約立法停滯,聯合國大會改以不具條約拘束力的「原則宣言」形塑國家行為——軟法(soft law)自此成為國際太空法的重要載體。</p>
+  <div class="sec-head"><span class="no">04</span><h2><span data-t="sec4">聯合國原則宣言</span><small data-t="sec4en">UN Declarations</small></h2></div>
+  <p class="sec-intro" data-t="sec4intro">1980 年代後條約立法停滯,聯合國大會改以不具條約拘束力的「原則宣言」形塑國家行為——軟法(soft law)自此成為國際太空法的重要載體。</p>
   <div class="cards">
     <div class="card">
       <div class="tag">1963</div>
-      <h3>法律原則宣言</h3>
-      <p class="en">Declaration of Legal Principles</p>
-      <p>外太空條約的前身,首度以聯大決議宣示太空自由、不得據有與國家責任等原則。</p>
+      <h3 data-t="d1h">法律原則宣言</h3>
+      <p class="en" data-t="d1en">Declaration of Legal Principles</p>
+      <p data-t="d1p">外太空條約的前身,首度以聯大決議宣示太空自由、不得據有與國家責任等原則。</p>
     </div>
     <div class="card">
       <div class="tag">1982</div>
-      <h3>國際直接電視廣播原則</h3>
-      <p class="en">Direct Broadcasting Principles</p>
-      <p>規範衛星直播電視的跨國訊號傳輸,平衡資訊自由與國家主權的緊張。</p>
+      <h3 data-t="d2h">國際直接電視廣播原則</h3>
+      <p class="en" data-t="d2en">Direct Broadcasting Principles</p>
+      <p data-t="d2p">規範衛星直播電視的跨國訊號傳輸,平衡資訊自由與國家主權的緊張。</p>
     </div>
     <div class="card">
       <div class="tag">1986</div>
-      <h3>遙感探測原則</h3>
-      <p class="en">Remote Sensing Principles</p>
-      <p>確立衛星遙測地球不需被觀測國同意,但被觀測國有權以合理條件取得本國影像資料。</p>
+      <h3 data-t="d3h">遙感探測原則</h3>
+      <p class="en" data-t="d3en">Remote Sensing Principles</p>
+      <p data-t="d3p">確立衛星遙測地球不需被觀測國同意,但被觀測國有權以合理條件取得本國影像資料。</p>
     </div>
     <div class="card">
       <div class="tag">1992</div>
-      <h3>核動力源原則</h3>
-      <p class="en">Nuclear Power Source Principles</p>
-      <p>回應 Cosmos 954 墜毀事件,就太空核動力源的安全使用、通報與賠償訂立準則。</p>
+      <h3 data-t="d4h">核動力源原則</h3>
+      <p class="en" data-t="d4en">Nuclear Power Source Principles</p>
+      <p data-t="d4p">回應 Cosmos 954 墜毀事件,就太空核動力源的安全使用、通報與賠償訂立準則。</p>
     </div>
     <div class="card">
       <div class="tag">1996</div>
-      <h3>太空利益宣言</h3>
-      <p class="en">Space Benefits Declaration</p>
-      <p>強調太空活動的利益應惠及所有國家,特別關注開發中國家的需求與國際合作。</p>
+      <h3 data-t="d5h">太空利益宣言</h3>
+      <p class="en" data-t="d5en">Space Benefits Declaration</p>
+      <p data-t="d5p">強調太空活動的利益應惠及所有國家,特別關注開發中國家的需求與國際合作。</p>
     </div>
   </div>
 </section>
 
 <!-- ============ 05 COPUOS 與會員演進 ============ -->
 <section class="block" id="copuos">
-  <div class="sec-head"><span class="no">05</span><h2>COPUOS 與會員演進<small>Membership Evolution</small></h2></div>
-  <p class="sec-intro">聯合國和平使用外太空委員會(COPUOS)是國際太空法的主要立法平台,採共識決,下設科學技術與法律兩個小組委員會,秘書處為維也納的 UNOOSA。1959 年以 24 國常設成立,歷經 60 餘年擴充,<b style="color:var(--cyan);">2025 年達 110 個會員國</b>,是聯合國最大的委員會之一。下表整理自 UNOOSA 官方會員演進表:</p>
+  <div class="sec-head"><span class="no">05</span><h2><span data-t="sec5">COPUOS 與會員演進</span><small data-t="sec5en">Membership Evolution</small></h2></div>
+  <p class="sec-intro" data-t="sec5intro">聯合國和平使用外太空委員會(COPUOS)是國際太空法的主要立法平台,採共識決,下設科學技術與法律兩個小組委員會,秘書處為維也納的 UNOOSA。1959 年以 24 國常設成立,歷經 60 餘年擴充,<b style="color:var(--cyan);">2025 年達 110 個會員國</b>,是聯合國最大的委員會之一。下表整理自 UNOOSA 官方會員演進表:</p>
 
   <div class="tablewrap">
     <table class="evo">
-      <thead><tr><th>年份 · 依據決議</th><th>會員數</th><th>新加入會員國</th></tr></thead>
+      <thead><tr><th data-t="evo_th1">年份 · 依據決議</th><th data-t="evo_th2">會員數</th><th data-t="evo_th3">新加入會員國</th></tr></thead>
       <tbody>
-        <tr><td class="yr">1958<small>RES 1348 (XIII)</small></td><td class="cnt"><b>18</b><div class="growbar" style="width:16%"></div></td><td>臨時委員會成立:阿根廷、澳洲、比利時、巴西、加拿大、捷克斯洛伐克、法國、印度、伊朗、義大利、日本、墨西哥、波蘭、瑞典、蘇聯、阿拉伯聯合共和國(今埃及)、英國、美國</td></tr>
-        <tr class="milestone"><td class="yr">1959<small>RES 1472 (XIV)</small></td><td class="cnt"><b>24</b><div class="growbar" style="width:22%"></div></td><td><b>常設化</b>,新增:阿爾巴尼亞、奧地利、保加利亞、匈牙利、黎巴嫩、羅馬尼亞</td></tr>
-        <tr><td class="yr">1961<small>RES 1721 E (XVI)</small></td><td class="cnt"><b>28</b><div class="growbar" style="width:25%"></div></td><td>查德、蒙古、摩洛哥、獅子山</td></tr>
-        <tr><td class="yr">1973<small>RES 3182 (XXVIII)</small></td><td class="cnt"><b>37</b><div class="growbar" style="width:34%"></div></td><td>智利、東德、西德、印尼、肯亞、奈及利亞、巴基斯坦、蘇丹、委內瑞拉</td></tr>
-        <tr><td class="yr">1977<small>RES 32/196 B</small></td><td class="cnt"><b>47</b><div class="growbar" style="width:43%"></div></td><td>貝南、喀麥隆、哥倫比亞、厄瓜多、伊拉克、荷蘭、尼日、菲律賓、土耳其、南斯拉夫</td></tr>
-        <tr class="milestone"><td class="yr">1980<small>RES 35/16</small></td><td class="cnt"><b>53</b><div class="growbar" style="width:48%"></div></td><td><b>中國</b>、希臘 ¹、西班牙、敘利亞、上伏塔(今布吉納法索)、烏拉圭、越南</td></tr>
-        <tr><td class="yr">1994<small>RES 49/33</small></td><td class="cnt"><b>61</b><div class="growbar" style="width:55%"></div></td><td>古巴 ²、哈薩克、馬來西亞 ²、尼加拉瓜、秘魯 ²、葡萄牙、韓國 ²、塞內加爾、南非、烏克蘭 ³(兩德統一後德國以單一席位續任)</td></tr>
-        <tr><td class="yr">2001<small>RES 56/51</small></td><td class="cnt"><b>64</b><div class="growbar" style="width:58%"></div></td><td>沙烏地阿拉伯、斯洛伐克(古巴、馬來西亞、秘魯、韓國終止輪席,各取得完整席位)</td></tr>
-        <tr><td class="yr">2002<small>RES 57/116</small></td><td class="cnt"><b>65</b><div class="growbar" style="width:59%"></div></td><td>阿爾及利亞</td></tr>
-        <tr><td class="yr">2004<small>RES 59/116</small></td><td class="cnt"><b>67</b><div class="growbar" style="width:61%"></div></td><td>利比亞、泰國</td></tr>
-        <tr><td class="yr">2007<small>RES 62/217</small></td><td class="cnt"><b>69</b><div class="growbar" style="width:63%"></div></td><td>玻利維亞、瑞士</td></tr>
-        <tr><td class="yr">2010<small>RES 65/97</small></td><td class="cnt"><b>70</b><div class="growbar" style="width:64%"></div></td><td>突尼西亞</td></tr>
-        <tr><td class="yr">2011<small>RES 66/71</small></td><td class="cnt"><b>71</b><div class="growbar" style="width:65%"></div></td><td>亞塞拜然</td></tr>
-        <tr><td class="yr">2012<small>RES 67/113</small></td><td class="cnt"><b>74</b><div class="growbar" style="width:67%"></div></td><td>亞美尼亞、哥斯大黎加、約旦</td></tr>
-        <tr><td class="yr">2013<small>RES 68/75</small></td><td class="cnt"><b>76</b><div class="growbar" style="width:69%"></div></td><td>白俄羅斯、迦納</td></tr>
-        <tr><td class="yr">2014<small>RES 69/85</small></td><td class="cnt"><b>77</b><div class="growbar" style="width:70%"></div></td><td>盧森堡</td></tr>
-        <tr><td class="yr">2015<small>DEC 70/518</small></td><td class="cnt"><b>83</b><div class="growbar" style="width:75%"></div></td><td>薩爾瓦多、以色列、阿曼、卡達、斯里蘭卡、阿拉伯聯合大公國</td></tr>
-        <tr><td class="yr">2016<small>RES 71/90</small></td><td class="cnt"><b>84</b><div class="growbar" style="width:76%"></div></td><td>紐西蘭</td></tr>
-        <tr><td class="yr">2017<small>RES 72/77</small></td><td class="cnt"><b>87</b><div class="growbar" style="width:79%"></div></td><td>巴林、丹麥、挪威</td></tr>
-        <tr><td class="yr">2018<small>DEC 73/517</small></td><td class="cnt"><b>92</b><div class="growbar" style="width:84%"></div></td><td>賽普勒斯、衣索比亞、芬蘭、模里西斯、巴拉圭</td></tr>
-        <tr><td class="yr">2019<small>RES 74/82</small></td><td class="cnt"><b>95</b><div class="growbar" style="width:86%"></div></td><td>多明尼加、盧安達、新加坡</td></tr>
-        <tr class="milestone"><td class="yr">2021<small>RES 76/76</small></td><td class="cnt"><b>100</b><div class="growbar" style="width:91%"></div></td><td><b>突破 100 國</b>:安哥拉、孟加拉、科威特、巴拿馬、斯洛維尼亞</td></tr>
-        <tr><td class="yr">2022<small>RES 77/121</small></td><td class="cnt"><b>102</b><div class="growbar" style="width:93%"></div></td><td>瓜地馬拉、烏茲別克</td></tr>
-        <tr><td class="yr">2024<small>DEC 79/519 A・B</small></td><td class="cnt"><b>104</b><div class="growbar" style="width:95%"></div></td><td>吉布地、拉脫維亞</td></tr>
-        <tr class="milestone"><td class="yr">2025<small>DEC 80/516 A–D</small></td><td class="cnt"><b>110</b><div class="growbar" style="width:100%"></div></td><td><b>現行規模</b>:象牙海岸、甘比亞、宏都拉斯、馬爾地夫、馬爾他、辛巴威</td></tr>
+        <tr><td class="yr">1958<small>RES 1348 (XIII)</small></td><td class="cnt"><b>18</b><div class="growbar" style="width:16%"></div></td><td data-t="evo_r1">臨時委員會成立:阿根廷、澳洲、比利時、巴西、加拿大、捷克斯洛伐克、法國、印度、伊朗、義大利、日本、墨西哥、波蘭、瑞典、蘇聯、阿拉伯聯合共和國(今埃及)、英國、美國</td></tr>
+        <tr class="milestone"><td class="yr">1959<small>RES 1472 (XIV)</small></td><td class="cnt"><b>24</b><div class="growbar" style="width:22%"></div></td><td data-t="evo_r2"><b>常設化</b>,新增:阿爾巴尼亞、奧地利、保加利亞、匈牙利、黎巴嫩、羅馬尼亞</td></tr>
+        <tr><td class="yr">1961<small>RES 1721 E (XVI)</small></td><td class="cnt"><b>28</b><div class="growbar" style="width:25%"></div></td><td data-t="evo_r3">查德、蒙古、摩洛哥、獅子山</td></tr>
+        <tr><td class="yr">1973<small>RES 3182 (XXVIII)</small></td><td class="cnt"><b>37</b><div class="growbar" style="width:34%"></div></td><td data-t="evo_r4">智利、東德、西德、印尼、肯亞、奈及利亞、巴基斯坦、蘇丹、委內瑞拉</td></tr>
+        <tr><td class="yr">1977<small>RES 32/196 B</small></td><td class="cnt"><b>47</b><div class="growbar" style="width:43%"></div></td><td data-t="evo_r5">貝南、喀麥隆、哥倫比亞、厄瓜多、伊拉克、荷蘭、尼日、菲律賓、土耳其、南斯拉夫</td></tr>
+        <tr class="milestone"><td class="yr">1980<small>RES 35/16</small></td><td class="cnt"><b>53</b><div class="growbar" style="width:48%"></div></td><td data-t="evo_r6"><b>中國</b>、希臘 ¹、西班牙、敘利亞、上伏塔(今布吉納法索)、烏拉圭、越南</td></tr>
+        <tr><td class="yr">1994<small>RES 49/33</small></td><td class="cnt"><b>61</b><div class="growbar" style="width:55%"></div></td><td data-t="evo_r7">古巴 ²、哈薩克、馬來西亞 ²、尼加拉瓜、秘魯 ²、葡萄牙、韓國 ²、塞內加爾、南非、烏克蘭 ³(兩德統一後德國以單一席位續任)</td></tr>
+        <tr><td class="yr">2001<small>RES 56/51</small></td><td class="cnt"><b>64</b><div class="growbar" style="width:58%"></div></td><td data-t="evo_r8">沙烏地阿拉伯、斯洛伐克(古巴、馬來西亞、秘魯、韓國終止輪席,各取得完整席位)</td></tr>
+        <tr><td class="yr">2002<small>RES 57/116</small></td><td class="cnt"><b>65</b><div class="growbar" style="width:59%"></div></td><td data-t="evo_r9">阿爾及利亞</td></tr>
+        <tr><td class="yr">2004<small>RES 59/116</small></td><td class="cnt"><b>67</b><div class="growbar" style="width:61%"></div></td><td data-t="evo_r10">利比亞、泰國</td></tr>
+        <tr><td class="yr">2007<small>RES 62/217</small></td><td class="cnt"><b>69</b><div class="growbar" style="width:63%"></div></td><td data-t="evo_r11">玻利維亞、瑞士</td></tr>
+        <tr><td class="yr">2010<small>RES 65/97</small></td><td class="cnt"><b>70</b><div class="growbar" style="width:64%"></div></td><td data-t="evo_r12">突尼西亞</td></tr>
+        <tr><td class="yr">2011<small>RES 66/71</small></td><td class="cnt"><b>71</b><div class="growbar" style="width:65%"></div></td><td data-t="evo_r13">亞塞拜然</td></tr>
+        <tr><td class="yr">2012<small>RES 67/113</small></td><td class="cnt"><b>74</b><div class="growbar" style="width:67%"></div></td><td data-t="evo_r14">亞美尼亞、哥斯大黎加、約旦</td></tr>
+        <tr><td class="yr">2013<small>RES 68/75</small></td><td class="cnt"><b>76</b><div class="growbar" style="width:69%"></div></td><td data-t="evo_r15">白俄羅斯、迦納</td></tr>
+        <tr><td class="yr">2014<small>RES 69/85</small></td><td class="cnt"><b>77</b><div class="growbar" style="width:70%"></div></td><td data-t="evo_r16">盧森堡</td></tr>
+        <tr><td class="yr">2015<small>DEC 70/518</small></td><td class="cnt"><b>83</b><div class="growbar" style="width:75%"></div></td><td data-t="evo_r17">薩爾瓦多、以色列、阿曼、卡達、斯里蘭卡、阿拉伯聯合大公國</td></tr>
+        <tr><td class="yr">2016<small>RES 71/90</small></td><td class="cnt"><b>84</b><div class="growbar" style="width:76%"></div></td><td data-t="evo_r18">紐西蘭</td></tr>
+        <tr><td class="yr">2017<small>RES 72/77</small></td><td class="cnt"><b>87</b><div class="growbar" style="width:79%"></div></td><td data-t="evo_r19">巴林、丹麥、挪威</td></tr>
+        <tr><td class="yr">2018<small>DEC 73/517</small></td><td class="cnt"><b>92</b><div class="growbar" style="width:84%"></div></td><td data-t="evo_r20">賽普勒斯、衣索比亞、芬蘭、模里西斯、巴拉圭</td></tr>
+        <tr><td class="yr">2019<small>RES 74/82</small></td><td class="cnt"><b>95</b><div class="growbar" style="width:86%"></div></td><td data-t="evo_r21">多明尼加、盧安達、新加坡</td></tr>
+        <tr class="milestone"><td class="yr">2021<small>RES 76/76</small></td><td class="cnt"><b>100</b><div class="growbar" style="width:91%"></div></td><td data-t="evo_r22"><b>突破 100 國</b>:安哥拉、孟加拉、科威特、巴拿馬、斯洛維尼亞</td></tr>
+        <tr><td class="yr">2022<small>RES 77/121</small></td><td class="cnt"><b>102</b><div class="growbar" style="width:93%"></div></td><td data-t="evo_r23">瓜地馬拉、烏茲別克</td></tr>
+        <tr><td class="yr">2024<small>DEC 79/519 A・B</small></td><td class="cnt"><b>104</b><div class="growbar" style="width:95%"></div></td><td data-t="evo_r24">吉布地、拉脫維亞</td></tr>
+        <tr class="milestone"><td class="yr">2025<small>DEC 80/516 A–D</small></td><td class="cnt"><b>110</b><div class="growbar" style="width:100%"></div></td><td data-t="evo_r25"><b>現行規模</b>:象牙海岸、甘比亞、宏都拉斯、馬爾地夫、馬爾他、辛巴威</td></tr>
       </tbody>
     </table>
   </div>
-  <p class="fn">¹ 希臘與土耳其自 1980 年起每三年輪替一席;² 古巴/秘魯、馬來西亞/韓國各每兩年輪替一席;上述輪席安排分別於 1994 年(希臘、葡萄牙、西班牙、土耳其)及 2001 年(古巴、馬來西亞、秘魯、韓國)終止。³ 烏克蘭係遞補兩德統一後釋出之席位,即時生效。捷克斯洛伐克解體後由捷克續任,斯洛伐克於 2001 年另行入會;南斯拉夫解體後未由繼承國續任。RES = 聯大決議,DEC = 聯大決定。</p>
+  <p class="fn" data-t="evo_fn">¹ 希臘與土耳其自 1980 年起每三年輪替一席;² 古巴/秘魯、馬來西亞/韓國各每兩年輪替一席;上述輪席安排分別於 1994 年(希臘、葡萄牙、西班牙、土耳其)及 2001 年(古巴、馬來西亞、秘魯、韓國)終止。³ 烏克蘭係遞補兩德統一後釋出之席位,即時生效。捷克斯洛伐克解體後由捷克續任,斯洛伐克於 2001 年另行入會;南斯拉夫解體後未由繼承國續任。RES = 聯大決議,DEC = 聯大決定。</p>
 
   <details class="members">
-    <summary>現行 110 個會員國完整名單(2025,依地理區域)<span class="arrow">→</span></summary>
+    <summary data-t="mem_summary">現行 110 個會員國完整名單(2025,依地理區域)<span class="arrow">→</span></summary>
     <div class="inner">
       <div class="member-groups" style="margin-top:22px;">
         <div class="member-group">
-          <div class="glabel">歐洲 Europe<b>30</b></div>
-          <div class="chips"><span class="chip">阿爾巴尼亞</span><span class="chip">奧地利</span><span class="chip">白俄羅斯</span><span class="chip">比利時</span><span class="chip">保加利亞</span><span class="chip">賽普勒斯</span><span class="chip">捷克</span><span class="chip">丹麥</span><span class="chip">芬蘭</span><span class="chip">法國</span><span class="chip">德國</span><span class="chip">希臘</span><span class="chip">匈牙利</span><span class="chip">義大利</span><span class="chip new">拉脫維亞</span><span class="chip">盧森堡</span><span class="chip new">馬爾他</span><span class="chip">荷蘭</span><span class="chip">挪威</span><span class="chip">波蘭</span><span class="chip">葡萄牙</span><span class="chip">羅馬尼亞</span><span class="chip">俄羅斯</span><span class="chip">斯洛伐克</span><span class="chip">斯洛維尼亞</span><span class="chip">西班牙</span><span class="chip">瑞典</span><span class="chip">瑞士</span><span class="chip">烏克蘭</span><span class="chip">英國</span></div>
+          <div class="glabel" data-t="grp_eu">歐洲 Europe<b>30</b></div>
+          <div class="chips" data-t="chips_eu"><span class="chip">阿爾巴尼亞</span><span class="chip">奧地利</span><span class="chip">白俄羅斯</span><span class="chip">比利時</span><span class="chip">保加利亞</span><span class="chip">賽普勒斯</span><span class="chip">捷克</span><span class="chip">丹麥</span><span class="chip">芬蘭</span><span class="chip">法國</span><span class="chip">德國</span><span class="chip">希臘</span><span class="chip">匈牙利</span><span class="chip">義大利</span><span class="chip new">拉脫維亞</span><span class="chip">盧森堡</span><span class="chip new">馬爾他</span><span class="chip">荷蘭</span><span class="chip">挪威</span><span class="chip">波蘭</span><span class="chip">葡萄牙</span><span class="chip">羅馬尼亞</span><span class="chip">俄羅斯</span><span class="chip">斯洛伐克</span><span class="chip">斯洛維尼亞</span><span class="chip">西班牙</span><span class="chip">瑞典</span><span class="chip">瑞士</span><span class="chip">烏克蘭</span><span class="chip">英國</span></div>
         </div>
         <div class="member-group">
-          <div class="glabel">亞洲・太平洋 Asia-Pacific<b>34</b></div>
-          <div class="chips"><span class="chip">亞美尼亞</span><span class="chip">澳洲</span><span class="chip">亞塞拜然</span><span class="chip">巴林</span><span class="chip">孟加拉</span><span class="chip">中國</span><span class="chip">印度</span><span class="chip">印尼</span><span class="chip">伊朗</span><span class="chip">伊拉克</span><span class="chip">以色列</span><span class="chip">日本</span><span class="chip">約旦</span><span class="chip">哈薩克</span><span class="chip">韓國</span><span class="chip">科威特</span><span class="chip">黎巴嫩</span><span class="chip new">馬爾地夫</span><span class="chip">馬來西亞</span><span class="chip">蒙古</span><span class="chip">紐西蘭</span><span class="chip">阿曼</span><span class="chip">巴基斯坦</span><span class="chip">菲律賓</span><span class="chip">卡達</span><span class="chip">沙烏地阿拉伯</span><span class="chip">新加坡</span><span class="chip">斯里蘭卡</span><span class="chip">敘利亞</span><span class="chip">泰國</span><span class="chip">土耳其</span><span class="chip">阿拉伯聯合大公國</span><span class="chip">烏茲別克</span><span class="chip">越南</span></div>
+          <div class="glabel" data-t="grp_ap">亞洲・太平洋 Asia-Pacific<b>34</b></div>
+          <div class="chips" data-t="chips_ap"><span class="chip">亞美尼亞</span><span class="chip">澳洲</span><span class="chip">亞塞拜然</span><span class="chip">巴林</span><span class="chip">孟加拉</span><span class="chip">中國</span><span class="chip">印度</span><span class="chip">印尼</span><span class="chip">伊朗</span><span class="chip">伊拉克</span><span class="chip">以色列</span><span class="chip">日本</span><span class="chip">約旦</span><span class="chip">哈薩克</span><span class="chip">韓國</span><span class="chip">科威特</span><span class="chip">黎巴嫩</span><span class="chip new">馬爾地夫</span><span class="chip">馬來西亞</span><span class="chip">蒙古</span><span class="chip">紐西蘭</span><span class="chip">阿曼</span><span class="chip">巴基斯坦</span><span class="chip">菲律賓</span><span class="chip">卡達</span><span class="chip">沙烏地阿拉伯</span><span class="chip">新加坡</span><span class="chip">斯里蘭卡</span><span class="chip">敘利亞</span><span class="chip">泰國</span><span class="chip">土耳其</span><span class="chip">阿拉伯聯合大公國</span><span class="chip">烏茲別克</span><span class="chip">越南</span></div>
         </div>
         <div class="member-group">
-          <div class="glabel">非洲 Africa<b>25</b></div>
-          <div class="chips"><span class="chip">阿爾及利亞</span><span class="chip">安哥拉</span><span class="chip">貝南</span><span class="chip">布吉納法索</span><span class="chip">喀麥隆</span><span class="chip">查德</span><span class="chip new">象牙海岸</span><span class="chip new">吉布地</span><span class="chip">埃及</span><span class="chip">衣索比亞</span><span class="chip new">甘比亞</span><span class="chip">迦納</span><span class="chip">肯亞</span><span class="chip">利比亞</span><span class="chip">模里西斯</span><span class="chip">摩洛哥</span><span class="chip">尼日</span><span class="chip">奈及利亞</span><span class="chip">盧安達</span><span class="chip">塞內加爾</span><span class="chip">獅子山</span><span class="chip">南非</span><span class="chip">蘇丹</span><span class="chip">突尼西亞</span><span class="chip new">辛巴威</span></div>
+          <div class="glabel" data-t="grp_af">非洲 Africa<b>25</b></div>
+          <div class="chips" data-t="chips_af"><span class="chip">阿爾及利亞</span><span class="chip">安哥拉</span><span class="chip">貝南</span><span class="chip">布吉納法索</span><span class="chip">喀麥隆</span><span class="chip">查德</span><span class="chip new">象牙海岸</span><span class="chip new">吉布地</span><span class="chip">埃及</span><span class="chip">衣索比亞</span><span class="chip new">甘比亞</span><span class="chip">迦納</span><span class="chip">肯亞</span><span class="chip">利比亞</span><span class="chip">模里西斯</span><span class="chip">摩洛哥</span><span class="chip">尼日</span><span class="chip">奈及利亞</span><span class="chip">盧安達</span><span class="chip">塞內加爾</span><span class="chip">獅子山</span><span class="chip">南非</span><span class="chip">蘇丹</span><span class="chip">突尼西亞</span><span class="chip new">辛巴威</span></div>
         </div>
         <div class="member-group">
-          <div class="glabel">美洲 Americas<b>21</b></div>
-          <div class="chips"><span class="chip">阿根廷</span><span class="chip">玻利維亞</span><span class="chip">巴西</span><span class="chip">加拿大</span><span class="chip">智利</span><span class="chip">哥倫比亞</span><span class="chip">哥斯大黎加</span><span class="chip">古巴</span><span class="chip">多明尼加</span><span class="chip">厄瓜多</span><span class="chip">薩爾瓦多</span><span class="chip">瓜地馬拉</span><span class="chip new">宏都拉斯</span><span class="chip">墨西哥</span><span class="chip">尼加拉瓜</span><span class="chip">巴拿馬</span><span class="chip">巴拉圭</span><span class="chip">秘魯</span><span class="chip">烏拉圭</span><span class="chip">美國</span><span class="chip">委內瑞拉</span></div>
+          <div class="glabel" data-t="grp_am">美洲 Americas<b>21</b></div>
+          <div class="chips" data-t="chips_am"><span class="chip">阿根廷</span><span class="chip">玻利維亞</span><span class="chip">巴西</span><span class="chip">加拿大</span><span class="chip">智利</span><span class="chip">哥倫比亞</span><span class="chip">哥斯大黎加</span><span class="chip">古巴</span><span class="chip">多明尼加</span><span class="chip">厄瓜多</span><span class="chip">薩爾瓦多</span><span class="chip">瓜地馬拉</span><span class="chip new">宏都拉斯</span><span class="chip">墨西哥</span><span class="chip">尼加拉瓜</span><span class="chip">巴拿馬</span><span class="chip">巴拉圭</span><span class="chip">秘魯</span><span class="chip">烏拉圭</span><span class="chip">美國</span><span class="chip">委內瑞拉</span></div>
         </div>
       </div>
-      <p class="fn" style="margin-top:20px;"><span class="chip new" style="font-size:12px;">綠框</span> 為 2024–2025 年新加入之 8 國。臺灣因非聯合國會員,無法成為 COPUOS 成員——這也是《太空發展法》以國內立法接軌國際規範的背景。另有歐洲太空總署(ESA)、國際太空法學會(IISL)等政府間與非政府組織以觀察員身分參與。資料來源:<a href="https://www.unoosa.org/oosa/en/ourwork/copuos/members/evolution.html" target="_blank" rel="noopener">UNOOSA Membership Evolution</a>。</p>
+      <p class="fn" style="margin-top:20px;" data-t="mem_fn"><span class="chip new" style="font-size:12px;">綠框</span> 為 2024–2025 年新加入之 8 國。臺灣因非聯合國會員,無法成為 COPUOS 成員——這也是《太空發展法》以國內立法接軌國際規範的背景。另有歐洲太空總署(ESA)、國際太空法學會(IISL)等政府間與非政府組織以觀察員身分參與。資料來源:<a href="https://www.unoosa.org/oosa/en/ourwork/copuos/members/evolution.html" target="_blank" rel="noopener">UNOOSA Membership Evolution</a>。</p>
     </div>
   </details>
 </section>
 
 <!-- ============ 06 當代發展 ============ -->
 <section class="block" id="modern">
-  <div class="sec-head"><span class="no">06</span><h2>當代發展<small>Contemporary Developments</small></h2></div>
-  <p class="sec-intro">商業太空時代帶來條約制定時難以想像的課題:私人載人飛行、太空資源開採、數萬顆衛星的巨型星系。新規則正以政治承諾、國內立法與技術準則等多元形式生成。</p>
+  <div class="sec-head"><span class="no">06</span><h2><span data-t="sec6">當代發展</span><small data-t="sec6en">Contemporary Developments</small></h2></div>
+  <p class="sec-intro" data-t="sec6intro">商業太空時代帶來條約制定時難以想像的課題:私人載人飛行、太空資源開採、數萬顆衛星的巨型星系。新規則正以政治承諾、國內立法與技術準則等多元形式生成。</p>
   <div class="cards">
     <div class="card">
       <div class="tag">2020 –</div>
-      <h3>Artemis Accords</h3>
-      <p class="en">阿提米絲協定</p>
-      <p>美國主導的月球探索政治承諾,截至 2026 年 6 月已有 68 國簽署。重申 OST 原則之外,就太空資源利用、活動「安全區」、太空遺產保護等訂立準則——但俄、中未參與,規則的普世性仍待觀察。</p>
+      <h3 data-t="m1h">Artemis Accords</h3>
+      <p class="en" data-t="m1en">阿提米絲協定</p>
+      <p data-t="m1p">美國主導的月球探索政治承諾,截至 2026 年 6 月已有 68 國簽署。重申 OST 原則之外,就太空資源利用、活動「安全區」、太空遺產保護等訂立準則——但俄、中未參與,規則的普世性仍待觀察。</p>
       <p class="src"><a href="https://www.nasa.gov/artemis-accords/" target="_blank" rel="noopener">NASA Artemis Accords →</a></p>
     </div>
     <div class="card">
       <div class="tag">2015 –</div>
-      <h3>太空資源國內立法潮</h3>
-      <p class="en">Space Resources Legislation</p>
-      <p>美國(2015)、盧森堡(2017)、阿聯與日本(2021)相繼立法承認私人可擁有開採所得的太空資源,引發「是否牴觸不得據有原則」的論辯;COPUOS 已設工作小組討論。</p>
+      <h3 data-t="m2h">太空資源國內立法潮</h3>
+      <p class="en" data-t="m2en">Space Resources Legislation</p>
+      <p data-t="m2p">美國(2015)、盧森堡(2017)、阿聯與日本(2021)相繼立法承認私人可擁有開採所得的太空資源,引發「是否牴觸不得據有原則」的論辯;COPUOS 已設工作小組討論。</p>
     </div>
     <div class="card">
       <div class="tag">2007 / 2019</div>
-      <h3>太空碎片與永續準則</h3>
-      <p class="en">Debris Mitigation &amp; LTS Guidelines</p>
-      <p>COPUOS 太空碎片減緩準則與長期永續性(LTS)21 項準則雖屬自願性質,已成為各國許可審查的實質標準——臺灣的發射許可審查亦參照國際標準。</p>
+      <h3 data-t="m3h">太空碎片與永續準則</h3>
+      <p class="en" data-t="m3en">Debris Mitigation &amp; LTS Guidelines</p>
+      <p data-t="m3p">COPUOS 太空碎片減緩準則與長期永續性(LTS)21 項準則雖屬自願性質,已成為各國許可審查的實質標準——臺灣的發射許可審查亦參照國際標準。</p>
     </div>
     <div class="card">
       <div class="tag">2022 –</div>
-      <h3>太空安全與軍備控制</h3>
-      <p class="en">Space Security</p>
-      <p>聯大決議呼籲暫停破壞性直升式反衛星試驗;「防止外太空軍備競賽」(PAROS)與負責任行為準則的討論,在大國競爭下持續推進。</p>
+      <h3 data-t="m4h">太空安全與軍備控制</h3>
+      <p class="en" data-t="m4en">Space Security</p>
+      <p data-t="m4p">聯大決議呼籲暫停破壞性直升式反衛星試驗;「防止外太空軍備競賽」(PAROS)與負責任行為準則的討論,在大國競爭下持續推進。</p>
     </div>
     <div class="card">
       <div class="tag">ITU</div>
-      <h3>頻譜與軌道資源</h3>
-      <p class="en">Spectrum &amp; Orbital Slots</p>
-      <p>國際電信聯盟(ITU)《無線電規則》管理衛星頻率與地球靜止軌道位置的登記協調——巨型星系時代,頻軌資源成為太空治理最實際的戰場。</p>
+      <h3 data-t="m5h">頻譜與軌道資源</h3>
+      <p class="en" data-t="m5en">Spectrum &amp; Orbital Slots</p>
+      <p data-t="m5p">國際電信聯盟(ITU)《無線電規則》管理衛星頻率與地球靜止軌道位置的登記協調——巨型星系時代,頻軌資源成為太空治理最實際的戰場。</p>
     </div>
     <div class="card">
       <div class="tag">EMERGING</div>
-      <h3>太空交通管理</h3>
-      <p class="en">Space Traffic Management</p>
-      <p>低軌衛星數量爆炸性成長,碰撞預警、離軌處置、在軌服務(維修、除役)的規則化,是下一階段國際太空法的核心議程。</p>
+      <h3 data-t="m6h">太空交通管理</h3>
+      <p class="en" data-t="m6en">Space Traffic Management</p>
+      <p data-t="m6p">低軌衛星數量爆炸性成長,碰撞預警、離軌處置、在軌服務(維修、除役)的規則化,是下一階段國際太空法的核心議程。</p>
     </div>
   </div>
 </section>
 
 <!-- ============ 06 重要意義 ============ -->
 <section class="block" id="significance">
-  <div class="sec-head"><span class="no">07</span><h2>重要意義<small>Why It Matters</small></h2></div>
-  <p class="sec-intro">國際太空法為何重要?它是人類第一次在進入新疆域「之前」就先立下規則的嘗試。</p>
+  <div class="sec-head"><span class="no">07</span><h2><span data-t="sec7">重要意義</span><small data-t="sec7en">Why It Matters</small></h2></div>
+  <p class="sec-intro" data-t="sec7intro">國際太空法為何重要?它是人類第一次在進入新疆域「之前」就先立下規則的嘗試。</p>
   <div class="cards">
     <div class="card">
       <div class="tag">PEACE</div>
-      <h3>和平的底線</h3>
-      <p class="en">Keeping Space Peaceful</p>
-      <p>在冷戰最激烈的年代,美蘇仍同意不將核武部署於軌道、天體專用於和平目的。太空至今未成為武裝衝突的戰場,條約功不可沒。</p>
+      <h3 data-t="w1h">和平的底線</h3>
+      <p class="en" data-t="w1en">Keeping Space Peaceful</p>
+      <p data-t="w1p">在冷戰最激烈的年代,美蘇仍同意不將核武部署於軌道、天體專用於和平目的。太空至今未成為武裝衝突的戰場,條約功不可沒。</p>
     </div>
     <div class="card">
       <div class="tag">COMMONS</div>
-      <h3>全球公域的典範</h3>
-      <p class="en">A Global Commons</p>
-      <p>「不得據為己有」使太空成為與公海、南極並列的全球公域,任何國家都能自由進出——這是小國與新興太空國家(包括臺灣)得以參與太空的法律前提。</p>
+      <h3 data-t="w2h">全球公域的典範</h3>
+      <p class="en" data-t="w2en">A Global Commons</p>
+      <p data-t="w2p">「不得據為己有」使太空成為與公海、南極並列的全球公域,任何國家都能自由進出——這是小國與新興太空國家(包括臺灣)得以參與太空的法律前提。</p>
     </div>
     <div class="card">
       <div class="tag">ACCOUNTABILITY</div>
-      <h3>責任有歸屬</h3>
-      <p class="en">Clear Accountability</p>
-      <p>國家責任 + 發射國賠償 + 登記制度三位一體,確保太空中每個物體都有國家為其負責——即使發射者是私人企業。</p>
+      <h3 data-t="w3h">責任有歸屬</h3>
+      <p class="en" data-t="w3en">Clear Accountability</p>
+      <p data-t="w3p">國家責任 + 發射國賠償 + 登記制度三位一體,確保太空中每個物體都有國家為其負責——即使發射者是私人企業。</p>
     </div>
     <div class="card">
       <div class="tag">FOUNDATION</div>
-      <h3>商業太空的基礎建設</h3>
-      <p class="en">Enabling Commercial Space</p>
-      <p>OST 第 6 條要求國家「授權並持續監督」民間太空活動,直接催生了各國的太空專法與許可制度。沒有這套法制,今日的商業發射、衛星服務與太空新創都無從確立權利義務。</p>
+      <h3 data-t="w4h">商業太空的基礎建設</h3>
+      <p class="en" data-t="w4en">Enabling Commercial Space</p>
+      <p data-t="w4p">OST 第 6 條要求國家「授權並持續監督」民間太空活動,直接催生了各國的太空專法與許可制度。沒有這套法制,今日的商業發射、衛星服務與太空新創都無從確立權利義務。</p>
     </div>
   </div>
 
   <div class="bridge">
-    <h3>與臺灣的連結</h3>
-    <p>臺灣因非聯合國會員,無法簽署聯合國太空條約,也不能直接向聯合國登記太空物體。但 2021 年《太空發展法》明定太空活動應本於和平使用目的、遵循相關國際公約與慣例之精神——透過國內立法將國際太空法的核心原則「內國法化」:登錄制度呼應登記公約、發射許可與責任保險呼應國家責任與損害賠償、事故處理呼應營救與責任公約。這是臺灣以自身法制接軌國際太空秩序的方式。</p>
-    <p style="margin:0;"><a href="index.html">← 回到臺灣太空法規總覽</a></p>
+    <h3 data-t="bridge_h">與臺灣的連結</h3>
+    <p data-t="bridge_p">臺灣因非聯合國會員,無法簽署聯合國太空條約,也不能直接向聯合國登記太空物體。但 2021 年《太空發展法》明定太空活動應本於和平使用目的、遵循相關國際公約與慣例之精神——透過國內立法將國際太空法的核心原則「內國法化」:登錄制度呼應登記公約、發射許可與責任保險呼應國家責任與損害賠償、事故處理呼應營救與責任公約。這是臺灣以自身法制接軌國際太空秩序的方式。</p>
+    <p style="margin:0;" data-t="bridge_link"><a href="index.html">← 回到臺灣太空法規總覽</a></p>
   </div>
 
-  <div class="disclaimer" style="margin-top:32px;">
+  <div class="disclaimer" style="margin-top:32px;" data-t="disclaimer">
     <b style="color:var(--gold);">資料說明</b><br>
     本頁內容彙整自<a href="https://www.unoosa.org/oosa/en/ourwork/spacelaw/treaties.html" target="_blank" rel="noopener">聯合國外太空事務廳(UNOOSA)</a>、<a href="https://www.nasa.gov/artemis-accords/" target="_blank" rel="noopener">NASA</a>及<a href="https://www.state.gov/bureau-of-oceans-and-international-environmental-and-scientific-affairs/artemis-accords" target="_blank" rel="noopener">美國國務院</a>等公開資訊,為方便閱讀經摘要與白話改寫,不具法律效力。締約國數字隨時間變動,請以 UNOOSA 條約狀態頁為準。資料整理時間:2026 年 7 月。
   </div>
@@ -548,17 +560,298 @@
 
 <!-- ============ FOOTER ============ -->
 <footer>
-  <div class="t">從福爾摩沙望向宇宙</div>
+  <div class="t" data-t="foot_t">從福爾摩沙望向宇宙</div>
   <div class="s">INTERNATIONAL SPACE LAW · FROM FORMOSA, TOWARD THE COSMOS</div>
   <div class="links">
-    <a href="index.html">臺灣太空法規總覽</a> ·
+    <a href="index.html" data-t="foot_tw">臺灣太空法規總覽</a> ·
     <a href="https://www.unoosa.org/" target="_blank" rel="noopener">UNOOSA</a> ·
-    <a href="https://www.tasa.org.tw/" target="_blank" rel="noopener">TASA 國家太空中心</a>
+    <a href="https://www.tasa.org.tw/" target="_blank" rel="noopener" data-t="foot_tasa">TASA 國家太空中心</a>
   </div>
 </footer>
 
 </div>
 
+<script>
+/* ===================== i18n =====================
+   Chinese lives in the markup and is snapshotted on load, so it stays the source of truth
+   for search engines and no-JS readers; I18N_EN carries English only. Any key without an
+   English entry falls back to the original Chinese instead of blanking the element. */
+const I18N_EN = {
+  __title: 'International Space Law — 國際太空法總覽',
+  __desc: 'A plain-language guide to international space law: the five UN space treaties, a timeline of its evolution, the core principles of the Outer Space Treaty, the UN declarations of principles, the Artemis Accords and other contemporary developments — and why they matter.',
+
+  /* nav — kept short so the bar stays on one row, as on valuechain.html */
+  nav_brand: 'Space Law',
+  nav_timeline: 'Timeline',
+  nav_treaties: 'Treaties',
+  nav_ost: 'OST Principles',
+  nav_principles: 'Declarations',
+  nav_copuos: 'COPUOS',
+  nav_modern: 'Today',
+  nav_significance: 'Why It Matters',
+  nav_valuechain: 'Value Chain',
+  nav_switch: 'Taiwan Space Law →',
+
+  /* hero */
+  kicker: 'The Law of Outer Space',
+  title: 'International Space Law',
+  sub: 'A Legal Order for All Humankind',
+  lede: 'Since Sputnik 1 lifted off in 1957, humanity has built a legal order for space activities under the United Nations framework. The 1967 Outer Space Treaty is its charter, supplemented by four further treaties and a series of declarations of principles, establishing that outer space may not be appropriated, must be used for peaceful purposes, and shall serve the common interest of all humankind. This page surveys how international space law evolved, the five core treaties, and where the rules are heading.',
+  note: 'This is a plain-language summary for general reference; the authentic treaty texts and current ratification status are those published by the <a href="https://www.unoosa.org/oosa/en/ourwork/spacelaw/treaties.html" target="_blank" rel="noopener">United Nations Office for Outer Space Affairs (UNOOSA)</a>.',
+  s1v: '1967', s1l: 'Outer Space Treaty entered into force',
+  s2v: '5',    s2l: 'core UN space treaties',
+  s3v: '118',  s3l: 'Outer Space Treaty States Parties (Oct 2025)',
+  s4v: '68',   s4l: 'Artemis Accords signatories (Jun 2026)',
+  s5v: '110',  s5l: 'COPUOS member States (2025)',
+
+  /* 01 timeline */
+  sec1: 'Timeline', sec1en: 'How the Law Evolved',
+  sec1intro: 'The Cold War space race produced humanity\'s first space laws. From the shock of Sputnik to the return to the Moon in the Artemis era, international space law has always evolved in the tension between technology and geopolitics.',
+  tl1d: '4 Oct 1957',
+  tl1h: 'Sputnik 1 Reaches Orbit',
+  tl1p: 'The Soviet Union launched the first artificial satellite. It passed over country after country without a single protest of "violation of airspace" — inadvertently laying down the state practice on which the freedom of outer space rests.',
+  tl2d: '1958–1959',
+  tl2h: 'The UN Creates COPUOS',
+  tl2p: 'The General Assembly established the Committee on the Peaceful Uses of Outer Space (COPUOS), which became a permanent body in 1959 and has been the principal law-making forum for international space law ever since. It works through a Scientific and Technical Subcommittee and a Legal Subcommittee.',
+  tl3d: '1963',
+  tl3h: 'Declaration of Legal Principles and the Partial Test Ban Treaty',
+  tl3p: 'The General Assembly adopted the Declaration of Legal Principles Governing the Activities of States in the Exploration and Use of Outer Space, foreshadowing the core of the future Outer Space Treaty. The same year, the Partial Test Ban Treaty prohibited nuclear tests in outer space.',
+  tl4d: '10 Oct 1967',
+  tl4h: 'The Outer Space Treaty Enters into Force — the Charter of Space',
+  tl4p: 'Formally the Treaty on Principles Governing the Activities of States in the Exploration and Use of Outer Space, including the Moon and Other Celestial Bodies. It set the constitutional framework of space law and is often called the "Magna Carta of space".',
+  tl5d: '1968',
+  tl5h: 'The Rescue Agreement',
+  tl5p: 'Astronauts are "envoys of mankind in outer space" — States are obliged to assist those in distress and to return space objects to the launching authority.',
+  tl6d: '1972',
+  tl6h: 'The Liability Convention',
+  tl6p: 'It fixed the liability of the "launching State": absolute liability for damage caused on the surface of the Earth or to aircraft in flight, and fault-based liability for collisions in outer space.',
+  tl7d: '1975',
+  tl7h: 'The Registration Convention',
+  tl7p: 'Launching States must enter space objects in a national registry and notify the UN Secretary-General — in effect an international register of residence for objects in space.',
+  tl8d: '1979',
+  tl8h: 'The Moon Agreement',
+  tl8p: 'It declared the Moon and its natural resources the "common heritage of mankind", but the major spacefaring States — the United States, Russia and China — never joined. With fewer than twenty parties, its practical effect is limited.',
+  tl9d: '1982–1996',
+  tl9h: 'The Era of the Four Declarations',
+  tl9p: 'Treaty-making slowed, and the General Assembly turned to resolutions instead, adopting principles on direct broadcasting satellites (1982), remote sensing (1986), nuclear power sources (1992) and the benefits of space (1996).',
+  tl10d: '2007–2019',
+  tl10h: 'Debris Mitigation and Long-Term Sustainability Guidelines',
+  tl10p: 'COPUOS endorsed the Space Debris Mitigation Guidelines in 2007 and adopted the 21 Guidelines for the Long-Term Sustainability (LTS) of Outer Space Activities in 2019, responding to the reality of increasingly crowded orbits.',
+  tl11d: '2020',
+  tl11h: 'The Artemis Accords Are Signed',
+  tl11p: 'Political commitments accompanying the US-led return to the Moon. They reaffirm Outer Space Treaty principles and set standards of conduct on transparency, interoperability, space resource use and safety zones. By June 2026, 68 States had signed.',
+  tl12d: '2022',
+  tl12h: 'The Push to Ban ASAT Testing',
+  tl12p: 'The General Assembly adopted a resolution calling on States to commit not to conduct destructive direct-ascent anti-satellite (ASAT) missile tests, in order to limit debris and preserve the safety of space.',
+  tl13d: 'Ongoing',
+  tl13h: 'Space Resources, Traffic Management and New Rules',
+  tl13p: 'The legal status of space resource extraction, orbital and spectrum management for mega-constellations, and space traffic management (STM) are all still taking shape — within COPUOS and in national legislation alike.',
+
+  /* 02 five treaties */
+  sec2: 'The Five UN Space Treaties', sec2en: 'The Backbone of Space Law',
+  sec2intro: 'The backbone of international space law, all negotiated within COPUOS. Party counts are approximate; for the current position see the <a href="https://www.unoosa.org/oosa/en/ourwork/spacelaw/treaties/status/index.html" target="_blank" rel="noopener">UNOOSA treaty status page</a>.',
+  t1tag: 'TREATY 01 · 1967',
+  t1h: 'Outer Space Treaty (OST)',
+  t1en: '外太空條約',
+  t1p: 'The charter of space law: exploration for the benefit of all humankind, no claim of sovereignty, no weapons of mass destruction in orbit, and international responsibility of States for national space activities. Nearly every spacefaring State is a party.',
+  t1pill1: '<i></i>118 States Parties (Oct 2025)',
+  t1pill2: '<i></i>Charter of space',
+  t2tag: 'TREATY 02 · 1968',
+  t2h: 'Rescue Agreement (ARRA)',
+  t2en: '營救協定',
+  t2p: 'States must do all they can to rescue astronauts in distress and return them safely; a space object found on their territory must be returned to the launching authority. It gives concrete form to the humanitarian duty in Article V of the OST.',
+  t2pill1: '<i></i>~100 States Parties',
+  t3tag: 'TREATY 03 · 1972',
+  t3h: 'Liability Convention (LIAB)',
+  t3en: '責任公約',
+  t3p: 'The "launching State" is liable for damage caused by its space objects: <b style="color:var(--gold);">absolute liability</b> for damage on the Earth\'s surface or to aircraft in flight, and fault-based liability as between space objects. Canada invoked the Convention to claim compensation when the Soviet nuclear-powered satellite Cosmos 954 crashed on its territory in 1978.',
+  t3pill1: '<i></i>~100 States Parties',
+  t4tag: 'TREATY 04 · 1975',
+  t4h: 'Registration Convention (REG)',
+  t4en: '登記公約',
+  t4p: 'Launching States must maintain a registry of space objects and furnish the UN Secretary-General with orbital parameters and other data, so that jurisdiction and liability can be traced — the international origin of national registration regimes, Taiwan\'s included.',
+  t4pill1: '<i></i>78 States Parties (Jan 2026)',
+  t5tag: 'TREATY 05 · 1979',
+  t5h: 'Moon Agreement',
+  t5en: '月球協定',
+  t5p: 'It declares the Moon and its resources the "common heritage of mankind" and calls for an international regime to share the benefits of any exploitation. Because the major spacefaring States all declined to join (fewer than twenty parties), it is seen as the watershed at which international space law-making went into decline.',
+  t5pill1: '<i></i>Major spacefaring States absent',
+
+  /* 03 OST principles */
+  sec3: 'Core Principles of the Outer Space Treaty', sec3en: 'OST Principles',
+  sec3intro: 'The Outer Space Treaty runs to just 17 articles, yet it laid the foundation of the space order for the sixty years that followed. Here are its principal provisions in plain language:',
+  ost1b: 'Province of All Mankind',    ost1en: '全人類的疆域',
+  ost1p: 'The exploration and use of outer space shall be carried out for the benefit of all countries; space is free for exploration and use by all States, without discrimination.',
+  ost2b: 'Non-Appropriation',          ost2en: '不得據為己有',
+  ost2p: 'Outer space and celestial bodies are not subject to national appropriation by claim of sovereignty, by means of use or occupation, or by any other means.',
+  ost3b: 'International Law Applies',  ost3en: '國際法適用',
+  ost3p: 'Space activities shall be conducted in accordance with international law, including the Charter of the United Nations, in the interest of maintaining international peace and security.',
+  ost4b: 'Partial Demilitarization',   ost4en: '限制軍事化',
+  ost4p: 'Placing nuclear weapons or any other weapons of mass destruction in orbit is prohibited; the Moon and other celestial bodies shall be used exclusively for peaceful purposes, barring military bases and weapons testing.',
+  ost5b: 'Envoys of Mankind',          ost5en: '太空人為人類使者',
+  ost5p: 'States shall regard astronauts as envoys of mankind in outer space and render them all possible assistance in the event of distress.',
+  ost6b: 'State Responsibility',       ost6en: '國家責任',
+  ost6p: 'States bear international responsibility for their national space activities — including those of private companies, which require authorization and continuing supervision by the State. This is the direct reason States enact domestic space legislation, Taiwan\'s Space Development Act among them.',
+  ost7b: 'Liability',                  ost7en: '損害賠償',
+  ost7p: 'The launching State is liable for damage caused by its space objects; the 1972 Liability Convention fills in the detail.',
+  ost8b: 'Jurisdiction &amp; Control', ost8en: '管轄與控制',
+  ost8p: 'The State of registry retains jurisdiction and control over its space object and over any personnel aboard it; ownership is not affected by the object\'s presence in outer space.',
+  ost9b: 'Due Regard',                 ost9en: '適當顧及原則',
+  ost9p: 'States shall conduct space activities with due regard to the corresponding interests of other States, avoid harmful contamination of space and celestial bodies, and undertake international consultations where necessary.',
+
+  /* 04 declarations */
+  sec4: 'UN Declarations of Principles', sec4en: 'When Soft Law Took Over',
+  sec4intro: 'After treaty-making stalled in the 1980s, the General Assembly turned to non-binding "declarations of principles" to shape State behaviour — and soft law became a principal vehicle of international space law.',
+  d1h: 'Declaration of Legal Principles', d1en: '法律原則宣言',
+  d1p: 'The forerunner of the Outer Space Treaty — the first General Assembly resolution to proclaim the freedom of space, non-appropriation and State responsibility.',
+  d2h: 'Direct Broadcasting Principles', d2en: '國際直接電視廣播原則',
+  d2p: 'Rules for the cross-border transmission of satellite television signals, balancing freedom of information against State sovereignty.',
+  d3h: 'Remote Sensing Principles', d3en: '遙感探測原則',
+  d3p: 'Sensing the Earth from orbit requires no consent from the sensed State, but that State is entitled to obtain data covering its own territory on reasonable terms.',
+  d4h: 'Nuclear Power Source Principles', d4en: '核動力源原則',
+  d4p: 'A response to the Cosmos 954 crash, setting standards for the safe use of nuclear power sources in space, and for notification and compensation.',
+  d5h: 'Space Benefits Declaration', d5en: '太空利益宣言',
+  d5p: 'It stresses that the benefits of space activities should reach all countries, with particular regard to the needs of developing countries and to international cooperation.',
+
+  /* 05 COPUOS */
+  sec5: 'COPUOS and Its Membership', sec5en: 'From 18 States to 110',
+  sec5intro: 'The United Nations Committee on the Peaceful Uses of Outer Space (COPUOS) is the principal law-making forum for international space law. It decides by consensus and works through a Scientific and Technical Subcommittee and a Legal Subcommittee, with UNOOSA in Vienna as its secretariat. Established on a permanent basis in 1959 with 24 members, it has expanded over more than sixty years to <b style="color:var(--cyan);">110 member States in 2025</b>, making it one of the largest committees in the United Nations. The table below is compiled from the official UNOOSA membership evolution record:',
+  evo_th1: 'Year · Resolution',
+  evo_th2: 'Members',
+  evo_th3: 'States Added',
+  evo_r1: 'Ad hoc committee established: Argentina, Australia, Belgium, Brazil, Canada, Czechoslovakia, France, India, Iran, Italy, Japan, Mexico, Poland, Sweden, Soviet Union, United Arab Republic (now Egypt), United Kingdom, United States',
+  evo_r2: '<b>Made permanent</b>; added: Albania, Austria, Bulgaria, Hungary, Lebanon, Romania',
+  evo_r3: 'Chad, Mongolia, Morocco, Sierra Leone',
+  evo_r4: 'Chile, East Germany, West Germany, Indonesia, Kenya, Nigeria, Pakistan, Sudan, Venezuela',
+  evo_r5: 'Benin, Cameroon, Colombia, Ecuador, Iraq, Netherlands, Niger, Philippines, Turkey, Yugoslavia',
+  evo_r6: '<b>China</b>, Greece ¹, Spain, Syria, Upper Volta (now Burkina Faso), Uruguay, Viet Nam',
+  evo_r7: 'Cuba ², Kazakhstan, Malaysia ², Nicaragua, Peru ², Portugal, Republic of Korea ², Senegal, South Africa, Ukraine ³ (after reunification, Germany continued in a single seat)',
+  evo_r8: 'Saudi Arabia, Slovakia (Cuba, Malaysia, Peru and the Republic of Korea ended their seat rotations, each taking a full seat)',
+  evo_r9: 'Algeria',
+  evo_r10: 'Libya, Thailand',
+  evo_r11: 'Bolivia, Switzerland',
+  evo_r12: 'Tunisia',
+  evo_r13: 'Azerbaijan',
+  evo_r14: 'Armenia, Costa Rica, Jordan',
+  evo_r15: 'Belarus, Ghana',
+  evo_r16: 'Luxembourg',
+  evo_r17: 'El Salvador, Israel, Oman, Qatar, Sri Lanka, United Arab Emirates',
+  evo_r18: 'New Zealand',
+  evo_r19: 'Bahrain, Denmark, Norway',
+  evo_r20: 'Cyprus, Ethiopia, Finland, Mauritius, Paraguay',
+  evo_r21: 'Dominican Republic, Rwanda, Singapore',
+  evo_r22: '<b>Past 100 members</b>: Angola, Bangladesh, Kuwait, Panama, Slovenia',
+  evo_r23: 'Guatemala, Uzbekistan',
+  evo_r24: 'Djibouti, Latvia',
+  evo_r25: '<b>Current size</b>: Côte d\'Ivoire, Gambia, Honduras, Maldives, Malta, Zimbabwe',
+  evo_fn: '¹ Greece and Turkey shared a seat on a three-year rotation from 1980; ² Cuba/Peru and Malaysia/the Republic of Korea each shared a seat on a two-year rotation. These rotation arrangements ended in 1994 (Greece, Portugal, Spain, Turkey) and in 2001 (Cuba, Malaysia, Peru, Republic of Korea) respectively. ³ Ukraine took up the seat released by German reunification, with immediate effect. After the dissolution of Czechoslovakia the seat continued with Czechia, and Slovakia joined separately in 2001; no successor State took over the seat of the former Yugoslavia. RES = General Assembly resolution, DEC = General Assembly decision.',
+  mem_summary: 'Full list of the 110 current member States (2025, by geographic group)<span class="arrow">→</span>',
+  grp_eu: 'Europe<b>30</b>',
+  grp_ap: 'Asia-Pacific<b>34</b>',
+  grp_af: 'Africa<b>25</b>',
+  grp_am: 'Americas<b>21</b>',
+  chips_eu: '<span class="chip">Albania</span><span class="chip">Austria</span><span class="chip">Belarus</span><span class="chip">Belgium</span><span class="chip">Bulgaria</span><span class="chip">Cyprus</span><span class="chip">Czechia</span><span class="chip">Denmark</span><span class="chip">Finland</span><span class="chip">France</span><span class="chip">Germany</span><span class="chip">Greece</span><span class="chip">Hungary</span><span class="chip">Italy</span><span class="chip new">Latvia</span><span class="chip">Luxembourg</span><span class="chip new">Malta</span><span class="chip">Netherlands</span><span class="chip">Norway</span><span class="chip">Poland</span><span class="chip">Portugal</span><span class="chip">Romania</span><span class="chip">Russia</span><span class="chip">Slovakia</span><span class="chip">Slovenia</span><span class="chip">Spain</span><span class="chip">Sweden</span><span class="chip">Switzerland</span><span class="chip">Ukraine</span><span class="chip">United Kingdom</span>',
+  chips_ap: '<span class="chip">Armenia</span><span class="chip">Australia</span><span class="chip">Azerbaijan</span><span class="chip">Bahrain</span><span class="chip">Bangladesh</span><span class="chip">China</span><span class="chip">India</span><span class="chip">Indonesia</span><span class="chip">Iran</span><span class="chip">Iraq</span><span class="chip">Israel</span><span class="chip">Japan</span><span class="chip">Jordan</span><span class="chip">Kazakhstan</span><span class="chip">Kuwait</span><span class="chip">Lebanon</span><span class="chip">Malaysia</span><span class="chip new">Maldives</span><span class="chip">Mongolia</span><span class="chip">New Zealand</span><span class="chip">Oman</span><span class="chip">Pakistan</span><span class="chip">Philippines</span><span class="chip">Qatar</span><span class="chip">Republic of Korea</span><span class="chip">Saudi Arabia</span><span class="chip">Singapore</span><span class="chip">Sri Lanka</span><span class="chip">Syria</span><span class="chip">Thailand</span><span class="chip">Turkey</span><span class="chip">United Arab Emirates</span><span class="chip">Uzbekistan</span><span class="chip">Viet Nam</span>',
+  chips_af: '<span class="chip">Algeria</span><span class="chip">Angola</span><span class="chip">Benin</span><span class="chip">Burkina Faso</span><span class="chip">Cameroon</span><span class="chip">Chad</span><span class="chip new">Côte d\'Ivoire</span><span class="chip new">Djibouti</span><span class="chip">Egypt</span><span class="chip">Ethiopia</span><span class="chip new">Gambia</span><span class="chip">Ghana</span><span class="chip">Kenya</span><span class="chip">Libya</span><span class="chip">Mauritius</span><span class="chip">Morocco</span><span class="chip">Niger</span><span class="chip">Nigeria</span><span class="chip">Rwanda</span><span class="chip">Senegal</span><span class="chip">Sierra Leone</span><span class="chip">South Africa</span><span class="chip">Sudan</span><span class="chip">Tunisia</span><span class="chip new">Zimbabwe</span>',
+  chips_am: '<span class="chip">Argentina</span><span class="chip">Bolivia</span><span class="chip">Brazil</span><span class="chip">Canada</span><span class="chip">Chile</span><span class="chip">Colombia</span><span class="chip">Costa Rica</span><span class="chip">Cuba</span><span class="chip">Dominican Republic</span><span class="chip">Ecuador</span><span class="chip">El Salvador</span><span class="chip">Guatemala</span><span class="chip new">Honduras</span><span class="chip">Mexico</span><span class="chip">Nicaragua</span><span class="chip">Panama</span><span class="chip">Paraguay</span><span class="chip">Peru</span><span class="chip">United States</span><span class="chip">Uruguay</span><span class="chip">Venezuela</span>',
+  mem_fn: '<span class="chip new" style="font-size:12px;">Green</span> marks the 8 States that joined in 2024–2025. Taiwan, not being a UN member, cannot become a member of COPUOS — which is the backdrop against which the Space Development Act aligns with international norms through domestic legislation. Intergovernmental and non-governmental bodies such as the European Space Agency (ESA) and the International Institute of Space Law (IISL) also take part as observers. Source: <a href="https://www.unoosa.org/oosa/en/ourwork/copuos/members/evolution.html" target="_blank" rel="noopener">UNOOSA Membership Evolution</a>.',
+
+  /* 06 contemporary developments */
+  sec6: 'Contemporary Developments', sec6en: 'Rules for the Commercial Era',
+  sec6intro: 'The commercial space age raises questions the treaty drafters could scarcely have imagined: private human spaceflight, space resource extraction, mega-constellations of tens of thousands of satellites. New rules are emerging in many forms — political commitments, national legislation and technical guidelines.',
+  m1h: 'Artemis Accords', m1en: '阿提米絲協定',
+  m1p: 'US-led political commitments on lunar exploration, signed by 68 States as of June 2026. Beyond reaffirming OST principles, they set standards on space resource use, "safety zones" around activities and the protection of space heritage — but Russia and China are not taking part, so how universal these rules become remains to be seen.',
+  m2h: 'Space Resources Legislation', m2en: '太空資源國內立法潮',
+  m2p: 'The United States (2015), Luxembourg (2017), the UAE and Japan (2021) have each legislated to recognize private ownership of extracted space resources, triggering debate over whether this conflicts with the non-appropriation principle. COPUOS has set up a working group on the question.',
+  m3h: 'Debris Mitigation &amp; LTS Guidelines', m3en: '太空碎片與永續準則',
+  m3p: 'The COPUOS Space Debris Mitigation Guidelines and the 21 Long-Term Sustainability (LTS) Guidelines are voluntary, yet they have become the de facto benchmark in national licensing reviews — Taiwan\'s launch permit review likewise follows international standards.',
+  m4h: 'Space Security', m4en: '太空安全與軍備控制',
+  m4p: 'General Assembly resolutions call for a halt to destructive direct-ascent anti-satellite testing, while discussion of the Prevention of an Arms Race in Outer Space (PAROS) and of norms of responsible behaviour presses on amid great-power competition.',
+  m5h: 'Spectrum &amp; Orbital Slots', m5en: '頻譜與軌道資源',
+  m5p: 'The ITU Radio Regulations govern the registration and coordination of satellite frequencies and geostationary orbital positions — in the age of mega-constellations, spectrum and orbital slots are the most concrete battleground in space governance.',
+  m6h: 'Space Traffic Management', m6en: '太空交通管理',
+  m6p: 'With LEO satellite numbers growing explosively, rules for collision warning, end-of-life disposal and on-orbit servicing (repair and decommissioning) are the core agenda for the next phase of international space law.',
+
+  /* 07 why it matters */
+  sec7: 'Why It Matters', sec7en: 'Rules Before the Frontier',
+  sec7intro: 'Why does international space law matter? It is humanity\'s first attempt to lay down the rules for a new frontier before entering it.',
+  w1h: 'Keeping Space Peaceful', w1en: '和平的底線',
+  w1p: 'At the height of the Cold War, the United States and the Soviet Union still agreed to keep nuclear weapons out of orbit and to reserve celestial bodies for peaceful purposes. That space has never become a battlefield of armed conflict owes much to these treaties.',
+  w2h: 'A Global Commons', w2en: '全球公域的典範',
+  w2p: 'Non-appropriation places outer space alongside the high seas and Antarctica as a global commons, open to every State — the legal precondition on which small and emerging spacefaring nations, Taiwan included, can take part in space at all.',
+  w3h: 'Clear Accountability', w3en: '責任有歸屬',
+  w3p: 'State responsibility, launching-State liability and registration work as one, ensuring that every object in space has a State answering for it — even when the launch is by a private company.',
+  w4h: 'Enabling Commercial Space', w4en: '商業太空的基礎建設',
+  w4p: 'Article VI of the OST requires States to "authorize and continually supervise" private space activities, and directly gave rise to national space acts and licensing regimes. Without that legal scaffolding, today\'s commercial launches, satellite services and space startups would have no basis on which to establish their rights and obligations.',
+
+  /* bridge, disclaimer, footer */
+  bridge_h: 'The Taiwan Connection',
+  bridge_p: 'Because Taiwan is not a UN member, it cannot sign the United Nations space treaties, nor register space objects directly with the UN. But the 2021 Space Development Act provides that space activities shall be founded on peaceful purposes and shall follow the spirit of the relevant international conventions and practice — domesticating the core principles of international space law through national legislation. Registration mirrors the Registration Convention; launch permits and liability insurance mirror State responsibility and liability for damage; accident handling mirrors the Rescue Agreement and the Liability Convention. This is how Taiwan connects its own legal system to the international space order.',
+  bridge_link: '<a href="index.html">← Back to Taiwan Space Law</a>',
+  disclaimer: '<b style="color:var(--gold);">About the data</b><br>This page is compiled from public sources including the <a href="https://www.unoosa.org/oosa/en/ourwork/spacelaw/treaties.html" target="_blank" rel="noopener">United Nations Office for Outer Space Affairs (UNOOSA)</a>, <a href="https://www.nasa.gov/artemis-accords/" target="_blank" rel="noopener">NASA</a> and the <a href="https://www.state.gov/bureau-of-oceans-and-international-environmental-and-scientific-affairs/artemis-accords" target="_blank" rel="noopener">U.S. Department of State</a>. It is summarized and rewritten in plain language for readability and has no legal effect. Party counts change over time — refer to the UNOOSA treaty status page. Compiled July 2026.',
+  foot_t: 'From Formosa, Toward the Cosmos',
+  foot_tw: 'Taiwan Space Law',
+  foot_tasa: 'TASA — Taiwan Space Agency',
+};
+
+const ZH_TITLE = document.title;
+const ZH_DESC = document.querySelector('meta[name="description"]').content;
+const ZH_SNAPSHOT = new Map();
+document.querySelectorAll('[data-t]').forEach(el => ZH_SNAPSHOT.set(el, el.innerHTML));
+
+const LANG_KEY = 'tasa-lang';
+let lang = 'zh';
+try {
+  lang = new URLSearchParams(location.search).get('lang') || localStorage.getItem(LANG_KEY) || 'zh';
+} catch (e) { /* URL or storage unavailable — stay with Chinese */ }
+if (lang !== 'en') lang = 'zh';
+
+function applyLang() {
+  const en = lang === 'en';
+  document.documentElement.lang = en ? 'en' : 'zh-Hant-TW';
+  document.title = en && I18N_EN.__title ? I18N_EN.__title : ZH_TITLE;
+  document.querySelector('meta[name="description"]').content =
+    en && I18N_EN.__desc ? I18N_EN.__desc : ZH_DESC;
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const zh = ZH_SNAPSHOT.get(el);
+    if (zh === undefined) return;  // no original recorded — leave the element alone
+    const v = I18N_EN[el.getAttribute('data-t')];
+    el.innerHTML = (en && v != null) ? v : zh;
+  });
+  document.getElementById('btn-zh').classList.toggle('active', !en);
+  document.getElementById('btn-en').classList.toggle('active', en);
+  syncLangLinks();
+}
+
+/* Carry the language across pages even where localStorage is unavailable (private mode). */
+function syncLangLinks() {
+  document.querySelectorAll('a[href]').forEach(a => {
+    const href = a.getAttribute('href');
+    if (!/^(index|international|valuechain)\.html/.test(href)) return;
+    const u = new URL(href, location.href);
+    u.searchParams.set('lang', lang);
+    a.setAttribute('href', u.pathname.split('/').pop() + u.search + u.hash);
+  });
+}
+
+function setLang(l) {
+  lang = l === 'en' ? 'en' : 'zh';
+  try { localStorage.setItem(LANG_KEY, lang); } catch (e) { /* private mode */ }
+  const url = new URL(location);
+  url.searchParams.set('lang', lang);
+  history.replaceState(null, '', url);
+  applyLang();
+}
+
+applyLang();
+
+/* Switching language changes the nav labels' length, which changes how many rows the nav
+   wraps to — so anchor targets have to track its real height, not a guessed constant. */
+const topnav = document.querySelector('.topnav');
+new ResizeObserver(() =>
+  document.documentElement.style.setProperty('--nav-h', topnav.offsetHeight + 'px')
+).observe(topnav);
+</script>
 <script>
 (function () {
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;

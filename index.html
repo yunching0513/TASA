@@ -58,6 +58,12 @@
   .topnav a.navlink:hover { color: var(--cyan); text-decoration: none; border-bottom-color: var(--cyan); }
   .topnav a.switch { border: 1px solid var(--gold); color: var(--gold); border-radius: 999px; padding: 5px 16px; font-size: 13.5px; }
   .topnav a.switch:hover { background: rgba(255,197,61,0.1); text-decoration: none; }
+  .langtoggle { display: flex; border: 1px solid var(--gold); border-radius: 999px; overflow: hidden; }
+  .langtoggle button {
+    font-family: 'Space Grotesk', 'Noto Sans TC'; background: transparent; color: var(--gold);
+    border: none; padding: 6px 16px; font-size: 13.5px; cursor: pointer; letter-spacing: 0.05em;
+  }
+  .langtoggle button.active { background: var(--gold); color: #262624; font-weight: 700; }
 
   /* ===== hero ===== */
   .hero { position: relative; overflow: hidden; padding: 110px 8vw 130px; border-bottom: 1px solid var(--border-soft); }
@@ -76,7 +82,9 @@
   .stat span { font-size: 12.5px; color: var(--muted); }
 
   /* ===== sections ===== */
-  section.block { padding: 96px 8vw; border-bottom: 1px solid var(--border-soft); position: relative; scroll-margin-top: 70px; }
+  /* The sticky nav wraps to 2–5 rows depending on width and language, so an anchor jump
+     has to clear whatever it currently measures — a fixed offset hides the heading. */
+  section.block { padding: 96px 8vw; border-bottom: 1px solid var(--border-soft); position: relative; scroll-margin-top: var(--nav-h, 70px); }
   .sec-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 14px; flex-wrap: wrap; }
   .sec-head .no { font-family: 'Space Grotesk'; font-size: 15px; color: var(--gold); letter-spacing: 0.2em; }
   .sec-head h2 { font-family: 'Noto Serif TC', serif; font-size: clamp(28px, 3.4vw, 38px); font-weight: 600; margin: 0; }
@@ -185,16 +193,20 @@
 
 <!-- ============ NAV ============ -->
 <nav class="topnav" aria-label="主要導覽">
-  <span class="brand"><span class="orb"><i></i></span>臺灣太空法規</span>
-  <a class="navlink" href="#timeline">法制沿革</a>
-  <a class="navlink" href="#system">法規體系</a>
-  <a class="navlink" href="#act">太空發展法</a>
-  <a class="navlink" href="#tasa">太空中心條例</a>
-  <a class="navlink" href="#sub">授權子法</a>
-  <a class="navlink" href="#admin">審查與規費</a>
-  <a class="navlink" href="#related">相關法規</a>
-  <a class="navlink" href="valuechain.html">產業鏈地圖</a>
-  <a class="switch" href="international.html">國際太空法 →</a>
+  <span class="brand"><span class="orb"><i></i></span><span data-t="nav_brand">臺灣太空法規</span></span>
+  <a class="navlink" href="#timeline" data-t="nav_timeline">法制沿革</a>
+  <a class="navlink" href="#system" data-t="nav_system">法規體系</a>
+  <a class="navlink" href="#act" data-t="nav_act">太空發展法</a>
+  <a class="navlink" href="#tasa" data-t="nav_tasa">太空中心條例</a>
+  <a class="navlink" href="#sub" data-t="nav_sub">授權子法</a>
+  <a class="navlink" href="#admin" data-t="nav_admin">審查與規費</a>
+  <a class="navlink" href="#related" data-t="nav_related">相關法規</a>
+  <a class="navlink" href="valuechain.html" data-t="nav_chain">產業鏈地圖</a>
+  <a class="switch" href="international.html" data-t="nav_intl">國際太空法 →</a>
+  <div class="langtoggle" role="group" aria-label="language">
+    <button id="btn-zh" onclick="setLang('zh')">中文</button>
+    <button id="btn-en" onclick="setLang('en')">EN</button>
+  </div>
 </nav>
 
 <!-- ============ HERO ============ -->
@@ -209,19 +221,19 @@
   </svg>
 
   <div class="kicker">
-    <span>Taiwan Space Law &amp; Regulations</span>
+    <span data-t="kicker">Taiwan Space Law &amp; Regulations</span>
   </div>
-  <h1>臺灣太空法規<br>及相關條例</h1>
-  <p class="sub">From Formosa, Toward the Cosmos — 一頁看懂臺灣的太空法制</p>
-  <p class="lede">2021 年公布的《太空發展法》是臺灣第一部太空專法,確立太空活動的和平原則、登錄與發射許可制度,並催生了行政法人「國家太空中心 TASA」。本頁彙整母法、組織法、四項授權子法與相關行政規則,以易讀的方式呈現臺灣太空法制的全貌。</p>
-  <p class="note">本頁為便民彙整之易讀版,非官方文件;正式條文以<a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160078" target="_blank" rel="noopener">全國法規資料庫</a>及<a href="https://law.nstc.gov.tw/" target="_blank" rel="noopener">國科會主管法規系統</a>公布者為準。</p>
+  <h1 data-t="hero_title">臺灣太空法規<br>及相關條例</h1>
+  <p class="sub" data-t="hero_sub">From Formosa, Toward the Cosmos — 一頁看懂臺灣的太空法制</p>
+  <p class="lede" data-t="hero_lede">2021 年公布的《太空發展法》是臺灣第一部太空專法,確立太空活動的和平原則、登錄與發射許可制度,並催生了行政法人「國家太空中心 TASA」。本頁彙整母法、組織法、四項授權子法與相關行政規則,以易讀的方式呈現臺灣太空法制的全貌。</p>
+  <p class="note" data-t="hero_note">本頁為便民彙整之易讀版,非官方文件;正式條文以<a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160078" target="_blank" rel="noopener">全國法規資料庫</a>及<a href="https://law.nstc.gov.tw/" target="_blank" rel="noopener">國科會主管法規系統</a>公布者為準。</p>
 
   <div class="stat-strip">
-    <div class="stat"><b>2021</b><span>太空發展法公布</span></div>
-    <div class="stat"><b>6 章 22 條</b><span>母法架構(2023 年增訂 2 條)</span></div>
-    <div class="stat"><b>4 項</b><span>授權子法同步施行</span></div>
-    <div class="stat"><b>100 km</b><span>法定「太空」之起點高度</span></div>
-    <div class="stat"><b>2023</b><span>TASA 改制行政法人</span></div>
+    <div class="stat"><b data-t="s1v">2021</b><span data-t="s1l">太空發展法公布</span></div>
+    <div class="stat"><b data-t="s2v">6 章 22 條</b><span data-t="s2l">母法架構(2023 年增訂 2 條)</span></div>
+    <div class="stat"><b data-t="s3v">4 項</b><span data-t="s3l">授權子法同步施行</span></div>
+    <div class="stat"><b data-t="s4v">100 km</b><span data-t="s4l">法定「太空」之起點高度</span></div>
+    <div class="stat"><b data-t="s5v">2023</b><span data-t="s5l">TASA 改制行政法人</span></div>
   </div>
 
   <svg class="ridge" viewBox="0 0 1440 180" preserveAspectRatio="none" aria-hidden="true">
@@ -232,84 +244,84 @@
 
 <!-- ============ 01 法制沿革 ============ -->
 <section class="block" id="timeline">
-  <div class="sec-head"><span class="no">01</span><h2>法制沿革<small>Timeline</small></h2></div>
-  <p class="sec-intro">從第一部太空專法三讀,到國家太空中心改制行政法人——臺灣太空法制的關鍵時刻。</p>
+  <div class="sec-head"><span class="no">01</span><h2><span data-t="sec1">法制沿革</span><small data-t="sec1en">Timeline</small></h2></div>
+  <p class="sec-intro" data-t="sec1intro">從第一部太空專法三讀,到國家太空中心改制行政法人——臺灣太空法制的關鍵時刻。</p>
   <div class="timeline">
     <div class="tl-item major">
-      <span class="date">2021.05.31</span>
-      <h3>立法院三讀通過《太空發展法》</h3>
-      <p>臺灣第一部太空專法完成立法,揭示促進太空活動與太空產業發展、提升國民生活福祉的立法目的。</p>
+      <span class="date" data-t="t1d">2021.05.31</span>
+      <h3 data-t="t1h">立法院三讀通過《太空發展法》</h3>
+      <p data-t="t1p">臺灣第一部太空專法完成立法,揭示促進太空活動與太空產業發展、提升國民生活福祉的立法目的。</p>
     </div>
     <div class="tl-item major">
-      <span class="date">2021.06.16</span>
-      <h3>總統公布《太空發展法》</h3>
-      <p>全文 6 章 22 條,施行日期由行政院另定。</p>
+      <span class="date" data-t="t2d">2021.06.16</span>
+      <h3 data-t="t2h">總統公布《太空發展法》</h3>
+      <p data-t="t2p">全文 6 章 22 條,施行日期由行政院另定。</p>
     </div>
     <div class="tl-item">
-      <span class="date">2022.01.18</span>
-      <h3>四項授權子法發布</h3>
-      <p>科技部(現國科會)發布登錄作業、發射許可及太空事故處理、發射場域、民間資訊提供等四項辦法。</p>
+      <span class="date" data-t="t3d">2022.01.18</span>
+      <h3 data-t="t3h">四項授權子法發布</h3>
+      <p data-t="t3p">科技部(現國科會)發布登錄作業、發射許可及太空事故處理、發射場域、民間資訊提供等四項辦法。</p>
     </div>
     <div class="tl-item major">
-      <span class="date">2022.01.20</span>
-      <h3>《太空發展法》及四項子法正式施行</h3>
-      <p>臺灣太空活動自此正式納入法制管理,開啟太空科技發展的新頁。</p>
+      <span class="date" data-t="t4d">2022.01.20</span>
+      <h3 data-t="t4h">《太空發展法》及四項子法正式施行</h3>
+      <p data-t="t4p">臺灣太空活動自此正式納入法制管理,開啟太空科技發展的新頁。</p>
     </div>
     <div class="tl-item">
-      <span class="date">2022.05.04</span>
-      <h3>總統公布《國家太空中心設置條例》</h3>
-      <p>全文 33 條,為國家太空中心改制行政法人建立法源,施行日期由行政院定之。</p>
+      <span class="date" data-t="t5d">2022.05.04</span>
+      <h3 data-t="t5h">總統公布《國家太空中心設置條例》</h3>
+      <p data-t="t5p">全文 33 條,為國家太空中心改制行政法人建立法源,施行日期由行政院定之。</p>
     </div>
     <div class="tl-item major">
-      <span class="date">2023.01.01</span>
-      <h3>國家太空中心(TASA)改制為行政法人</h3>
-      <p>脫離國研院體系成為獨立行政法人,監督機關為國家科學及技術委員會,肩負國家太空計畫的執行。</p>
+      <span class="date" data-t="t6d">2023.01.01</span>
+      <h3 data-t="t6h">國家太空中心(TASA)改制為行政法人</h3>
+      <p data-t="t6p">脫離國研院體系成為獨立行政法人,監督機關為國家科學及技術委員會,肩負國家太空計畫的執行。</p>
     </div>
     <div class="tl-item">
-      <span class="date">2023.06.28</span>
-      <h3>《太空發展法》第一次修正</h3>
-      <p>修正公布第 2、22 條並增訂第 18-1、18-2 條;配合行政院組織改造,主管機關由科技部改為國家科學及技術委員會。</p>
+      <span class="date" data-t="t7d">2023.06.28</span>
+      <h3 data-t="t7h">《太空發展法》第一次修正</h3>
+      <p data-t="t7p">修正公布第 2、22 條並增訂第 18-1、18-2 條;配合行政院組織改造,主管機關由科技部改為國家科學及技術委員會。</p>
     </div>
     <div class="tl-item">
-      <span class="date">2024.10.23</span>
-      <h3>登錄與發射許可規費收費標準訂定</h3>
-      <p>發布《發射載具及太空載具申請登錄收費標準》等規費標準,使用者付費制度到位。</p>
+      <span class="date" data-t="t8d">2024.10.23</span>
+      <h3 data-t="t8h">登錄與發射許可規費收費標準訂定</h3>
+      <p data-t="t8p">發布《發射載具及太空載具申請登錄收費標準》等規費標準,使用者付費制度到位。</p>
     </div>
   </div>
 </section>
 
 <!-- ============ 02 法規體系 ============ -->
 <section class="block" id="system">
-  <div class="sec-head"><span class="no">02</span><h2>法規體系<small>Legal Framework</small></h2></div>
-  <p class="sec-intro">臺灣太空法制採「母法 — 授權子法 — 行政規則」三層架構,另以《國家太空中心設置條例》作為專責機構的組織法。</p>
+  <div class="sec-head"><span class="no">02</span><h2><span data-t="sec2">法規體系</span><small data-t="sec2en">Legal Framework</small></h2></div>
+  <p class="sec-intro" data-t="sec2intro">臺灣太空法制採「母法 — 授權子法 — 行政規則」三層架構,另以《國家太空中心設置條例》作為專責機構的組織法。</p>
   <div class="hier">
     <div class="hier-row">
-      <div class="hier-label">母法 Act</div>
+      <div class="hier-label" data-t="hier_l1">母法 Act</div>
       <div class="hier-items">
-        <div class="hier-node root"><b>太空發展法</b><span>2021 公布 · 2023 修正 · 6 章 22 條+增訂 2 條</span></div>
+        <div class="hier-node root"><b data-t="n1b">太空發展法</b><span data-t="n1s">2021 公布 · 2023 修正 · 6 章 22 條+增訂 2 條</span></div>
       </div>
     </div>
     <div class="hier-row">
-      <div class="hier-label">組織法 Statute</div>
+      <div class="hier-label" data-t="hier_l2">組織法 Statute</div>
       <div class="hier-items">
-        <div class="hier-node"><b>國家太空中心設置條例</b><span>2022 公布 · 全文 33 條 · 行政法人 TASA 之法源</span></div>
+        <div class="hier-node"><b data-t="n2b">國家太空中心設置條例</b><span data-t="n2s">2022 公布 · 全文 33 條 · 行政法人 TASA 之法源</span></div>
       </div>
     </div>
     <div class="hier-row">
-      <div class="hier-label">授權子法 Regulations</div>
+      <div class="hier-label" data-t="hier_l3">授權子法 Regulations</div>
       <div class="hier-items">
-        <div class="hier-node"><b>發射載具及太空載具登錄作業辦法</b><span>登錄制度</span></div>
-        <div class="hier-node"><b>發射載具發射許可及太空事故處理辦法</b><span>發射許可・事故處理</span></div>
-        <div class="hier-node"><b>發射場域土地之選址設置營運管理補償及回饋辦法</b><span>國家發射場域</span></div>
-        <div class="hier-node"><b>民間太空載具資訊提供及補償辦法</b><span>資訊提供・補償</span></div>
+        <div class="hier-node"><b data-t="n3b">發射載具及太空載具登錄作業辦法</b><span data-t="n3s">登錄制度</span></div>
+        <div class="hier-node"><b data-t="n4b">發射載具發射許可及太空事故處理辦法</b><span data-t="n4s">發射許可・事故處理</span></div>
+        <div class="hier-node"><b data-t="n5b">發射場域土地之選址設置營運管理補償及回饋辦法</b><span data-t="n5s">國家發射場域</span></div>
+        <div class="hier-node"><b data-t="n6b">民間太空載具資訊提供及補償辦法</b><span data-t="n6s">資訊提供・補償</span></div>
       </div>
     </div>
     <div class="hier-row">
-      <div class="hier-label">行政規則 · 規費</div>
+      <div class="hier-label" data-t="hier_l4">行政規則 · 規費</div>
       <div class="hier-items">
-        <div class="hier-node"><b>發射載具技術規範及發射許可審查基準</b><span>技術審查</span></div>
-        <div class="hier-node"><b>太空載具登錄審查基準</b><span>登錄審查</span></div>
-        <div class="hier-node"><b>申請登錄/發射許可收費標準</b><span>規費</span></div>
+        <div class="hier-node"><b data-t="n7b">發射載具技術規範及發射許可審查基準</b><span data-t="n7s">技術審查</span></div>
+        <div class="hier-node"><b data-t="n8b">太空載具登錄審查基準</b><span data-t="n8s">登錄審查</span></div>
+        <div class="hier-node"><b data-t="n9b">申請登錄/發射許可收費標準</b><span data-t="n9s">規費</span></div>
       </div>
     </div>
   </div>
@@ -317,149 +329,149 @@
 
 <!-- ============ 03 太空發展法 ============ -->
 <section class="block" id="act">
-  <div class="sec-head"><span class="no">03</span><h2>太空發展法<small>Space Development Act</small></h2></div>
+  <div class="sec-head"><span class="no">03</span><h2><span data-t="sec3">太空發展法</span><small data-t="sec3en">Space Development Act</small></h2></div>
   <p class="sec-intro">
-    <span class="pill gold" style="margin-right:8px;"><i></i>母法</span>
-    <span class="pill cyan"><i></i>主管機關:國家科學及技術委員會</span><br><br>
-    2021 年 6 月 16 日公布、2022 年 1 月 20 日施行;2023 年 6 月 28 日修正公布第 2、22 條並增訂第 18-1、18-2 條。以下依主題整理重點,官方全文請見
-    <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160078" target="_blank" rel="noopener">全國法規資料庫</a>。
+    <span class="pill gold" style="margin-right:8px;"><i></i><span data-t="act_pill1">母法</span></span>
+    <span class="pill cyan"><i></i><span data-t="act_pill2">主管機關:國家科學及技術委員會</span></span><br><br>
+    <span data-t="act_intro">2021 年 6 月 16 日公布、2022 年 1 月 20 日施行;2023 年 6 月 28 日修正公布第 2、22 條並增訂第 18-1、18-2 條。以下依主題整理重點,官方全文請見
+    <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160078" target="_blank" rel="noopener">全國法規資料庫</a>。</span>
   </p>
 
   <details class="law-group" open>
-    <summary><span class="idx">3.1</span>立法目的與基本原則<span class="arrow">→</span></summary>
+    <summary><span class="idx">3.1</span><span data-t="g1sum">立法目的與基本原則</span><span class="arrow">→</span></summary>
     <div class="body">
-      <p>為促進我國太空活動及太空產業之發展,提高國民生活福祉,並協助人類社會之永續與和平發展而制定。太空發展應遵循的核心原則包括:</p>
+      <p data-t="g1p">為促進我國太空活動及太空產業之發展,提高國民生活福祉,並協助人類社會之永續與和平發展而制定。太空發展應遵循的核心原則包括:</p>
       <div class="cards" style="margin-top:18px;">
-        <div class="card"><div class="tag">PRINCIPLE 01</div><h3>和平使用</h3><p class="en">Peaceful Use</p><p>太空活動本於和平使用之目的,並遵循相關國際公約與慣例之精神。</p></div>
-        <div class="card"><div class="tag">PRINCIPLE 02</div><h3>永續與環境保護</h3><p class="en">Sustainability</p><p>重視太空環境保護、減緩太空碎片(太空垃圾)之產生,兼顧地球環境永續。</p></div>
-        <div class="card"><div class="tag">PRINCIPLE 03</div><h3>資訊公開與產業自主</h3><p class="en">Transparency &amp; Autonomy</p><p>資訊公開透明、扶植國內太空產業自主能量,並促進國際合作與接軌。</p></div>
+        <div class="card"><div class="tag">PRINCIPLE 01</div><h3 data-t="pr1h">和平使用</h3><p class="en" data-t="pr1en">Peaceful Use</p><p data-t="pr1p">太空活動本於和平使用之目的,並遵循相關國際公約與慣例之精神。</p></div>
+        <div class="card"><div class="tag">PRINCIPLE 02</div><h3 data-t="pr2h">永續與環境保護</h3><p class="en" data-t="pr2en">Sustainability</p><p data-t="pr2p">重視太空環境保護、減緩太空碎片(太空垃圾)之產生,兼顧地球環境永續。</p></div>
+        <div class="card"><div class="tag">PRINCIPLE 03</div><h3 data-t="pr3h">資訊公開與產業自主</h3><p class="en" data-t="pr3en">Transparency &amp; Autonomy</p><p data-t="pr3p">資訊公開透明、扶植國內太空產業自主能量,並促進國際合作與接軌。</p></div>
       </div>
     </div>
   </details>
 
   <details class="law-group" open>
-    <summary><span class="idx">3.2</span>關鍵名詞定義<span class="arrow">→</span></summary>
+    <summary><span class="idx">3.2</span><span data-t="g2sum">關鍵名詞定義</span><span class="arrow">→</span></summary>
     <div class="body">
-      <p>本法第 3 條就太空活動的核心概念設有定義,以下為白話摘要:</p>
+      <p data-t="g2p">本法第 3 條就太空活動的核心概念設有定義,以下為白話摘要:</p>
       <div class="defs" style="margin-top:18px;">
-        <div class="def"><b>太空</b><span class="en">OUTER SPACE</span><p>距離海平面 100 公里以上之空間——這是臺灣法制上「太空」的起點。</p></div>
-        <div class="def"><b>太空活動</b><span class="en">SPACE ACTIVITY</span><p>在太空從事的探索、開發、利用行為,及發射載具與太空載具之發射、操作等相關活動。</p></div>
-        <div class="def"><b>發射載具</b><span class="en">LAUNCH VEHICLE</span><p>用以將太空載具送入太空的運載工具,例如運載火箭。</p></div>
-        <div class="def"><b>太空載具</b><span class="en">SPACE VEHICLE</span><p>在太空運行、執行任務的載具,例如人造衛星、太空船。</p></div>
-        <div class="def"><b>發射場域</b><span class="en">LAUNCH SITE</span><p>供發射載具進行發射活動之場地及其必要設施。</p></div>
-        <div class="def"><b>太空事故</b><span class="en">SPACE ACCIDENT</span><p>因太空活動造成人員傷亡、財產損害或環境污染等事故。</p></div>
+        <div class="def"><b data-t="d1b">太空</b><span class="en" data-t="d1en">OUTER SPACE</span><p data-t="d1p">距離海平面 100 公里以上之空間——這是臺灣法制上「太空」的起點。</p></div>
+        <div class="def"><b data-t="d2b">太空活動</b><span class="en" data-t="d2en">SPACE ACTIVITY</span><p data-t="d2p">在太空從事的探索、開發、利用行為,及發射載具與太空載具之發射、操作等相關活動。</p></div>
+        <div class="def"><b data-t="d3b">發射載具</b><span class="en" data-t="d3en">LAUNCH VEHICLE</span><p data-t="d3p">用以將太空載具送入太空的運載工具,例如運載火箭。</p></div>
+        <div class="def"><b data-t="d4b">太空載具</b><span class="en" data-t="d4en">SPACE VEHICLE</span><p data-t="d4p">在太空運行、執行任務的載具,例如人造衛星、太空船。</p></div>
+        <div class="def"><b data-t="d5b">發射場域</b><span class="en" data-t="d5en">LAUNCH SITE</span><p data-t="d5p">供發射載具進行發射活動之場地及其必要設施。</p></div>
+        <div class="def"><b data-t="d6b">太空事故</b><span class="en" data-t="d6en">SPACE ACCIDENT</span><p data-t="d6p">因太空活動造成人員傷亡、財產損害或環境污染等事故。</p></div>
       </div>
     </div>
   </details>
 
   <details class="law-group">
-    <summary><span class="idx">3.3</span>登錄制度 — 火箭與衛星都要「上戶口」<span class="arrow">→</span></summary>
+    <summary><span class="idx">3.3</span><span data-t="g3sum">登錄制度 — 火箭與衛星都要「上戶口」</span><span class="arrow">→</span></summary>
     <div class="body">
-      <p>太空活動所運用之發射載具或太空載具,凡預定於我國境內發射,或由政府補助、委託、出資,或公立研究機關(構)依法編列預算研發者,應向主管機關辦理登錄。登錄制度使國家能夠掌握太空物體的所有權與責任歸屬,也是履行國際太空物體登記慣例的基礎。</p>
+      <p data-t="g3p">太空活動所運用之發射載具或太空載具,凡預定於我國境內發射,或由政府補助、委託、出資,或公立研究機關(構)依法編列預算研發者,應向主管機關辦理登錄。登錄制度使國家能夠掌握太空物體的所有權與責任歸屬,也是履行國際太空物體登記慣例的基礎。</p>
       <div class="kv">
-        <div class="row"><b>誰要登錄</b><div>境內發射者、政府補助/委託/出資研發者、公立研究機關(構)編列預算研發者</div></div>
-        <div class="row"><b>向誰登錄</b><div>國家科學及技術委員會(得委託國家太空中心辦理審查)</div></div>
-        <div class="row"><b>細節規定</b><div>《發射載具及太空載具登錄作業辦法》及《太空載具登錄審查基準》</div></div>
+        <div class="row"><b data-t="g3k1">誰要登錄</b><div data-t="g3v1">境內發射者、政府補助/委託/出資研發者、公立研究機關(構)編列預算研發者</div></div>
+        <div class="row"><b data-t="g3k2">向誰登錄</b><div data-t="g3v2">國家科學及技術委員會(得委託國家太空中心辦理審查)</div></div>
+        <div class="row"><b data-t="g3k3">細節規定</b><div data-t="g3v3">《發射載具及太空載具登錄作業辦法》及《太空載具登錄審查基準》</div></div>
       </div>
     </div>
   </details>
 
   <details class="law-group">
-    <summary><span class="idx">3.4</span>發射許可 — 發射前六個月提出申請<span class="arrow">→</span></summary>
+    <summary><span class="idx">3.4</span><span data-t="g4sum">發射許可 — 發射前六個月提出申請</span><span class="arrow">→</span></summary>
     <div class="body">
-      <p>於我國境內發射發射載具,應於預定發射日六個月前檢附登錄文件、飛行計畫等資料,向主管機關申請發射許可;未經許可不得發射。發射活動並應於國家發射場域為之。申請程序、應備文件與廢止許可事由,由主管機關會商相關中央機關定之。</p>
+      <p data-t="g4p">於我國境內發射發射載具,應於預定發射日六個月前檢附登錄文件、飛行計畫等資料,向主管機關申請發射許可;未經許可不得發射。發射活動並應於國家發射場域為之。申請程序、應備文件與廢止許可事由,由主管機關會商相關中央機關定之。</p>
       <div class="kv">
-        <div class="row"><b>申請時點</b><div>預定發射日 6 個月前</div></div>
-        <div class="row"><b>發射地點</b><div>應於國家發射場域進行</div></div>
-        <div class="row"><b>審查依據</b><div>《發射載具發射許可及太空事故處理辦法》、《發射載具技術規範及發射許可審查基準》</div></div>
+        <div class="row"><b data-t="g4k1">申請時點</b><div data-t="g4v1">預定發射日 6 個月前</div></div>
+        <div class="row"><b data-t="g4k2">發射地點</b><div data-t="g4v2">應於國家發射場域進行</div></div>
+        <div class="row"><b data-t="g4k3">審查依據</b><div data-t="g4v3">《發射載具發射許可及太空事故處理辦法》、《發射載具技術規範及發射許可審查基準》</div></div>
       </div>
     </div>
   </details>
 
   <details class="law-group">
-    <summary><span class="idx">3.5</span>國家發射場域<span class="arrow">→</span></summary>
+    <summary><span class="idx">3.5</span><span data-t="g5sum">國家發射場域</span><span class="arrow">→</span></summary>
     <div class="body">
-      <p>政府應設置國家發射場域,其選址、設置、營運管理,以及對在地居民的補償與回饋機制,均依授權子法辦理。國家太空中心負責發射場域的選址、初步規劃與受託營運管理。場域設置強調與在地社區(包括原住民族地區)的溝通、補償及回饋。</p>
+      <p data-t="g5p">政府應設置國家發射場域,其選址、設置、營運管理,以及對在地居民的補償與回饋機制,均依授權子法辦理。國家太空中心負責發射場域的選址、初步規劃與受託營運管理。場域設置強調與在地社區(包括原住民族地區)的溝通、補償及回饋。</p>
     </div>
   </details>
 
   <details class="law-group">
-    <summary><span class="idx">3.6</span>太空事故處理與損害賠償<span class="arrow">→</span></summary>
+    <summary><span class="idx">3.6</span><span data-t="g6sum">太空事故處理與損害賠償</span><span class="arrow">→</span></summary>
     <div class="body">
-      <p>發生太空事故時,相關人員負有通報義務,主管機關得成立調查機制釐清原因。太空活動造成他人損害者,應負賠償責任;從事發射活動者並應投保責任保險或提出財務擔保,確保受害者能獲得填補。此設計呼應 1972 年《太空物體所致損害之國際責任公約》由發射國承擔賠償責任的國際法精神。</p>
+      <p data-t="g6p">發生太空事故時,相關人員負有通報義務,主管機關得成立調查機制釐清原因。太空活動造成他人損害者,應負賠償責任;從事發射活動者並應投保責任保險或提出財務擔保,確保受害者能獲得填補。此設計呼應 1972 年《太空物體所致損害之國際責任公約》由發射國承擔賠償責任的國際法精神。</p>
     </div>
   </details>
 
   <details class="law-group">
-    <summary><span class="idx">3.7</span>太空產業之促進<span class="arrow">→</span></summary>
+    <summary><span class="idx">3.7</span><span data-t="g7sum">太空產業之促進</span><span class="arrow">→</span></summary>
     <div class="body">
-      <p>主管機關應會同經濟部等相關機關,推動下列事項:鼓勵民間投資太空事業、推動高附加價值太空技術產業應用及必要之獎勵措施、協助關聯產業發展與國際接軌、培育太空產業人才,以及輔導新興太空事業。太空產業範疇涵蓋太空載具發射、太空科學研究、太空相關與地面接收設備製造、衛星應用服務(含營運)及太空活動衍生之新型態服務。2023 年修法增訂第 18-1、18-2 條,進一步充實推動機制(詳見官方條文)。</p>
+      <p data-t="g7p">主管機關應會同經濟部等相關機關,推動下列事項:鼓勵民間投資太空事業、推動高附加價值太空技術產業應用及必要之獎勵措施、協助關聯產業發展與國際接軌、培育太空產業人才,以及輔導新興太空事業。太空產業範疇涵蓋太空載具發射、太空科學研究、太空相關與地面接收設備製造、衛星應用服務(含營運)及太空活動衍生之新型態服務。2023 年修法增訂第 18-1、18-2 條,進一步充實推動機制(詳見官方條文)。</p>
     </div>
   </details>
 
   <details class="law-group">
-    <summary><span class="idx">3.8</span>罰則<span class="arrow">→</span></summary>
+    <summary><span class="idx">3.8</span><span data-t="g8sum">罰則</span><span class="arrow">→</span></summary>
     <div class="body">
-      <p>違反本法管理制度者,依情節分別課以刑事責任或行政罰鍰:</p>
+      <p data-t="g8p">違反本法管理制度者,依情節分別課以刑事責任或行政罰鍰:</p>
       <div class="tablewrap" style="margin-top:18px;">
         <table class="pen">
-          <thead><tr><th>違反行為</th><th>法律效果</th><th>金額(新臺幣)</th></tr></thead>
+          <thead><tr><th data-t="pen_th1">違反行為</th><th data-t="pen_th2">法律效果</th><th data-t="pen_th3">金額(新臺幣)</th></tr></thead>
           <tbody>
-            <tr><td>未經許可於我國境內發射發射載具</td><td>5 年以下有期徒刑,得併科罰金</td><td class="amt">100 萬 – 1,000 萬(罰金)</td></tr>
-            <tr><td>經主管機關要求限期提供資訊而未履行</td><td>行政罰鍰</td><td class="amt">50 萬 – 500 萬</td></tr>
-            <tr><td>應辦理登錄而未登錄</td><td>行政罰鍰</td><td class="amt">20 萬 – 200 萬</td></tr>
+            <tr><td data-t="pen_r1a">未經許可於我國境內發射發射載具</td><td data-t="pen_r1b">5 年以下有期徒刑,得併科罰金</td><td class="amt" data-t="pen_r1c">100 萬 – 1,000 萬(罰金)</td></tr>
+            <tr><td data-t="pen_r2a">經主管機關要求限期提供資訊而未履行</td><td data-t="pen_r2b">行政罰鍰</td><td class="amt" data-t="pen_r2c">50 萬 – 500 萬</td></tr>
+            <tr><td data-t="pen_r3a">應辦理登錄而未登錄</td><td data-t="pen_r3b">行政罰鍰</td><td class="amt" data-t="pen_r3c">20 萬 – 200 萬</td></tr>
           </tbody>
         </table>
       </div>
-      <p style="margin-top:14px; font-size:13px; color:var(--muted);">※ 完整罰則(含其他違反態樣、按次處罰等)請以官方條文為準。</p>
+      <p style="margin-top:14px; font-size:13px; color:var(--muted);" data-t="pen_note">※ 完整罰則(含其他違反態樣、按次處罰等)請以官方條文為準。</p>
     </div>
   </details>
 </section>
 
 <!-- ============ 04 國家太空中心設置條例 ============ -->
 <section class="block" id="tasa">
-  <div class="sec-head"><span class="no">04</span><h2>國家太空中心設置條例<small>TASA Act</small></h2></div>
+  <div class="sec-head"><span class="no">04</span><h2><span data-t="sec4">國家太空中心設置條例</span><small data-t="sec4en">TASA Act</small></h2></div>
   <p class="sec-intro">
-    <span class="pill cyan" style="margin-right:8px;"><i></i>組織法 · 全文 33 條</span>
-    <span class="pill green"><i></i>2023.01.01 起 TASA 為行政法人</span><br><br>
-    2022 年 5 月 4 日公布,為《太空發展法》第 5 條「政府應設專責法人」的具體實踐。國家太空中心(Taiwan Space Agency, TASA)自 2023 年 1 月 1 日起由國研院轄下單位改制為獨立行政法人,監督機關為國家科學及技術委員會。官方全文請見
-    <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160083" target="_blank" rel="noopener">全國法規資料庫</a>。
+    <span class="pill cyan" style="margin-right:8px;"><i></i><span data-t="tasa_pill1">組織法 · 全文 33 條</span></span>
+    <span class="pill green"><i></i><span data-t="tasa_pill2">2023.01.01 起 TASA 為行政法人</span></span><br><br>
+    <span data-t="tasa_intro">2022 年 5 月 4 日公布,為《太空發展法》第 5 條「政府應設專責法人」的具體實踐。國家太空中心(Taiwan Space Agency, TASA)自 2023 年 1 月 1 日起由國研院轄下單位改制為獨立行政法人,監督機關為國家科學及技術委員會。官方全文請見
+    <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160083" target="_blank" rel="noopener">全國法規資料庫</a>。</span>
   </p>
   <div class="cards">
     <div class="card">
       <div class="tag">MANDATE</div>
-      <h3>業務範圍</h3>
-      <p class="en">Scope of Business</p>
+      <h3 data-t="tc1h">業務範圍</h3>
+      <p class="en" data-t="tc1en">Scope of Business</p>
       <ul>
-        <li>國家太空科技計畫之規劃與執行</li>
-        <li>太空科技研發、發射載具與衛星系統研製</li>
-        <li>受託辦理登錄及發射許可之審查</li>
-        <li>國家發射場域之選址、規劃與營運管理</li>
-        <li>太空產業推動、國際合作交流</li>
-        <li>太空科技人才培育與法制研究</li>
+        <li data-t="tc1l1">國家太空科技計畫之規劃與執行</li>
+        <li data-t="tc1l2">太空科技研發、發射載具與衛星系統研製</li>
+        <li data-t="tc1l3">受託辦理登錄及發射許可之審查</li>
+        <li data-t="tc1l4">國家發射場域之選址、規劃與營運管理</li>
+        <li data-t="tc1l5">太空產業推動、國際合作交流</li>
+        <li data-t="tc1l6">太空科技人才培育與法制研究</li>
       </ul>
     </div>
     <div class="card">
       <div class="tag">GOVERNANCE</div>
-      <h3>組織治理</h3>
-      <p class="en">Governance</p>
+      <h3 data-t="tc2h">組織治理</h3>
+      <p class="en" data-t="tc2en">Governance</p>
       <ul>
-        <li>設董事會,置董事 11 至 15 人</li>
-        <li>置監事 3 至 5 人</li>
-        <li>董事長對外代表中心,綜理業務</li>
-        <li>監督機關:國家科學及技術委員會</li>
-        <li>經費來源含政府核撥、受託收入、捐贈等</li>
+        <li data-t="tc2l1">設董事會,置董事 11 至 15 人</li>
+        <li data-t="tc2l2">置監事 3 至 5 人</li>
+        <li data-t="tc2l3">董事長對外代表中心,綜理業務</li>
+        <li data-t="tc2l4">監督機關:國家科學及技術委員會</li>
+        <li data-t="tc2l5">經費來源含政府核撥、受託收入、捐贈等</li>
       </ul>
     </div>
     <div class="card">
       <div class="tag">EVOLUTION</div>
-      <h3>機構沿革</h3>
-      <p class="en">History</p>
+      <h3 data-t="tc3h">機構沿革</h3>
+      <p class="en" data-t="tc3en">History</p>
       <ul>
-        <li>1991 年:國家太空計畫室籌備處成立</li>
-        <li>2005 年:改為國研院轄下「國家太空中心」</li>
-        <li>2023 年:依本條例改制為行政法人 TASA</li>
-        <li>改制後更具人事與財務彈性,加速任務執行與產業鏈結</li>
+        <li data-t="tc3l1">1991 年:國家太空計畫室籌備處成立</li>
+        <li data-t="tc3l2">2005 年:改為國研院轄下「國家太空中心」</li>
+        <li data-t="tc3l3">2023 年:依本條例改制為行政法人 TASA</li>
+        <li data-t="tc3l4">改制後更具人事與財務彈性,加速任務執行與產業鏈結</li>
       </ul>
     </div>
   </div>
@@ -467,124 +479,124 @@
 
 <!-- ============ 05 授權子法 ============ -->
 <section class="block" id="sub">
-  <div class="sec-head"><span class="no">05</span><h2>四項授權子法<small>Subsidiary Regulations</small></h2></div>
-  <p class="sec-intro">依《太空發展法》授權訂定,2022 年 1 月 18 日發布、1 月 20 日與母法同步施行,構成太空活動管理的操作細節。</p>
+  <div class="sec-head"><span class="no">05</span><h2><span data-t="sec5">四項授權子法</span><small data-t="sec5en">Subsidiary Regulations</small></h2></div>
+  <p class="sec-intro" data-t="sec5intro">依《太空發展法》授權訂定,2022 年 1 月 18 日發布、1 月 20 日與母法同步施行,構成太空活動管理的操作細節。</p>
   <div class="cards">
     <div class="card">
       <div class="tag">REGULATION 01</div>
-      <h3>發射載具及太空載具登錄作業辦法</h3>
-      <p class="en">Registration Regulations</p>
+      <h3 data-t="rg1h">發射載具及太空載具登錄作業辦法</h3>
+      <p class="en" data-t="rg1en">Registration Regulations</p>
       <ul>
-        <li>明定應辦理登錄之情形與申請文件(含營運計畫)</li>
-        <li>設置審查小組進行載具審查</li>
-        <li>可重複使用載具應載明飛行序列與返回路徑</li>
-        <li>登錄事項變更、廢止之程序</li>
+        <li data-t="rg1l1">明定應辦理登錄之情形與申請文件(含營運計畫)</li>
+        <li data-t="rg1l2">設置審查小組進行載具審查</li>
+        <li data-t="rg1l3">可重複使用載具應載明飛行序列與返回路徑</li>
+        <li data-t="rg1l4">登錄事項變更、廢止之程序</li>
       </ul>
-      <p class="src"><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160079" target="_blank" rel="noopener">官方條文 →</a></p>
+      <p class="src"><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160079" target="_blank" rel="noopener" data-t="src_law">官方條文 →</a></p>
     </div>
     <div class="card">
       <div class="tag">REGULATION 02</div>
-      <h3>發射載具發射許可及太空事故處理辦法</h3>
-      <p class="en">Launch Permit &amp; Accident Regulations</p>
+      <h3 data-t="rg2h">發射載具發射許可及太空事故處理辦法</h3>
+      <p class="en" data-t="rg2en">Launch Permit &amp; Accident Regulations</p>
       <ul>
-        <li>發射許可之申請程序與審查要件</li>
-        <li>飛行安全與風險評估要求</li>
-        <li>太空事故之通報、應變與調查程序</li>
-        <li>廢止發射許可之事由</li>
+        <li data-t="rg2l1">發射許可之申請程序與審查要件</li>
+        <li data-t="rg2l2">飛行安全與風險評估要求</li>
+        <li data-t="rg2l3">太空事故之通報、應變與調查程序</li>
+        <li data-t="rg2l4">廢止發射許可之事由</li>
       </ul>
-      <p class="src"><a href="https://law.nstc.gov.tw/LawContent.aspx?id=GL000459" target="_blank" rel="noopener">官方條文 →</a></p>
+      <p class="src"><a href="https://law.nstc.gov.tw/LawContent.aspx?id=GL000459" target="_blank" rel="noopener" data-t="src_law">官方條文 →</a></p>
     </div>
     <div class="card">
       <div class="tag">REGULATION 03</div>
-      <h3>發射場域土地之選址設置營運管理補償及回饋辦法</h3>
-      <p class="en">Launch Site Regulations</p>
+      <h3 data-t="rg3h">發射場域土地之選址設置營運管理補償及回饋辦法</h3>
+      <p class="en" data-t="rg3en">Launch Site Regulations</p>
       <ul>
-        <li>國家發射場域之選址評估程序</li>
-        <li>場域設置與營運管理規範</li>
-        <li>對在地居民之補償機制</li>
-        <li>回饋地方之具體作法</li>
+        <li data-t="rg3l1">國家發射場域之選址評估程序</li>
+        <li data-t="rg3l2">場域設置與營運管理規範</li>
+        <li data-t="rg3l3">對在地居民之補償機制</li>
+        <li data-t="rg3l4">回饋地方之具體作法</li>
       </ul>
-      <p class="src"><a href="https://law.nstc.gov.tw/LawQuery.aspx" target="_blank" rel="noopener">官方條文 →</a></p>
+      <p class="src"><a href="https://law.nstc.gov.tw/LawQuery.aspx" target="_blank" rel="noopener" data-t="src_law">官方條文 →</a></p>
     </div>
     <div class="card">
       <div class="tag">REGULATION 04</div>
-      <h3>民間太空載具資訊提供及補償辦法</h3>
-      <p class="en">Information Provision Regulations</p>
+      <h3 data-t="rg4h">民間太空載具資訊提供及補償辦法</h3>
+      <p class="en" data-t="rg4en">Information Provision Regulations</p>
       <ul>
-        <li>政府基於公益或安全需要,得請民間提供太空載具資訊</li>
-        <li>資訊提供之範圍與程序</li>
-        <li>對提供者之合理補償機制</li>
+        <li data-t="rg4l1">政府基於公益或安全需要,得請民間提供太空載具資訊</li>
+        <li data-t="rg4l2">資訊提供之範圍與程序</li>
+        <li data-t="rg4l3">對提供者之合理補償機制</li>
       </ul>
-      <p class="src"><a href="https://law.nstc.gov.tw/LawQuery.aspx" target="_blank" rel="noopener">官方條文 →</a></p>
+      <p class="src"><a href="https://law.nstc.gov.tw/LawQuery.aspx" target="_blank" rel="noopener" data-t="src_law">官方條文 →</a></p>
     </div>
   </div>
 </section>
 
 <!-- ============ 06 審查基準與規費 ============ -->
 <section class="block" id="admin">
-  <div class="sec-head"><span class="no">06</span><h2>審查基準與收費標準<small>Standards &amp; Fees</small></h2></div>
-  <p class="sec-intro">國科會另以公告與規費標準補充操作層次的技術與費用規範。</p>
+  <div class="sec-head"><span class="no">06</span><h2><span data-t="sec6">審查基準與收費標準</span><small data-t="sec6en">Standards &amp; Fees</small></h2></div>
+  <p class="sec-intro" data-t="sec6intro">國科會另以公告與規費標準補充操作層次的技術與費用規範。</p>
   <div class="cards">
     <div class="card">
       <div class="tag">STANDARD</div>
-      <h3>發射載具技術規範及發射許可審查基準</h3>
-      <p class="en">Technical Standards for Launch Vehicles</p>
-      <p>發射載具之技術規範與發射許可審查之具體基準,參照國際標準訂定,是火箭業者申請發射許可的技術門檻。</p>
-      <p class="src"><a href="https://law.nstc.gov.tw/LawContent.aspx?id=GL000538" target="_blank" rel="noopener">官方內容 →</a></p>
+      <h3 data-t="st1h">發射載具技術規範及發射許可審查基準</h3>
+      <p class="en" data-t="st1en">Technical Standards for Launch Vehicles</p>
+      <p data-t="st1p">發射載具之技術規範與發射許可審查之具體基準,參照國際標準訂定,是火箭業者申請發射許可的技術門檻。</p>
+      <p class="src"><a href="https://law.nstc.gov.tw/LawContent.aspx?id=GL000538" target="_blank" rel="noopener" data-t="src_doc">官方內容 →</a></p>
     </div>
     <div class="card">
       <div class="tag">STANDARD</div>
-      <h3>太空載具登錄審查基準</h3>
-      <p class="en">Review Standards for Registration</p>
-      <p>太空載具(衛星等)申請登錄之審查基準,規定申請書表、身分證明文件及其他應備資料與審查流程。</p>
-      <p class="src"><a href="https://law.nstc.gov.tw/LawQuery.aspx" target="_blank" rel="noopener">官方內容 →</a></p>
+      <h3 data-t="st2h">太空載具登錄審查基準</h3>
+      <p class="en" data-t="st2en">Review Standards for Registration</p>
+      <p data-t="st2p">太空載具(衛星等)申請登錄之審查基準,規定申請書表、身分證明文件及其他應備資料與審查流程。</p>
+      <p class="src"><a href="https://law.nstc.gov.tw/LawQuery.aspx" target="_blank" rel="noopener" data-t="src_doc">官方內容 →</a></p>
     </div>
     <div class="card">
       <div class="tag">FEE</div>
-      <h3>申請登錄/發射許可收費標準</h3>
-      <p class="en">Fee Standards</p>
-      <p>2024 年訂定《發射載具及太空載具申請登錄收費標準》與《發射載具申請發射許可收費標準》,確立規費之使用者付費制度。</p>
-      <p class="src"><a href="https://law.nstc.gov.tw/LawQuery.aspx" target="_blank" rel="noopener">官方內容 →</a></p>
+      <h3 data-t="st3h">申請登錄/發射許可收費標準</h3>
+      <p class="en" data-t="st3en">Fee Standards</p>
+      <p data-t="st3p">2024 年訂定《發射載具及太空載具申請登錄收費標準》與《發射載具申請發射許可收費標準》,確立規費之使用者付費制度。</p>
+      <p class="src"><a href="https://law.nstc.gov.tw/LawQuery.aspx" target="_blank" rel="noopener" data-t="src_doc">官方內容 →</a></p>
     </div>
   </div>
 </section>
 
 <!-- ============ 07 相關法規 ============ -->
 <section class="block" id="related">
-  <div class="sec-head"><span class="no">07</span><h2>其他相關法規<small>Related Laws</small></h2></div>
-  <p class="sec-intro">太空活動亦涉及頻譜、空域、出口管制等領域,實務上須一併注意下列法規:</p>
+  <div class="sec-head"><span class="no">07</span><h2><span data-t="sec7">其他相關法規</span><small data-t="sec7en">Related Laws</small></h2></div>
+  <p class="sec-intro" data-t="sec7intro">太空活動亦涉及頻譜、空域、出口管制等領域,實務上須一併注意下列法規:</p>
   <div class="cards">
     <div class="card">
       <div class="tag">TELECOM</div>
-      <h3>電信管理法</h3>
-      <p class="en">Telecommunications Management Act</p>
-      <p>衛星通訊之無線電頻率使用、衛星地面站與相關執照,由國家通訊傳播委員會(NCC)依本法管理。低軌衛星通訊服務亦適用。</p>
-      <p class="src"><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=K0060111" target="_blank" rel="noopener">官方條文 →</a></p>
+      <h3 data-t="rl1h">電信管理法</h3>
+      <p class="en" data-t="rl1en">Telecommunications Management Act</p>
+      <p data-t="rl1p">衛星通訊之無線電頻率使用、衛星地面站與相關執照,由國家通訊傳播委員會(NCC)依本法管理。低軌衛星通訊服務亦適用。</p>
+      <p class="src"><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=K0060111" target="_blank" rel="noopener" data-t="src_law">官方條文 →</a></p>
     </div>
     <div class="card">
       <div class="tag">AVIATION</div>
-      <h3>民用航空法</h3>
-      <p class="en">Civil Aviation Act</p>
-      <p>發射載具穿越航空器活動空域時,涉及飛航安全與空域協調,由交通部民用航空局主管。</p>
-      <p class="src"><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=K0090001" target="_blank" rel="noopener">官方條文 →</a></p>
+      <h3 data-t="rl2h">民用航空法</h3>
+      <p class="en" data-t="rl2en">Civil Aviation Act</p>
+      <p data-t="rl2p">發射載具穿越航空器活動空域時,涉及飛航安全與空域協調,由交通部民用航空局主管。</p>
+      <p class="src"><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=K0090001" target="_blank" rel="noopener" data-t="src_law">官方條文 →</a></p>
     </div>
     <div class="card">
       <div class="tag">EXPORT</div>
-      <h3>貿易法(戰略性高科技貨品管理)</h3>
-      <p class="en">Foreign Trade Act</p>
-      <p>火箭、衛星關鍵零組件多屬戰略性高科技貨品,其輸出入受出口管制規範,由經濟部國際貿易署主管。</p>
-      <p class="src"><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=J0090004" target="_blank" rel="noopener">官方條文 →</a></p>
+      <h3 data-t="rl3h">貿易法(戰略性高科技貨品管理)</h3>
+      <p class="en" data-t="rl3en">Foreign Trade Act</p>
+      <p data-t="rl3p">火箭、衛星關鍵零組件多屬戰略性高科技貨品,其輸出入受出口管制規範,由經濟部國際貿易署主管。</p>
+      <p class="src"><a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=J0090004" target="_blank" rel="noopener" data-t="src_law">官方條文 →</a></p>
     </div>
     <div class="card">
       <div class="tag">INTERNATIONAL</div>
-      <h3>國際太空法脈絡</h3>
-      <p class="en">International Space Law</p>
-      <p>臺灣雖非聯合國會員,《太空發展法》仍明定遵循 1967 年《外太空條約》等國際公約與慣例之精神——和平使用、國家責任與損害賠償等原則皆已內國法化。</p>
-      <p class="src"><a href="international.html">深入閱讀:國際太空法總覽 →</a></p>
+      <h3 data-t="rl4h">國際太空法脈絡</h3>
+      <p class="en" data-t="rl4en">International Space Law</p>
+      <p data-t="rl4p">臺灣雖非聯合國會員,《太空發展法》仍明定遵循 1967 年《外太空條約》等國際公約與慣例之精神——和平使用、國家責任與損害賠償等原則皆已內國法化。</p>
+      <p class="src"><a href="international.html" data-t="rl4src">深入閱讀:國際太空法總覽 →</a></p>
     </div>
   </div>
 
-  <div class="disclaimer" style="margin-top:48px;">
+  <div class="disclaimer" style="margin-top:48px;" data-t="disc">
     <b style="color:var(--gold);">資料說明</b><br>
     本頁內容彙整自<a href="https://law.moj.gov.tw/" target="_blank" rel="noopener">全國法規資料庫</a>、<a href="https://law.nstc.gov.tw/" target="_blank" rel="noopener">國科會主管法規共用系統</a>、<a href="https://www.nstc.gov.tw/" target="_blank" rel="noopener">國科會</a>與<a href="https://www.tasa.org.tw/" target="_blank" rel="noopener">國家太空中心 TASA</a>之公開資訊,為方便閱讀經過摘要與白話改寫,不具法律效力。引用條文請以主管機關公布之正式文本為準。資料整理時間:2026 年 7 月。
   </div>
@@ -592,17 +604,318 @@
 
 <!-- ============ FOOTER ============ -->
 <footer>
-  <div class="t">從福爾摩沙望向宇宙</div>
+  <div class="t" data-t="foot_t">從福爾摩沙望向宇宙</div>
   <div class="s">TAIWAN SPACE LAW &amp; REGULATIONS · FROM FORMOSA, TOWARD THE COSMOS</div>
   <div class="links">
-    <a href="international.html">國際太空法總覽</a> ·
-    <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160078" target="_blank" rel="noopener">太空發展法</a> ·
-    <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160083" target="_blank" rel="noopener">國家太空中心設置條例</a> ·
-    <a href="https://www.tasa.org.tw/" target="_blank" rel="noopener">TASA 國家太空中心</a>
+    <a href="international.html" data-t="f_intl">國際太空法總覽</a> ·
+    <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160078" target="_blank" rel="noopener" data-t="f_act">太空發展法</a> ·
+    <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160083" target="_blank" rel="noopener" data-t="f_tasa_act">國家太空中心設置條例</a> ·
+    <a href="https://www.tasa.org.tw/" target="_blank" rel="noopener" data-t="f_tasa">TASA 國家太空中心</a>
   </div>
 </footer>
 
 </div>
+
+<script>
+/* ===================== i18n =====================
+   Chinese lives in the markup and is snapshotted on load, so it stays the source of truth
+   for search engines and no-JS readers; I18N_EN carries English only. Any key without an
+   English entry falls back to the original Chinese instead of blanking the element. */
+const I18N_EN = {
+  __title: 'Taiwan Space Law & Regulations — 臺灣太空法規總覽',
+  __desc: 'A plain-language guide to Taiwan\'s space law: the Space Development Act, the Act for Establishment of the Taiwan Space Agency, the four subsidiary regulations, review standards and fee schedules — with a timeline of the legislation and links to the official texts.',
+
+  /* nav */
+  nav_brand: 'Taiwan Space Law',
+  nav_timeline: 'Timeline',
+  nav_system: 'Framework',
+  nav_act: 'Space Development Act',
+  nav_tasa: 'TASA Act',
+  nav_sub: 'Regulations',
+  nav_admin: 'Standards &amp; Fees',
+  nav_related: 'Related Laws',
+  nav_chain: 'Value Chain Map',
+  nav_intl: 'International Space Law →',
+
+  /* hero */
+  kicker: 'Taiwan Space Law &amp; Regulations',
+  hero_title: 'Taiwan Space Law<br>&amp; Regulations',
+  hero_sub: 'From Formosa, Toward the Cosmos — Taiwan\'s space law on one page',
+  hero_lede: 'Promulgated in 2021, the Space Development Act is Taiwan\'s first dedicated space statute. It establishes the principle of peaceful use, a registration system and a launch-permit regime, and it gave rise to the Taiwan Space Agency (TASA) as an administrative corporation. This page brings together the Act, the organic statute, the four subsidiary regulations and the related administrative rules — the whole of Taiwan\'s space-law framework, in readable form.',
+  hero_note: 'This is an unofficial plain-language digest, not a government document. The authoritative texts are those published in the <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160078" target="_blank" rel="noopener">Laws &amp; Regulations Database of the Republic of China (Taiwan)</a> and the <a href="https://law.nstc.gov.tw/" target="_blank" rel="noopener">NSTC Regulations System</a>.',
+
+  /* hero stats */
+  s1v: '2021', s1l: 'Space Development Act promulgated',
+  s2v: '6 ch. 22 art.', s2l: 'Structure of the Act (2 articles added in 2023)',
+  s3v: '4', s3l: 'subsidiary regulations in force alongside it',
+  s4v: '100 km', s4l: 'statutory altitude where “outer space” begins',
+  s5v: '2023', s5l: 'TASA becomes an administrative corporation',
+
+  /* 01 timeline */
+  sec1: 'Timeline', sec1en: '法制沿革',
+  sec1intro: 'From the third reading of Taiwan\'s first dedicated space statute to the reorganization of the Taiwan Space Agency — the milestones of Taiwan\'s space law.',
+  t1d: '2021.05.31',
+  t1h: 'Legislative Yuan passes the Space Development Act on third reading',
+  t1p: 'Taiwan\'s first dedicated space statute clears the legislature, declaring its purpose: to promote space activities and the space industry, and to improve the well-being of the public.',
+  t2d: '2021.06.16',
+  t2h: 'President promulgates the Space Development Act',
+  t2p: '6 chapters and 22 articles in all; the Executive Yuan to set the date it takes effect.',
+  t3d: '2022.01.18',
+  t3h: 'Four subsidiary regulations issued',
+  t3p: 'The Ministry of Science and Technology (now the NSTC) issued four regulations covering registration, launch permits and space accidents, launch sites, and information provision by private operators.',
+  t4d: '2022.01.20',
+  t4h: 'The Space Development Act and its four regulations take effect',
+  t4p: 'Space activities in Taiwan come under a formal legal regime, opening a new chapter for the country\'s space technology.',
+  t5d: '2022.05.04',
+  t5h: 'President promulgates the Act for Establishment of the Taiwan Space Agency',
+  t5p: '33 articles providing the legal basis for reorganizing the agency as an administrative corporation; the Executive Yuan to set the date it takes effect.',
+  t6d: '2023.01.01',
+  t6h: 'The Taiwan Space Agency (TASA) becomes an administrative corporation',
+  t6p: 'Spun out of the NARLabs system into an independent administrative corporation supervised by the National Science and Technology Council, TASA takes charge of executing the national space program.',
+  t7d: '2023.06.28',
+  t7h: 'First amendment to the Space Development Act',
+  t7p: 'Articles 2 and 22 were amended and Articles 18-1 and 18-2 added; following the Executive Yuan\'s reorganization, the competent authority changed from the Ministry of Science and Technology to the National Science and Technology Council.',
+  t8d: '2024.10.23',
+  t8h: 'Fee schedules for registration and launch permits adopted',
+  t8p: 'The Fee Schedule for Registration of Launch Vehicles and Space Vehicles and related fee rules were issued, putting a user-pays system in place.',
+
+  /* 02 framework */
+  sec2: 'Legal Framework', sec2en: '法規體系',
+  sec2intro: 'Taiwan\'s space law is built in three tiers — the Act, its subsidiary regulations and administrative rules — with the Act for Establishment of the Taiwan Space Agency serving as the organic statute of the dedicated agency.',
+  hier_l1: 'Primary Act',
+  hier_l2: 'Organic Statute',
+  hier_l3: 'Regulations',
+  hier_l4: 'Admin. Rules · Fees',
+  n1b: 'Space Development Act',
+  n1s: 'Promulgated 2021 · amended 2023 · 6 chapters, 22 articles + 2 added',
+  n2b: 'Act for Establishment of the Taiwan Space Agency',
+  n2s: 'Promulgated 2022 · 33 articles · legal basis for TASA as an administrative corporation',
+  n3b: 'Regulations for Registration of Launch Vehicles and Space Vehicles',
+  n3s: 'Registration',
+  n4b: 'Regulations for Launch Permits and Handling of Space Accidents',
+  n4s: 'Launch permits · accidents',
+  n5b: 'Regulations for the Siting, Establishment, Operation, Compensation and Community Benefits of Launch Site Land',
+  n5s: 'National launch site',
+  n6b: 'Regulations for Information Provision by Private Space Vehicles and Compensation',
+  n6s: 'Information · compensation',
+  n7b: 'Technical Specifications for Launch Vehicles and Review Standards for Launch Permits',
+  n7s: 'Technical review',
+  n8b: 'Review Standards for Space Vehicle Registration',
+  n8s: 'Registration review',
+  n9b: 'Fee Schedules for Registration / Launch Permit Applications',
+  n9s: 'Fees',
+
+  /* 03 Space Development Act */
+  sec3: 'Space Development Act', sec3en: '太空發展法',
+  act_pill1: 'Primary Act',
+  act_pill2: 'Competent authority: National Science and Technology Council (NSTC)',
+  act_intro: 'Promulgated on 16 June 2021 and in force since 20 January 2022; Articles 2 and 22 were amended and Articles 18-1 and 18-2 added on 28 June 2023. The highlights below are organized by theme; for the official full text see the <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160078" target="_blank" rel="noopener">Laws &amp; Regulations Database of the Republic of China (Taiwan)</a>.',
+
+  g1sum: 'Legislative Purpose &amp; Basic Principles',
+  g1p: 'The Act was enacted to promote Taiwan\'s space activities and space industry, to improve the well-being of the public, and to contribute to the sustainable and peaceful development of human society. Space development must observe these core principles:',
+  pr1h: 'Peaceful Use', pr1en: '和平使用',
+  pr1p: 'Space activities are conducted for peaceful purposes, in the spirit of the relevant international conventions and customary practice.',
+  pr2h: 'Sustainability &amp; Environmental Protection', pr2en: '永續與環境保護',
+  pr2p: 'The Act stresses protection of the space environment, mitigation of space debris, and the sustainability of the Earth\'s environment alongside it.',
+  pr3h: 'Transparency &amp; Industrial Autonomy', pr3en: '資訊公開與產業自主',
+  pr3p: 'Open and transparent information, cultivation of an autonomous domestic space industry, and the promotion of international cooperation and alignment.',
+
+  g2sum: 'Key Definitions',
+  g2p: 'Article 3 of the Act defines the core concepts of space activity. The following is a plain-language summary:',
+  d1b: 'Outer Space', d1en: '太空',
+  d1p: 'The space more than 100 km above sea level — where “outer space” begins as a matter of Taiwanese law.',
+  d2b: 'Space Activity', d2en: '太空活動',
+  d2p: 'Exploration, development and use carried out in outer space, together with the launch and operation of launch vehicles and space vehicles.',
+  d3b: 'Launch Vehicle', d3en: '發射載具',
+  d3p: 'A vehicle used to carry a space vehicle into outer space — a carrier rocket, for example.',
+  d4b: 'Space Vehicle', d4en: '太空載具',
+  d4p: 'A vehicle that operates and performs missions in outer space, such as a satellite or a spacecraft.',
+  d5b: 'Launch Site', d5en: '發射場域',
+  d5p: 'The site and necessary facilities at which launch vehicles conduct launch activities.',
+  d6b: 'Space Accident', d6en: '太空事故',
+  d6p: 'An accident arising from space activities that causes death or injury, property damage or environmental pollution.',
+
+  g3sum: 'Registration — every rocket and satellite must be on the books',
+  g3p: 'A launch vehicle or space vehicle used in space activities must be registered with the competent authority if it is to be launched from Taiwan, if it is subsidized, commissioned or funded by the government, or if it is developed by a public research institution under a statutory budget. Registration lets the state track ownership of and responsibility for space objects, and underpins Taiwan\'s adherence to the international practice of registering space objects.',
+  g3k1: 'Who must register',
+  g3v1: 'Anyone launching from Taiwan; anyone developing with government subsidy, commission or funding; public research institutions developing under a statutory budget',
+  g3k2: 'Register with',
+  g3v2: 'The National Science and Technology Council (which may commission TASA to conduct the review)',
+  g3k3: 'Detailed rules',
+  g3v3: 'Regulations for Registration of Launch Vehicles and Space Vehicles; Review Standards for Space Vehicle Registration',
+
+  g4sum: 'Launch Permits — apply six months before launch',
+  g4p: 'To launch a launch vehicle from Taiwan, an applicant must file for a launch permit with the competent authority at least six months before the planned launch date, attaching registration documents, the flight plan and other materials; no launch may take place without a permit, and launches must be conducted at the national launch site. The application procedure, required documents and grounds for revoking a permit are set by the competent authority in consultation with the relevant central agencies.',
+  g4k1: 'When to apply',
+  g4v1: 'At least 6 months before the planned launch date',
+  g4k2: 'Where to launch',
+  g4v2: 'At the national launch site',
+  g4k3: 'Review basis',
+  g4v3: 'Regulations for Launch Permits and Handling of Space Accidents; Technical Specifications for Launch Vehicles and Review Standards for Launch Permits',
+
+  g5sum: 'The National Launch Site',
+  g5p: 'The government must establish a national launch site. Its siting, construction and operation, together with compensation and community-benefit arrangements for local residents, follow the subsidiary regulations. TASA is responsible for site selection, preliminary planning and, under commission, operation of the site. Establishing a site places particular weight on consultation with, compensation of and benefits for local communities, including indigenous areas.',
+
+  g6sum: 'Space Accidents &amp; Liability for Damage',
+  g6p: 'When a space accident occurs, those involved have a duty to report it, and the competent authority may convene an investigation to establish the cause. Anyone whose space activity causes damage to others is liable to compensate them; launch operators must also carry liability insurance or post financial security so that victims can be made whole. This mirrors the 1972 Convention on International Liability for Damage Caused by Space Objects, under which the launching state bears liability for damage caused by space objects.',
+
+  g7sum: 'Promotion of the Space Industry',
+  g7p: 'Together with the Ministry of Economic Affairs and other agencies, the competent authority must encourage private investment in space ventures, promote high-value-added industrial applications of space technology with the necessary incentives, help related industries grow and connect internationally, cultivate space-industry talent, and support emerging space businesses. The space industry spans the launch of space vehicles, space science research, the manufacture of space-related and ground-receiving equipment, satellite application services (including operations), and new forms of service derived from space activities. The 2023 amendment added Articles 18-1 and 18-2 to strengthen these mechanisms further (see the official text for details).',
+
+  g8sum: 'Penalties',
+  g8p: 'Breaches of the Act\'s regulatory regime carry either criminal liability or an administrative fine, depending on their gravity:',
+  pen_th1: 'Violation', pen_th2: 'Legal consequence', pen_th3: 'Amount (NT$)',
+  pen_r1a: 'Launching a launch vehicle from Taiwan without a permit',
+  pen_r1b: 'Up to 5 years\' imprisonment, with a possible additional fine',
+  pen_r1c: 'NT$1M – NT$10M (criminal fine)',
+  pen_r2a: 'Failing to provide information within the period required by the competent authority',
+  pen_r2b: 'Administrative fine',
+  pen_r2c: 'NT$500K – NT$5M',
+  pen_r3a: 'Failing to register when registration is required',
+  pen_r3b: 'Administrative fine',
+  pen_r3c: 'NT$200K – NT$2M',
+  pen_note: '※ For the complete penalty provisions (including other types of violation and consecutive penalties), refer to the official text.',
+
+  /* 04 TASA Act */
+  sec4: 'Act for Establishment of the Taiwan Space Agency', sec4en: '國家太空中心設置條例',
+  tasa_pill1: 'Organic statute · 33 articles',
+  tasa_pill2: 'TASA an administrative corporation since 2023.01.01',
+  tasa_intro: 'Promulgated on 4 May 2022, this statute gives effect to Article 5 of the Space Development Act, which requires the government to establish a dedicated juridical person. On 1 January 2023 the Taiwan Space Agency (TASA) was reorganized from a unit under NARLabs into an independent administrative corporation supervised by the National Science and Technology Council. For the official full text see the <a href="https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=H0160083" target="_blank" rel="noopener">Laws &amp; Regulations Database of the Republic of China (Taiwan)</a>.',
+  tc1h: 'Scope of Business', tc1en: '業務範圍',
+  tc1l1: 'Planning and executing the national space technology program',
+  tc1l2: 'Space technology R&amp;D; developing launch vehicles and satellite systems',
+  tc1l3: 'Reviewing registration and launch-permit applications under commission',
+  tc1l4: 'Site selection, planning and operation of the national launch site',
+  tc1l5: 'Promoting the space industry and international cooperation',
+  tc1l6: 'Cultivating space-technology talent and researching space law',
+  tc2h: 'Governance', tc2en: '組織治理',
+  tc2l1: 'A board of 11 to 15 directors',
+  tc2l2: '3 to 5 supervisors',
+  tc2l3: 'The chairperson represents TASA externally and oversees its operations',
+  tc2l4: 'Supervisory authority: the National Science and Technology Council',
+  tc2l5: 'Funded by government appropriations, commissioned work, donations and other sources',
+  tc3h: 'History', tc3en: '機構沿革',
+  tc3l1: '1991: The National Space Program Office preparatory office is founded',
+  tc3l2: '2005: Becomes the National Space Organization under NARLabs',
+  tc3l3: '2023: Reorganized under this Act into TASA, an administrative corporation',
+  tc3l4: 'The new status brings greater flexibility in staffing and finances, speeding up missions and ties to industry',
+
+  /* 05 subsidiary regulations */
+  sec5: 'The Four Subsidiary Regulations', sec5en: '四項授權子法',
+  sec5intro: 'Issued under the Space Development Act on 18 January 2022 and in force alongside it from 20 January, these four regulations supply the operating detail for managing space activities.',
+  rg1h: 'Regulations for Registration of Launch Vehicles and Space Vehicles', rg1en: '發射載具及太空載具登錄作業辦法',
+  rg1l1: 'Specifies when registration is required and the documents to file (including an operations plan)',
+  rg1l2: 'Establishes a review panel to examine vehicles',
+  rg1l3: 'Reusable vehicles must state their flight sequence and return trajectory',
+  rg1l4: 'Procedures for amending or revoking a registration',
+  rg2h: 'Regulations for Launch Permits and Handling of Space Accidents', rg2en: '發射載具發射許可及太空事故處理辦法',
+  rg2l1: 'Application procedure and review criteria for launch permits',
+  rg2l2: 'Flight-safety and risk-assessment requirements',
+  rg2l3: 'Reporting, response and investigation procedures for space accidents',
+  rg2l4: 'Grounds for revoking a launch permit',
+  rg3h: 'Regulations for the Siting, Establishment, Operation, Compensation and Community Benefits of Launch Site Land', rg3en: '發射場域土地之選址設置營運管理補償及回饋辦法',
+  rg3l1: 'Assessment procedure for siting the national launch site',
+  rg3l2: 'Rules for building and operating the site',
+  rg3l3: 'Compensation arrangements for local residents',
+  rg3l4: 'Concrete measures for benefiting the local community',
+  rg4h: 'Regulations for Information Provision by Private Space Vehicles and Compensation', rg4en: '民間太空載具資訊提供及補償辦法',
+  rg4l1: 'The government may require private operators to provide space-vehicle information for public-interest or security needs',
+  rg4l2: 'Scope and procedure of information provision',
+  rg4l3: 'Reasonable compensation for the provider',
+  src_law: 'Official text →',
+  src_doc: 'Official document →',
+
+  /* 06 standards & fees */
+  sec6: 'Review Standards &amp; Fee Schedules', sec6en: '審查基準與收費標準',
+  sec6intro: 'The NSTC supplements the framework with public notices and fee schedules covering technical requirements and charges at the operating level.',
+  st1h: 'Technical Specifications for Launch Vehicles and Review Standards for Launch Permits', st1en: '發射載具技術規範及發射許可審查基準',
+  st1p: 'Technical specifications for launch vehicles and the detailed standards for reviewing launch permits, drawn from international standards — the technical threshold a rocket operator must clear to obtain a permit.',
+  st2h: 'Review Standards for Space Vehicle Registration', st2en: '太空載具登錄審查基準',
+  st2p: 'The standards for reviewing registration of space vehicles such as satellites, setting out the application forms, identity documents, other required materials and the review process.',
+  st3h: 'Fee Schedules for Registration / Launch Permit Applications', st3en: '申請登錄/發射許可收費標準',
+  st3p: 'Adopted in 2024, the Fee Schedule for Registration of Launch Vehicles and Space Vehicles and the Fee Schedule for Launch Permit Applications put the user-pays principle into practice.',
+
+  /* 07 related laws */
+  sec7: 'Other Related Laws', sec7en: '其他相關法規',
+  sec7intro: 'Space activities also touch on spectrum, airspace and export control. In practice the following laws must be considered alongside the Act:',
+  rl1h: 'Telecommunications Management Act', rl1en: '電信管理法',
+  rl1p: 'Radio-frequency use for satellite communications, satellite earth stations and the related licences are administered by the National Communications Commission (NCC) under this Act. It applies to LEO satellite communication services as well.',
+  rl2h: 'Civil Aviation Act', rl2en: '民用航空法',
+  rl2p: 'Where a launch vehicle crosses airspace used by aircraft, flight safety and airspace coordination come into play, administered by the Civil Aviation Administration of the Ministry of Transportation and Communications.',
+  rl3h: 'Foreign Trade Act (strategic high-tech commodities)', rl3en: '貿易法(戰略性高科技貨品管理)',
+  rl3p: 'Key rocket and satellite components are largely classified as strategic high-tech commodities; their import and export are subject to export controls administered by the International Trade Administration of the Ministry of Economic Affairs.',
+  rl4h: 'The International Space Law Context', rl4en: '國際太空法脈絡',
+  rl4p: 'Although Taiwan is not a UN member, the Space Development Act expressly follows the spirit of international conventions and practice such as the 1967 Outer Space Treaty — peaceful use, state responsibility and liability for damage are all written into domestic law.',
+  rl4src: 'Read on: International Space Law overview →',
+
+  disc: '<b style="color:var(--gold);">About the data</b><br>This page compiles public information from the <a href="https://law.moj.gov.tw/" target="_blank" rel="noopener">Laws &amp; Regulations Database of the Republic of China (Taiwan)</a>, the <a href="https://law.nstc.gov.tw/" target="_blank" rel="noopener">NSTC Regulations System</a>, the <a href="https://www.nstc.gov.tw/" target="_blank" rel="noopener">NSTC</a> and the <a href="https://www.tasa.org.tw/" target="_blank" rel="noopener">Taiwan Space Agency (TASA)</a>. It has been summarized and rewritten in plain language for readability and has no legal force; when citing provisions, rely on the official texts published by the competent authority. Compiled July 2026.',
+
+  /* footer */
+  foot_t: 'From Formosa, Toward the Cosmos',
+  f_intl: 'International Space Law',
+  f_act: 'Space Development Act',
+  f_tasa_act: 'Act for Establishment of TASA',
+  f_tasa: 'Taiwan Space Agency (TASA)',
+};
+
+const ZH_TITLE = document.title;
+const ZH_DESC = document.querySelector('meta[name="description"]').content;
+const ZH_SNAPSHOT = new Map();
+document.querySelectorAll('[data-t]').forEach(el => ZH_SNAPSHOT.set(el, el.innerHTML));
+
+const LANG_KEY = 'tasa-lang';
+let lang = 'zh';
+try {
+  lang = new URLSearchParams(location.search).get('lang') || localStorage.getItem(LANG_KEY) || 'zh';
+} catch (e) { /* URL or storage unavailable — stay with Chinese */ }
+if (lang !== 'en') lang = 'zh';
+
+function applyLang() {
+  const en = lang === 'en';
+  document.documentElement.lang = en ? 'en' : 'zh-Hant-TW';
+  document.title = en && I18N_EN.__title ? I18N_EN.__title : ZH_TITLE;
+  document.querySelector('meta[name="description"]').content =
+    en && I18N_EN.__desc ? I18N_EN.__desc : ZH_DESC;
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const zh = ZH_SNAPSHOT.get(el);
+    if (zh === undefined) return;  // no original recorded — leave the element alone
+    const v = I18N_EN[el.getAttribute('data-t')];
+    el.innerHTML = (en && v != null) ? v : zh;
+  });
+  document.getElementById('btn-zh').classList.toggle('active', !en);
+  document.getElementById('btn-en').classList.toggle('active', en);
+  syncLangLinks();
+}
+
+/* Carry the language across pages even where localStorage is unavailable (private mode). */
+function syncLangLinks() {
+  document.querySelectorAll('a[href]').forEach(a => {
+    const href = a.getAttribute('href');
+    if (!/^(index|international|valuechain)\.html/.test(href)) return;
+    const u = new URL(href, location.href);
+    u.searchParams.set('lang', lang);
+    a.setAttribute('href', u.pathname.split('/').pop() + u.search + u.hash);
+  });
+}
+
+function setLang(l) {
+  lang = l === 'en' ? 'en' : 'zh';
+  try { localStorage.setItem(LANG_KEY, lang); } catch (e) { /* private mode */ }
+  const url = new URL(location);
+  url.searchParams.set('lang', lang);
+  history.replaceState(null, '', url);
+  applyLang();
+}
+
+applyLang();
+
+/* Switching language changes the nav labels' length, which changes how many rows the nav
+   wraps to — so anchor targets have to track its real height, not a guessed constant. */
+const topnav = document.querySelector('.topnav');
+new ResizeObserver(() =>
+  document.documentElement.style.setProperty('--nav-h', topnav.offsetHeight + 'px')
+).observe(topnav);
+</script>
 
 <script>
 (function () {
