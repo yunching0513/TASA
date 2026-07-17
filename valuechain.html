@@ -81,7 +81,10 @@
 
   /* map layout — full width */
   .maparea { display: block; }
-  .mapbox { border: 1px solid var(--border); border-radius: 24px; background: linear-gradient(170deg, rgba(48,48,46,0.7), rgba(38,38,36,0.4)); padding: 14px; position: relative; }
+  /* z-index:0 makes this a stacking context. Leaflet's controls sit at z-index 1000 and
+     #twmap itself creates none, so without this they escape to .page and paint over the
+     sticky .topnav (z-index 50) as the map scrolls under it. */
+  .mapbox { border: 1px solid var(--border); border-radius: 24px; background: linear-gradient(170deg, rgba(48,48,46,0.7), rgba(38,38,36,0.4)); padding: 14px; position: relative; z-index: 0; }
   #twmap { height: 620px; border-radius: 14px; background: #1F1E1C; }
   @media (max-width: 900px) { #twmap { height: 460px; } }
   /* OSM tiles → deep-space dark mode */
@@ -232,7 +235,7 @@
   <div class="maparea">
     <div class="mapbox">
       <div id="twmap" role="application" aria-label="Taiwan industry map"></div>
-      <p style="font-size:11.5px;color:var(--muted);margin:10px 4px 0;line-height:1.6;" data-t="maphint"></p>
+      <p style="font-size:11.5px;color:var(--muted);margin:10px 4px 0;line-height:1.6;" id="maphint" data-t="maphint"></p>
     </div>
     <div class="panel">
       <h3 class="ptitle" id="ptitle"></h3>
@@ -627,6 +630,7 @@ const I18N = {
     sec2:'產業地圖', sec2en:'Industry Map',
     sec2intro:'點擊地圖節點檢視當地的公司與機構,或以價值鏈環節篩選。節點大小反映收錄機構數量。',
     maphint:'※ 底圖:OpenStreetMap。據點以總部或主要基地所在縣市標示;橘色節點為國家發射場域。可拖曳與縮放地圖。',
+    maphint_touch:'※ 底圖:OpenStreetMap。據點以總部或主要基地所在縣市標示;橘色節點為國家發射場域。請以雙指移動或縮放地圖;單指可直接捲動頁面。',
     secA:'LEO 衛星元件 × 臺灣供應鏈', secAen:'Satellite Anatomy',
     secAintro:'一顆低軌衛星拆開來,臺灣在哪裡?點擊爆炸圖上的元件編號,檢視對應的臺灣廠商與供應鏈強度。電子含量高、可標準化量產的元件,臺灣幾乎全數卡位;缺口集中在化學與能源含量高的環節。',
     r_strong:'國際供應鏈要角', r_mid:'發展中・累積飛行履歷', r_gap:'缺口・仰賴進口',
@@ -656,6 +660,7 @@ const I18N = {
     sec2:'Industry Map', sec2en:'Where the Industry Lives',
     sec2intro:'Click a node to see local companies and institutions, or filter by value-chain segment. Node size reflects the number of entries.',
     maphint:'※ Base map: OpenStreetMap. Pins mark the city of each HQ or main base; the orange node is the national launch site. Drag and zoom to explore.',
+    maphint_touch:'※ Base map: OpenStreetMap. Pins mark the city of each HQ or main base; the orange node is the national launch site. Use two fingers to move or zoom the map; one finger scrolls the page.',
     secA:'LEO Satellite × Taiwan Supply Chain', secAen:'Satellite Anatomy',
     secAintro:'Take a LEO satellite apart — where is Taiwan? Click a numbered component in the exploded view to see the matching Taiwanese suppliers and chain strength. Taiwan holds nearly every electronics-heavy, mass-producible part; the gaps cluster in chemistry- and energy-heavy subsystems.',
     r_strong:'Key global supplier', r_mid:'Developing / gaining flight heritage', r_gap:'Gap — import-reliant',
@@ -672,10 +677,23 @@ const I18N = {
 };
 
 /* ===================== state & render ===================== */
-let lang = localStorage.getItem('vc-lang') || (new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'zh');
+/* Shared with index.html and international.html so the choice survives navigation.
+   ?lang= is read first: it carries the language from the page you clicked through from,
+   and an explicit link must beat whatever this browser happened to store earlier. */
+const LANG_KEY = 'tasa-lang';
+let lang = 'zh';
+try {
+  lang = new URLSearchParams(location.search).get('lang') || localStorage.getItem(LANG_KEY) || 'zh';
+} catch (e) { /* storage blocked (private mode) — stay with Chinese */ }
+if (lang !== 'en') lang = 'zh';
+
 let selCity = null, selSeg = null;
 
-function t(k) { return I18N[lang][k] || ''; }
+/* Falls back to Chinese rather than blanking the element when a key is untranslated. */
+function t(k) {
+  const v = I18N[lang][k];
+  return v != null ? v : (I18N.zh[k] != null ? I18N.zh[k] : '');
+}
 
 function renderStatic() {
   document.documentElement.lang = lang === 'zh' ? 'zh-Hant-TW' : 'en';
@@ -684,6 +702,8 @@ function renderStatic() {
     if (el.getAttribute('data-t') === 'title') el.innerHTML = v.replace('\n', '<br>');
     else el.textContent = v;
   });
+  // The generic hint tells readers to drag; on touch that gesture now scrolls the page.
+  if (TOUCH_PRIMARY) document.getElementById('maphint').textContent = t('maphint_touch');
   document.getElementById('btn-zh').classList.toggle('active', lang === 'zh');
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
   document.getElementById('disc').innerHTML = t('disc');
@@ -724,6 +744,12 @@ function renderFilters() {
 
 /* Leaflet map over OpenStreetMap tiles */
 let map = null, markerLayer = null;
+let autoFit = true;
+
+const TW_BOUNDS = [[21.85, 119.95], [25.40, 122.05]];
+
+/* Primary input is touch (phones, tablets) — one-finger gestures belong to the page. */
+const TOUCH_PRIMARY = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
 
 function initMap() {
   const el = document.getElementById('twmap');
@@ -731,18 +757,41 @@ function initMap() {
     el.innerHTML = '<div class="mapfallback">Map library failed to load.<br>請檢查網路連線後重新整理。</div>';
     return;
   }
-  map = L.map('twmap', { scrollWheelZoom: false, zoomSnap: 0.25, attributionControl: true });
+  // Leaflet's drag handler puts touch-action:pinch-zoom on the container, which disables
+  // native scrolling — a finger landing on this 460px-tall map then pans instead of
+  // scrolling the page, with no way out. Dropping dragging leaves the container at
+  // touch-action:pan-x pan-y, and touchZoom still pans *and* zooms on two fingers.
+  map = L.map('twmap', {
+    scrollWheelZoom: false,
+    dragging: !TOUCH_PRIMARY,
+    zoomSnap: 0.25,
+    attributionControl: true,
+  });
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors',
   }).addTo(map);
   markerLayer = L.layerGroup().addTo(map);
-  const fit = () => map.fitBounds([[21.85, 119.95], [25.40, 122.05]], { padding: [20, 20] });
-  fit();
-  // full-width container: recompute size after layout settles and on resize
-  requestAnimationFrame(() => { map.invalidateSize(); fit(); });
-  let rt;
-  window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { map.invalidateSize(); fit(); }, 200); });
+
+  let fitting = false;
+  const fit = () => {
+    fitting = true;
+    map.fitBounds(TW_BOUNDS, { padding: [20, 20], animate: false });
+    fitting = false;
+  };
+  // Once the reader has framed the map themselves, stop yanking the view back.
+  map.on('movestart zoomstart', () => { if (!fitting) autoFit = false; });
+  fit();  // must set a view before renderMap() can add markers
+
+  // Observe the container, not the window: mobile browsers fire window resize when the
+  // URL bar collapses mid-scroll, and re-fitting on that reset the view while the reader
+  // was simply scrolling past. #twmap has a fixed height, so this only reacts to real
+  // layout changes (rotation, window resize, the 900px breakpoint). The first callback
+  // fires once layout settles, which is also what the map needs to size itself correctly.
+  new ResizeObserver(() => {
+    map.invalidateSize();
+    if (autoFit) fit();
+  }).observe(el);
 }
 
 function renderMap() {
@@ -891,12 +940,25 @@ function renderMissions() {
 
 function update() {
   renderStatic(); renderChain(); renderFilters(); renderMap(); renderPanel(); renderAnatomy(); renderMissions();
+  syncLangLinks();
 }
 
 
+/* Carry the language across pages even where localStorage is unavailable (private mode). */
+function syncLangLinks() {
+  document.querySelectorAll('a[href]').forEach(a => {
+    const href = a.getAttribute('href');
+    if (!/^(index|international|valuechain)\.html/.test(href)) return;
+    const u = new URL(href, location.href);
+    u.searchParams.set('lang', lang);
+    a.setAttribute('href', u.pathname.split('/').pop() + u.search + u.hash);
+  });
+}
+
 function setLang(l) {
-  lang = l; localStorage.setItem('vc-lang', l);
-  const url = new URL(location); url.searchParams.set('lang', l); history.replaceState(null, '', url);
+  lang = l === 'en' ? 'en' : 'zh';
+  try { localStorage.setItem(LANG_KEY, lang); } catch (e) { /* private mode */ }
+  const url = new URL(location); url.searchParams.set('lang', lang); history.replaceState(null, '', url);
   update();
 }
 
