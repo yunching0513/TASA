@@ -43,9 +43,10 @@
   .topnav .brand { display: flex; align-items: center; gap: 10px; margin-right: auto; font-weight: 700; font-size: 16px; color: var(--text); }
   .topnav .orb { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--blue); display: grid; place-items: center; flex: none; }
   .topnav .orb i { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
-  .topnav a.navlink { font-size: 14.5px; color: var(--text-2); padding: 4px 2px; border-bottom: 2px solid transparent; }
+  .topnav a.navlink { font-size: 14.5px; color: var(--text-2); padding: 4px 2px; border-bottom: 2px solid transparent; white-space: nowrap; }
   .topnav a.navlink:hover { color: var(--cyan); text-decoration: none; border-bottom-color: var(--cyan); }
-  .langtoggle { display: flex; border: 1px solid var(--gold); border-radius: 999px; overflow: hidden; }
+  .navscroll { display: contents; }
+  .langtoggle { display: flex; border: 1px solid var(--gold); border-radius: 999px; overflow: hidden; flex: none; }
   .langtoggle button {
     font-family: 'Space Grotesk', 'Noto Sans TC'; background: transparent; color: var(--gold);
     border: none; padding: 6px 16px; font-size: 13.5px; cursor: pointer; letter-spacing: 0.05em;
@@ -102,6 +103,25 @@
   }
   .cluster-label.sel div { color: var(--gold); }
   .mapfallback { display: grid; place-items: center; height: 100%; color: var(--muted); font-size: 14px; text-align: center; padding: 20px; }
+  /* pie markers coloured by industry segment */
+  .pie-marker { background: none; border: none; }
+  .pie-marker .pie {
+    box-sizing: border-box; border-radius: 50%; border-style: solid; cursor: pointer;
+    box-shadow: 0 0 0 1px rgba(31,30,28,0.55); transition: opacity .2s;
+  }
+  .pie-marker .pie.launch { animation: ringpulse 2.2s ease-out infinite; }
+  @keyframes ringpulse {
+    0%   { box-shadow: 0 0 0 1px rgba(31,30,28,0.55), 0 0 0 0 rgba(255,122,92,0.55); }
+    100% { box-shadow: 0 0 0 1px rgba(31,30,28,0.55), 0 0 0 13px rgba(255,122,92,0); }
+  }
+  .pie-hit { display: flex; align-items: center; justify-content: center; }
+  /* two-finger-to-pan hint overlay (touch devices) */
+  .map-gesture-hint {
+    position: absolute; inset: 0; z-index: 500; display: grid; place-items: center;
+    background: rgba(31,30,28,0.55); color: var(--text); font-size: 14px; text-align: center; padding: 24px;
+    opacity: 0; pointer-events: none; transition: opacity .25s; border-radius: 14px;
+  }
+  .map-gesture-hint.show { opacity: 1; }
 
   /* filters */
   .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
@@ -117,7 +137,7 @@
   .panel { margin-top: 30px; }
   .panel .ptitle { font-family: 'Noto Serif TC', serif; font-size: 24px; font-weight: 600; margin: 0 0 4px; }
   .panel .psub { font-family: 'Space Grotesk'; font-size: 12.5px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 22px; }
-  .orgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 16px; }
+  .orgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 16px; }
   .org { border: 1px solid var(--border); border-left: 3px solid var(--seg, var(--gold)); border-radius: 14px; background: var(--bg-2); padding: 18px 22px; display: flex; flex-direction: column; }
   .org .head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
   .org b { font-size: 16px; }
@@ -132,23 +152,12 @@
   }
   .org .site:hover { background: #FFD666; text-decoration: none; box-shadow: 0 0 16px rgba(255,197,61,0.4); }
 
-  /* satellite anatomy (exploded view) */
+  /* satellite anatomy (interactive 3D model) */
   .satarea { display: grid; grid-template-columns: minmax(340px, 620px) 1fr; gap: 34px; align-items: start; }
   @media (max-width: 980px) { .satarea { grid-template-columns: 1fr; } }
   .satbox { border: 1px solid var(--border); border-radius: 24px; background: linear-gradient(170deg, rgba(48,48,46,0.7), rgba(38,38,36,0.4)); padding: 18px; }
-  .satbox svg { width: 100%; height: auto; display: block; }
-  .sat-line { stroke: #6FA7D9; stroke-width: 1.4; fill: none; stroke-linecap: round; }
-  .sat-fill { fill: #2E3A4A; stroke: #6FA7D9; stroke-width: 1.4; }
-  .sat-panel { fill: #24405C; stroke: #6FD4FF; stroke-width: 1.2; }
-  .sat-grid { stroke: #6FD4FF; stroke-width: 0.5; opacity: 0.5; }
-  .leader { stroke: #57554F; stroke-width: 1; stroke-dasharray: 3 4; }
-  .hotspot { cursor: pointer; }
-  .hotspot circle.num { fill: #262624; stroke: var(--rc, #6FD4FF); stroke-width: 1.6; transition: all .15s; }
-  .hotspot text { font-family: 'Space Grotesk', 'Noto Sans TC'; font-size: 13px; font-weight: 700; fill: var(--rc, #6FD4FF); text-anchor: middle; dominant-baseline: central; pointer-events: none; }
-  .hotspot:hover circle.num { fill: var(--rc, #6FD4FF); }
-  .hotspot:hover text { fill: #262624; }
-  .hotspot.sel circle.num { fill: var(--rc, #6FD4FF); r: 13; }
-  .hotspot.sel text { fill: #262624; }
+  .model-frame { height: 640px; overflow: hidden; border: 1px solid var(--border-soft); border-radius: 16px; background: #262624; }
+  .model-frame iframe { display: block; width: 100%; height: 100%; border: 0; }
   .comp-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
   .cchip {
     font-family: inherit; font-size: 12.5px; cursor: pointer; border-radius: 999px; padding: 6px 13px;
@@ -185,6 +194,37 @@
   footer .t { font-family: 'Noto Serif TC', serif; font-weight: 600; font-size: 22px; margin-bottom: 8px; }
   footer .s { font-family: 'Space Grotesk'; font-size: 12px; letter-spacing: 0.2em; color: var(--muted); }
   footer .links { margin: 20px 0 0; font-size: 13.5px; color: var(--muted); }
+
+  /* ============ MOBILE ============ */
+  @media (max-width: 760px) {
+    .topnav { padding: 10px 5vw; gap: 12px; flex-wrap: nowrap; }
+    .topnav .brand { font-size: 15px; flex: none; margin-right: 0; }
+    .topnav .brand .orb { width: 26px; height: 26px; }
+    .navscroll {
+      display: flex; align-items: center; gap: 18px; flex: 1 1 auto; min-width: 0;
+      overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); mask-image: linear-gradient(90deg, #000 88%, transparent);
+    }
+    .navscroll::-webkit-scrollbar { display: none; }
+    .topnav a.navlink { font-size: 14px; padding: 2px 0; }
+    .langtoggle button { padding: 6px 13px; font-size: 13px; }
+
+    .hero { padding: 64px 7vw 84px; }
+    section.block { padding: 56px 7vw; }
+    .sec-intro { margin-bottom: 32px; }
+    .stat { flex: 1 1 140px; padding: 12px 16px; }
+
+    /* map: taller, declutter labels, easier touch */
+    #twmap { height: 66vh; min-height: 380px; max-height: 560px; }
+    .mapbox { padding: 8px; border-radius: 18px; }
+    .cluster-label:not(.sel) { display: none; }   /* only the tapped city keeps its label */
+    .cluster-label div { font-size: 13px; }
+    .panel { margin-top: 22px; }
+    .ratelegend { gap: 10px 14px; font-size: 12.5px; }
+    .satbox, .comp-panel { min-width: 0; }
+    .model-frame { height: 570px; }
+    .comp-chips .cchip { font-size: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -193,12 +233,14 @@
 
 <nav class="topnav" aria-label="main">
   <span class="brand"><span class="orb"><i></i></span><span data-t="nav_brand"></span></span>
-  <a class="navlink" href="#chain" data-t="nav_chain"></a>
-  <a class="navlink" href="#map" data-t="nav_map"></a>
-  <a class="navlink" href="#anatomy" data-t="nav_anatomy"></a>
-  <a class="navlink" href="#missions" data-t="nav_missions"></a>
-  <a class="navlink" href="index.html" data-t="nav_tw"></a>
-  <a class="navlink" href="international.html" data-t="nav_intl"></a>
+  <div class="navscroll">
+    <a class="navlink" href="#chain" data-t="nav_chain"></a>
+    <a class="navlink" href="#map" data-t="nav_map"></a>
+    <a class="navlink" href="#anatomy" data-t="nav_anatomy"></a>
+    <a class="navlink" href="#missions" data-t="nav_missions"></a>
+    <a class="navlink" href="index.html" data-t="nav_tw"></a>
+    <a class="navlink" href="international.html" data-t="nav_intl"></a>
+  </div>
   <div class="langtoggle" role="group" aria-label="language">
     <button id="btn-zh" onclick="setLang('zh')">中文</button>
     <button id="btn-en" onclick="setLang('en')">EN</button>
@@ -258,108 +300,9 @@
   </div>
   <div class="satarea">
     <div class="satbox">
-      <svg id="satsvg" viewBox="0 0 560 500" role="img" aria-label="LEO satellite exploded view">
-        <!-- earth arc -->
-        <path d="M-20,540 Q280,430 580,540" fill="none" stroke="#2B5ACF" stroke-width="1.2" opacity="0.5"/>
-        <path d="M-20,560 Q280,455 580,560" fill="#1F2A3A" opacity="0.5"/>
-
-        <!-- left solar wing -->
-        <g id="g-solar">
-          <rect class="sat-panel" x="28" y="196" width="52" height="64" rx="3"/>
-          <rect class="sat-panel" x="86" y="196" width="52" height="64" rx="3"/>
-          <rect class="sat-panel" x="144" y="196" width="52" height="64" rx="3"/>
-          <line class="sat-grid" x1="54" y1="196" x2="54" y2="260"/><line class="sat-grid" x1="112" y1="196" x2="112" y2="260"/><line class="sat-grid" x1="170" y1="196" x2="170" y2="260"/>
-          <line class="sat-grid" x1="28" y1="228" x2="196" y2="228"/>
-          <line class="sat-line" x1="196" y1="228" x2="238" y2="228"/>
-          <!-- right solar wing -->
-          <rect class="sat-panel" x="364" y="196" width="52" height="64" rx="3"/>
-          <rect class="sat-panel" x="422" y="196" width="52" height="64" rx="3"/>
-          <rect class="sat-panel" x="480" y="196" width="52" height="64" rx="3"/>
-          <line class="sat-grid" x1="390" y1="196" x2="390" y2="260"/><line class="sat-grid" x1="448" y1="196" x2="448" y2="260"/><line class="sat-grid" x1="506" y1="196" x2="506" y2="260"/>
-          <line class="sat-grid" x1="364" y1="228" x2="532" y2="228"/>
-          <line class="sat-line" x1="322" y1="228" x2="364" y2="228"/>
-        </g>
-
-        <!-- bus -->
-        <g id="g-bus">
-          <rect class="sat-fill" x="238" y="176" width="84" height="104" rx="6"/>
-          <line class="sat-grid" x1="238" y1="176" x2="322" y2="280"/>
-          <line class="sat-grid" x1="322" y1="176" x2="238" y2="280"/>
-          <line class="sat-grid" x1="238" y1="228" x2="322" y2="228"/>
-        </g>
-
-        <!-- 3 payload dish -->
-        <g id="g-dish">
-          <path class="sat-fill" d="M244,96 Q280,66 316,96 Q280,120 244,96 Z"/>
-          <line class="sat-line" x1="280" y1="96" x2="280" y2="128"/>
-          <circle class="sat-fill" cx="280" cy="88" r="5"/>
-          <line class="leader" x1="280" y1="128" x2="280" y2="176"/>
-        </g>
-
-        <!-- 2 ADCS cluster -->
-        <g id="g-adcs">
-          <rect class="sat-fill" x="164" y="108" width="26" height="22" rx="3"/>
-          <rect class="sat-fill" x="196" y="118" width="22" height="26" rx="3"/>
-          <circle class="sat-line" cx="177" cy="150" r="10" fill="none"/>
-          <line class="leader" x1="208" y1="146" x2="240" y2="180"/>
-        </g>
-
-        <!-- 5 TT&C -->
-        <g id="g-ttc">
-          <line class="sat-line" x1="336" y1="150" x2="352" y2="128"/>
-          <circle class="sat-fill" cx="354" cy="125" r="4"/>
-          <line class="sat-line" x1="350" y1="158" x2="368" y2="142"/>
-          <circle class="sat-fill" cx="371" cy="139" r="4"/>
-          <line class="leader" x1="340" y1="154" x2="322" y2="180"/>
-        </g>
-
-        <!-- 6 PMAD battery -->
-        <g id="g-pmad">
-          <rect class="sat-fill" x="356" y="286" width="40" height="24" rx="4"/>
-          <line class="sat-grid" x1="366" y1="286" x2="366" y2="310"/>
-          <line class="sat-grid" x1="376" y1="286" x2="376" y2="310"/>
-          <line class="sat-grid" x1="386" y1="286" x2="386" y2="310"/>
-          <line class="leader" x1="356" y1="296" x2="322" y2="268"/>
-        </g>
-
-        <!-- 8 thermal radiator -->
-        <g id="g-thermal">
-          <rect class="sat-fill" x="408" y="300" width="46" height="34" rx="3"/>
-          <line class="sat-grid" x1="408" y1="309" x2="454" y2="309"/>
-          <line class="sat-grid" x1="408" y1="318" x2="454" y2="318"/>
-          <line class="sat-grid" x1="408" y1="327" x2="454" y2="327"/>
-          <line class="leader" x1="408" y1="314" x2="322" y2="262"/>
-        </g>
-
-        <!-- 7 OBC -->
-        <g id="g-obc">
-          <rect class="sat-fill" x="168" y="300" width="44" height="30" rx="3"/>
-          <rect class="sat-line" x="176" y="307" width="12" height="10" fill="none"/>
-          <line class="sat-grid" x1="194" y1="307" x2="206" y2="307"/>
-          <line class="sat-grid" x1="194" y1="313" x2="206" y2="313"/>
-          <line class="sat-grid" x1="194" y1="319" x2="206" y2="319"/>
-          <line class="leader" x1="212" y1="308" x2="240" y2="276"/>
-        </g>
-
-        <!-- 4 propulsion -->
-        <g id="g-prop">
-          <circle class="sat-fill" cx="280" cy="330" r="16"/>
-          <path class="sat-line" d="M266,352 L262,366 M280,350 L280,366 M294,352 L298,366"/>
-          <path class="sat-fill" d="M258,366 L266,366 L262,376 Z M276,366 L284,366 L280,378 Z M294,366 L302,366 L298,376 Z"/>
-          <line class="leader" x1="280" y1="314" x2="280" y2="282"/>
-        </g>
-
-        <!-- 9 imaging payload -->
-        <g id="g-imaging">
-          <rect class="sat-fill" x="330" y="342" width="30" height="26" rx="4"/>
-          <circle class="sat-line" cx="345" cy="380" r="9" fill="none"/>
-          <circle class="sat-fill" cx="345" cy="380" r="4"/>
-          <line class="leader" x1="340" y1="342" x2="318" y2="282"/>
-        </g>
-
-        <!-- numbered hotspots (positions near each part) -->
-        <g id="hotspots"></g>
-      </svg>
+      <div class="model-frame">
+        <iframe id="satellite-model" title="Interactive 3D LEO satellite model" src="leo-satellite.html?embed=1&lang=zh" loading="lazy" allow="fullscreen"></iframe>
+      </div>
       <div class="comp-chips" id="compchips"></div>
       <p style="font-size:11.5px;color:var(--muted);margin:12px 4px 0;line-height:1.6;" data-t="satHint"></p>
     </div>
@@ -631,12 +574,12 @@ const I18N = {
     sec1intro:'太空產業從上游到下游環環相扣。臺灣以地面設備見長,並沿著半導體與精密製造的優勢,向衛星本體、火箭與應用服務延伸。',
     sec2:'產業地圖', sec2en:'Industry Map',
     sec2intro:'點擊地圖節點檢視當地的公司與機構,或以價值鏈環節篩選。節點大小反映收錄機構數量。',
-    maphint:'※ 底圖:OpenStreetMap。據點以總部或主要基地所在縣市標示;橘色節點為國家發射場域。可拖曳與縮放地圖。',
-    maphint_touch:'※ 底圖:OpenStreetMap。據點以總部或主要基地所在縣市標示;橘色節點為國家發射場域。請以雙指移動或縮放地圖;單指可直接捲動頁面。',
+    maphint:'※ 底圖:OpenStreetMap。圓圈依當地五種產業類別的組成比例上色(對照上方篩選器的顏色);圓圈大小反映機構數量,脈動者為國家發射場域。可拖曳與縮放地圖。',
+    maphint_touch:'※ 底圖:OpenStreetMap。圓圈依當地五種產業類別的組成比例上色(對照上方篩選器的顏色);圓圈大小反映機構數量,脈動者為國家發射場域。請以雙指移動或縮放地圖;單指可直接捲動頁面。',
     secA:'LEO 衛星元件 × 臺灣供應鏈', secAen:'Satellite Anatomy',
-    secAintro:'一顆低軌衛星拆開來,臺灣在哪裡?點擊爆炸圖上的元件編號,檢視對應的臺灣廠商與供應鏈強度。電子含量高、可標準化量產的元件,臺灣幾乎全數卡位;缺口集中在化學與能源含量高的環節。',
+    secAintro:'一顆低軌衛星拆開來,臺灣在哪裡?拖曳 3D 模型旋轉、點選元件或下方晶片,檢視對應的臺灣廠商與供應鏈強度。電子含量高、可標準化量產的元件,臺灣幾乎全數卡位;缺口集中在化學與能源含量高的環節。',
     r_strong:'國際供應鏈要角', r_mid:'發展中・累積飛行履歷', r_gap:'缺口・仰賴進口',
-    satHint:'※ 示意爆炸圖。點擊編號或下方晶片切換元件;評級為本站依公開資訊之彙整判斷。',
+    satHint:'※ 互動 3D 概念模型。可拖曳、縮放、點選元件或下方晶片;評級為本站依公開資訊之彙整判斷。',
     firms_t:'對應臺灣廠商與機構',
     sec3:'旗艦任務與計畫', sec3en:'Flagship Missions',
     sec3intro:'產業鏈的成果,最終在這些任務上匯聚升空。',
@@ -661,12 +604,12 @@ const I18N = {
     sec1intro:"The space industry runs upstream to downstream. Taiwan leads in ground equipment and is extending along its semiconductor and precision-manufacturing strengths into satellites, rockets and services.",
     sec2:'Industry Map', sec2en:'Where the Industry Lives',
     sec2intro:'Click a node to see local companies and institutions, or filter by value-chain segment. Node size reflects the number of entries.',
-    maphint:'※ Base map: OpenStreetMap. Pins mark the city of each HQ or main base; the orange node is the national launch site. Drag and zoom to explore.',
-    maphint_touch:'※ Base map: OpenStreetMap. Pins mark the city of each HQ or main base; the orange node is the national launch site. Use two fingers to move or zoom the map; one finger scrolls the page.',
+    maphint:'※ Base map: OpenStreetMap. Each circle is coloured by its mix of the five industry segments (matching the filter colours above); circle size reflects the number of organizations, and the pulsing one is the national launch site. Drag and zoom to explore.',
+    maphint_touch:'※ Base map: OpenStreetMap. Each circle is coloured by its mix of the five industry segments (matching the filter colours above); circle size reflects the number of organizations, and the pulsing one is the national launch site. Use two fingers to move or zoom the map; one finger scrolls the page.',
     secA:'LEO Satellite × Taiwan Supply Chain', secAen:'Satellite Anatomy',
-    secAintro:'Take a LEO satellite apart — where is Taiwan? Click a numbered component in the exploded view to see the matching Taiwanese suppliers and chain strength. Taiwan holds nearly every electronics-heavy, mass-producible part; the gaps cluster in chemistry- and energy-heavy subsystems.',
+    secAintro:'Take a LEO satellite apart — where is Taiwan? Rotate the 3D model and select a component or chip to see matching Taiwanese suppliers and chain strength. Taiwan holds nearly every electronics-heavy, mass-producible part; the gaps cluster in chemistry- and energy-heavy subsystems.',
     r_strong:'Key global supplier', r_mid:'Developing / gaining flight heritage', r_gap:'Gap — import-reliant',
-    satHint:'※ Schematic exploded view. Click a number or a chip below to switch components; ratings are this site\'s synthesis of public information.',
+    satHint:'※ Interactive 3D concept model. Drag, zoom, and select a component or chip; ratings are this site\'s synthesis of public information.',
     firms_t:'Matching Taiwanese players',
     sec3:'Flagship Missions & Programs', sec3en:'Where It All Comes Together',
     sec3intro:'The value chain converges — and lifts off — in these missions.',
@@ -796,6 +739,25 @@ function initMap() {
   }).observe(el);
 }
 
+const SEG_ORDER = ['agency', 'launch', 'satellite', 'ground', 'service'];
+
+// build a conic-gradient string from the segment mix at a city
+function segGradient(orgsHere) {
+  const counts = {};
+  orgsHere.forEach(o => { counts[o.seg] = (counts[o.seg] || 0) + 1; });
+  const total = orgsHere.length || 1;
+  let acc = 0;
+  const stops = [];
+  SEG_ORDER.forEach(sk => {
+    if (!counts[sk]) return;
+    const start = (acc / total) * 360;
+    acc += counts[sk];
+    const end = (acc / total) * 360;
+    stops.push(`${SEGS[sk].color} ${start}deg ${end}deg`);
+  });
+  return stops.length > 1 ? `conic-gradient(${stops.join(',')})` : (stops[0] ? stops[0].split(' ')[0] : '#6FD4FF');
+}
+
 function renderMap() {
   if (!map || !markerLayer) return;
   markerLayer.clearLayers();
@@ -804,29 +766,28 @@ function renderMap() {
     const match = selSeg ? orgsHere.some(o => o.seg === selSeg) : true;
     const isSel = selCity === key;
     const r = Math.min(8 + orgsHere.length * 1.6, 18);
-    const baseColor = key === 'pingtung' ? '#FF7A5C' : '#6FD4FF';
-    const marker = L.circleMarker([c.lat, c.lng], {
-      radius: r,
-      color: isSel ? '#FFC53D' : '#262624',
-      weight: isSel ? 3 : 1.5,
-      fillColor: isSel ? '#FFC53D' : baseColor,
-      fillOpacity: match ? 0.85 : 0.2,
-      opacity: match ? 1 : 0.3,
+    const d = Math.round(r * 2);
+    const hit = d + 16;                         // transparent padding → larger tap target
+    const bg = segGradient(orgsHere);          // coloured by industry segment(s)
+    const bw = isSel ? 3 : 1.5;
+    const bc = isSel ? '#FFC53D' : '#1F1E1C';
+    const op = match ? 1 : 0.28;
+    const icon = L.divIcon({
+      className: 'pie-marker',
+      html: `<div class="pie-hit" style="width:${hit}px;height:${hit}px;">` +
+            `<div class="pie${key === 'pingtung' ? ' launch' : ''}" style="width:${d}px;height:${d}px;` +
+            `background:${bg};border-color:${bc};border-width:${bw}px;opacity:${op};"></div></div>`,
+      iconSize: [hit, hit], iconAnchor: [hit / 2, hit / 2],
     });
+    const marker = L.marker([c.lat, c.lng], { icon, keyboard: true, title: lang === 'zh' ? c.zh : c.en });
     marker.on('click', () => { selCity = (selCity === key ? null : key); update(); });
     marker.bindTooltip(
       `<div>${lang === 'zh' ? c.zh : c.en} · ${orgsHere.length}</div>`,
       { permanent: true, direction: c.labelDir || 'right',
-        offset: c.labelDir === 'top' ? [0, -(r + 4)] : [c.labelDir === 'left' ? -(r + 4) : (r + 4), 0],
+        offset: c.labelDir === 'top' ? [0, -(r + 5)] : [c.labelDir === 'left' ? -(r + 5) : (r + 5), 0],
         className: 'cluster-label' + (isSel ? ' sel' : ''), opacity: match ? 1 : 0.35 }
     );
     markerLayer.addLayer(marker);
-    // glow ring for the national launch site
-    if (key === 'pingtung') {
-      markerLayer.addLayer(L.circleMarker([c.lat, c.lng], {
-        radius: r + 7, color: '#FF7A5C', weight: 1.2, fill: false, opacity: match ? 0.7 : 0.2, interactive: false,
-      }));
-    }
   });
 }
 
@@ -869,30 +830,17 @@ function renderPanel() {
 
 /* satellite anatomy */
 let selComp = 'adcs';
+const modelFrame = document.getElementById('satellite-model');
+
+function syncModelSelection() {
+  modelFrame.contentWindow?.postMessage({ source: 'taiwan-supply-chain', type: 'component-select', component: selComp }, window.location.origin === 'null' ? '*' : window.location.origin);
+}
+
+function setModelLanguage() {
+  modelFrame.src = `leo-satellite.html?embed=1&lang=${lang}`;
+}
 
 function renderAnatomy() {
-  const hs = document.getElementById('hotspots');
-  hs.innerHTML = '';
-  COMPS.forEach(c => {
-    const rc = RATES[c.rate].color;
-    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-    g.setAttribute('class', 'hotspot' + (selComp === c.id ? ' sel' : ''));
-    g.setAttribute('style', `--rc:${rc}`);
-    g.setAttribute('tabindex', '0'); g.setAttribute('role', 'button');
-    const circ = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    circ.setAttribute('cx', c.hx); circ.setAttribute('cy', c.hy); circ.setAttribute('r', 11);
-    circ.setAttribute('class', 'num');
-    g.appendChild(circ);
-    const txt = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-    txt.setAttribute('x', c.hx); txt.setAttribute('y', c.hy);
-    txt.textContent = c.no;
-    g.appendChild(txt);
-    const pick = () => { selComp = c.id; update(); };
-    g.addEventListener('click', pick);
-    g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(); } });
-    hs.appendChild(g);
-  });
-
   const chips = document.getElementById('compchips');
   chips.innerHTML = '';
   COMPS.forEach(c => {
@@ -900,7 +848,7 @@ function renderAnatomy() {
     b.className = 'cchip' + (selComp === c.id ? ' sel' : '');
     b.style.setProperty('--rc', RATES[c.rate].color);
     b.innerHTML = `<i></i>${c.no}. ${lang === 'zh' ? c.zh : c.en}`;
-    b.onclick = () => { selComp = c.id; update(); };
+    b.onclick = () => { selComp = c.id; renderAnatomy(); syncModelSelection(); };
     chips.appendChild(b);
   });
 
@@ -961,11 +909,19 @@ function setLang(l) {
   lang = l === 'en' ? 'en' : 'zh';
   try { localStorage.setItem(LANG_KEY, lang); } catch (e) { /* private mode */ }
   const url = new URL(location); url.searchParams.set('lang', lang); history.replaceState(null, '', url);
+  setModelLanguage();
   update();
 }
 
+modelFrame.addEventListener('load', syncModelSelection);
+window.addEventListener('message', event => {
+  if (event.source !== modelFrame.contentWindow || event.data?.source !== 'leo-satellite' || event.data?.type !== 'component-select') return;
+  if (COMPS.some(c => c.id === event.data.component)) { selComp = event.data.component; renderAnatomy(); }
+});
+setModelLanguage();
 initMap();
 update();
+syncModelSelection();
 
 /* Switching language changes the nav labels' length, which changes how many rows the nav
    wraps to — so anchor targets have to track its real height, not a guessed constant. */

@@ -54,7 +54,7 @@
   .topnav .brand { display: flex; align-items: center; gap: 10px; margin-right: auto; font-weight: 700; font-size: 16px; color: var(--text); }
   .topnav .orb { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--blue); display: grid; place-items: center; flex: none; }
   .topnav .orb i { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 10px var(--gold); }
-  .topnav a.navlink { font-size: 14.5px; color: var(--text-2); padding: 4px 2px; border-bottom: 2px solid transparent; }
+  .topnav a.navlink { font-size: 14.5px; color: var(--text-2); padding: 4px 2px; border-bottom: 2px solid transparent; white-space: nowrap; }
   .topnav a.navlink:hover { color: var(--cyan); text-decoration: none; border-bottom-color: var(--cyan); }
   .topnav a.switch { border: 1px solid var(--gold); color: var(--gold); border-radius: 999px; padding: 5px 16px; font-size: 13.5px; }
   .topnav a.switch:hover { background: rgba(255,197,61,0.1); text-decoration: none; }
@@ -183,6 +183,20 @@
   footer .t { font-family: 'Noto Serif TC', serif; font-weight: 600; font-size: 24px; margin-bottom: 8px; }
   footer .s { font-family: 'Space Grotesk'; font-size: 12px; letter-spacing: 0.2em; color: var(--muted); }
   footer .links { margin: 22px 0 0; font-size: 13.5px; color: var(--muted); }
+
+  /* ============ MOBILE ============ */
+  @media (max-width: 760px) {
+    .topnav {
+      gap: 16px; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      padding: 11px 5vw;
+    }
+    .topnav::-webkit-scrollbar { display: none; }
+    .topnav .brand { margin-right: 0; flex: none; font-size: 15px; }
+    .topnav a.navlink, .topnav a.switch { flex: none; }
+    .hero { padding: 64px 7vw 80px; }
+    section.block { padding: 56px 7vw; }
+    .sec-intro { margin-bottom: 32px; }
+  }
 </style>
 </head>
 <body>
@@ -202,6 +216,7 @@
   <a class="navlink" href="#admin" data-t="nav_admin">審查與規費</a>
   <a class="navlink" href="#related" data-t="nav_related">相關法規</a>
   <a class="navlink" href="valuechain.html" data-t="nav_chain">產業鏈地圖</a>
+  <a class="navlink" href="leo-satellite.html" data-t="nav_leo">3D 衛星解剖圖</a>
   <a class="switch" href="international.html" data-t="nav_intl">國際太空法 →</a>
   <div class="langtoggle" role="group" aria-label="language">
     <button id="btn-zh" onclick="setLang('zh')">中文</button>
@@ -635,6 +650,7 @@ const I18N_EN = {
   nav_admin: 'Standards &amp; Fees',
   nav_related: 'Related Laws',
   nav_chain: 'Value Chain Map',
+  nav_leo: '3D Satellite',
   nav_intl: 'International Space Law →',
 
   /* hero */
@@ -891,7 +907,7 @@ function applyLang() {
 function syncLangLinks() {
   document.querySelectorAll('a[href]').forEach(a => {
     const href = a.getAttribute('href');
-    if (!/^(index|international|valuechain)\.html/.test(href)) return;
+    if (!/^(index|international|valuechain|leo-satellite)\.html/.test(href)) return;
     const u = new URL(href, location.href);
     u.searchParams.set('lang', lang);
     a.setAttribute('href', u.pathname.split('/').pop() + u.search + u.hash);
