@@ -3,32 +3,32 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#07101d">
+  <meta name="theme-color" content="#262624">
   <title>LEO 衛星系統解剖圖｜TASA Engineering Visualizer</title>
   <meta name="description" content="可旋轉、點選與展開的低軌衛星系統 3D 工程視覺化。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+TC:wght@400;500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Noto+Serif+TC:wght@600;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --ink: #e9f4ff;
-      --muted: #8da3b9;
-      --soft: #496076;
-      --line: rgba(144, 197, 237, .21);
-      --panel: rgba(8, 21, 35, .78);
-      --panel-solid: #0a1725;
-      --cyan: #71ddff;
-      --cyan-dim: #2d7898;
-      --gold: #ffbf4a;
-      --danger: #ff6f63;
-      --green: #62e1aa;
-      --space: #07101d;
+      --ink: #ECEAE5;
+      --muted: #8F8C84;
+      --soft: #ABA79E;
+      --line: #464540;
+      --panel: rgba(48, 48, 46, .84);
+      --panel-solid: #30302E;
+      --cyan: #6FD4FF;
+      --cyan-dim: #4C74D9;
+      --gold: #FFC53D;
+      --danger: #FF7A5C;
+      --green: #35D0A0;
+      --space: #262624;
     }
     * { box-sizing: border-box; }
     html, body { min-height: 100%; margin: 0; background: var(--space); }
     body {
       color: var(--ink); font-family: "Noto Sans TC", sans-serif; overflow-x: hidden;
-      background-image: radial-gradient(ellipse at 50% -30%, #173d5b 0%, #0a1c2e 28%, #07101d 64%);
+      background-image: radial-gradient(ellipse at 50% -35%, #3A3936 0%, #30302E 34%, #262624 72%);
     }
     button, input { font: inherit; }
     button { color: inherit; }
@@ -37,89 +37,95 @@
     .app { min-height: 100vh; position: relative; isolation: isolate; }
     .app::after {
       content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .34;
-      background-image: radial-gradient(rgba(176,225,255,.55) .7px, transparent .8px), radial-gradient(rgba(176,225,255,.34) .55px, transparent .7px);
+      background-image: radial-gradient(rgba(236,234,229,.45) .7px, transparent .8px), radial-gradient(rgba(111,212,255,.32) .55px, transparent .7px);
       background-position: 0 0, 73px 47px; background-size: 137px 139px, 193px 191px;
     }
     .topbar {
       height: 66px; display: flex; align-items: center; gap: 20px; padding: 0 30px;
-      border-bottom: 1px solid var(--line); background: rgba(5, 15, 27, .84); backdrop-filter: blur(18px); position: relative; z-index: 20;
+      border-bottom: 1px solid var(--line); background: rgba(38, 38, 36, .88); backdrop-filter: blur(18px); position: relative; z-index: 20;
     }
     .brand { display: flex; gap: 11px; align-items: center; text-decoration: none; color: var(--ink); min-width: max-content; }
-    .brand-mark { width: 28px; height: 28px; position: relative; border: 1.5px solid var(--gold); border-radius: 50%; transform: rotate(-27deg); }
+    .brand-mark { width: 28px; height: 28px; position: relative; border: 1.5px solid var(--blue, #4C74D9); border-radius: 50%; transform: rotate(-27deg); }
     .brand-mark::before, .brand-mark::after { content: ""; position: absolute; inset: 5px -6px; border-top: 1px solid var(--cyan); border-bottom: 1px solid var(--cyan); border-radius: 50%; }
     .brand-mark::after { inset: -6px 5px; transform: rotate(90deg); }
-    .brand-type strong { display: block; font-family: Rajdhani, sans-serif; font-size: 18px; letter-spacing: .12em; line-height: .82; }
-    .brand-type small { display: block; font: 500 9px "IBM Plex Mono", monospace; letter-spacing: .17em; color: var(--muted); margin-top: 4px; }
-    .breadcrumb { color: var(--soft); font: 500 11px "IBM Plex Mono", monospace; letter-spacing: .08em; margin-left: 8px; }
+    .brand-type strong { display: block; font-family: "Noto Serif TC", serif; font-size: 17px; letter-spacing: .1em; line-height: .9; }
+    .brand-type small { display: block; font: 500 9px "Space Grotesk", sans-serif; letter-spacing: .17em; color: var(--muted); margin-top: 4px; }
+    .breadcrumb { color: var(--soft); font: 500 11px "Space Grotesk", sans-serif; letter-spacing: .08em; margin-left: 8px; }
     .breadcrumb b { color: var(--cyan); font-weight: 500; }
     .top-actions { margin-left: auto; display: flex; align-items: center; gap: 14px; }
-    .status { color: var(--green); font: 500 10px "IBM Plex Mono", monospace; letter-spacing: .12em; white-space: nowrap; }
+    .status { color: var(--green); font: 500 10px "Space Grotesk", sans-serif; letter-spacing: .12em; white-space: nowrap; }
     .status i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 10px currentColor; margin-right: 7px; }
-    .return-link { color: var(--muted); text-decoration: none; border: 1px solid var(--line); padding: 7px 12px; font: 500 11px "IBM Plex Mono", monospace; letter-spacing: .07em; transition: .2s; }
+    .return-link { color: var(--muted); text-decoration: none; border: 1px solid var(--line); border-radius: 12px; padding: 7px 12px; font: 500 11px "Space Grotesk", sans-serif; letter-spacing: .07em; transition: .2s; }
     .return-link:hover { border-color: var(--cyan); color: var(--cyan); }
 
     main { width: min(1760px, 100%); margin: 0 auto; padding: 28px 30px 30px; }
     .intro { display: flex; justify-content: space-between; align-items: end; gap: 30px; margin: 0 0 22px; }
-    .eyebrow { font: 500 11px "IBM Plex Mono", monospace; letter-spacing: .16em; color: var(--gold); text-transform: uppercase; }
-    h1 { margin: 5px 0 0; font: 700 clamp(30px, 3.3vw, 52px)/.95 Rajdhani, "Noto Sans TC", sans-serif; letter-spacing: .015em; }
-    h1 span { color: var(--cyan); font-family: "Noto Sans TC", sans-serif; font-size: .51em; font-weight: 700; vertical-align: middle; margin-left: .24em; letter-spacing: .04em; }
+    .eyebrow { font: 500 11px "Space Grotesk", sans-serif; letter-spacing: .16em; color: var(--blue, #4C74D9); text-transform: uppercase; }
+    h1 { margin: 5px 0 0; font: 600 clamp(30px, 3.3vw, 52px)/1.14 "Noto Serif TC", serif; letter-spacing: .08em; }
+    h1 span { color: var(--cyan); font-family: "Noto Sans TC", sans-serif; font-size: .46em; font-weight: 700; vertical-align: middle; margin-left: .24em; letter-spacing: .04em; }
     .intro-copy { width: min(500px, 38%); margin: 0; color: var(--muted); font-size: 13px; line-height: 1.8; border-left: 1px solid var(--cyan-dim); padding-left: 17px; }
-    .workbench { display: grid; grid-template-columns: minmax(0, 1fr) 330px; min-height: min(680px, calc(100vh - 205px)); border: 1px solid var(--line); background: linear-gradient(140deg, rgba(12,30,48,.86), rgba(5,14,25,.9)); box-shadow: 0 20px 80px rgba(0,0,0,.32), inset 0 1px rgba(200,238,255,.04); }
+    .workbench { display: grid; grid-template-columns: minmax(0, 1fr) 330px; min-height: min(680px, calc(100vh - 205px)); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; background: linear-gradient(160deg, rgba(58,57,54,.94), rgba(38,38,36,.97)); box-shadow: 0 20px 80px rgba(0,0,0,.22), inset 0 1px rgba(236,234,229,.04); }
     .viewer { min-width: 0; position: relative; overflow: hidden; border-right: 1px solid var(--line); }
     #scene { position: absolute; inset: 0; width: 100%; height: 100%; cursor: grab; }
     #scene:active { cursor: grabbing; }
-    .scanlines { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: .12; background: repeating-linear-gradient(0deg, transparent, transparent 3px, #80cfff 4px); mix-blend-mode: overlay; }
+    .scanlines { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: .08; background: repeating-linear-gradient(0deg, transparent, transparent 3px, #6FD4FF 4px); mix-blend-mode: overlay; }
     .view-corner { position: absolute; width: 35px; height: 35px; z-index: 3; pointer-events: none; border-color: var(--cyan); opacity: .8; }
     .view-corner.tl { top: 16px; left: 16px; border-top: 1px solid; border-left: 1px solid; }
     .view-corner.tr { top: 16px; right: 16px; border-top: 1px solid; border-right: 1px solid; }
     .view-corner.bl { bottom: 64px; left: 16px; border-bottom: 1px solid; border-left: 1px solid; }
     .view-corner.br { bottom: 64px; right: 16px; border-bottom: 1px solid; border-right: 1px solid; }
-    .scene-title { position: absolute; top: 25px; left: 66px; z-index: 3; font: 500 10px "IBM Plex Mono", monospace; letter-spacing: .12em; color: var(--muted); }
+    .scene-title { position: absolute; top: 25px; left: 66px; z-index: 3; font: 500 10px "Space Grotesk", sans-serif; letter-spacing: .12em; color: var(--muted); }
     .scene-title b { color: var(--cyan); font-weight: 500; }
-    .reticle { position: absolute; left: 50%; top: 50%; z-index: 0; width: min(76vw, 760px); aspect-ratio: 1; transform: translate(-50%, -50%); border: 1px dashed rgba(113, 221, 255, .09); border-radius: 50%; pointer-events: none; }
-    .reticle::before, .reticle::after { content: ""; position: absolute; left: 50%; top: 0; height: 100%; border-left: 1px solid rgba(113, 221, 255, .06); transform: rotate(45deg); transform-origin: 50% 50%; }
+    .reticle { position: absolute; left: 50%; top: 50%; z-index: 0; width: min(76vw, 760px); aspect-ratio: 1; transform: translate(-50%, -50%); border: 1px dashed rgba(76, 116, 217, .18); border-radius: 50%; pointer-events: none; }
+    .reticle::before, .reticle::after { content: ""; position: absolute; left: 50%; top: 0; height: 100%; border-left: 1px solid rgba(76, 116, 217, .1); transform: rotate(45deg); transform-origin: 50% 50%; }
     .reticle::after { transform: rotate(-45deg); }
-    .telemetry { position: absolute; left: 24px; bottom: 76px; z-index: 4; color: var(--muted); font: 500 10px/1.7 "IBM Plex Mono", monospace; letter-spacing: .065em; pointer-events: none; }
+    .telemetry { position: absolute; left: 24px; bottom: 76px; z-index: 4; color: var(--muted); font: 500 10px/1.7 "Space Grotesk", sans-serif; letter-spacing: .065em; pointer-events: none; }
     .telemetry b { color: var(--ink); font-weight: 500; }
     .modebar { position: absolute; z-index: 5; left: 20px; right: 20px; bottom: 17px; display: flex; justify-content: space-between; align-items: center; gap: 14px; }
-    .controls { display: flex; gap: 7px; padding: 6px; background: rgba(4, 13, 24, .78); border: 1px solid var(--line); backdrop-filter: blur(12px); }
-    .tool-btn { border: 1px solid transparent; background: transparent; min-height: 33px; padding: 0 11px; color: var(--muted); font: 500 10px "IBM Plex Mono", monospace; letter-spacing: .07em; cursor: pointer; transition: .2s; white-space: nowrap; }
+    .controls { display: flex; gap: 7px; padding: 6px; background: rgba(48,48,46,.88); border: 1px solid var(--line); border-radius: 12px; backdrop-filter: blur(12px); }
+    .tool-btn { border: 1px solid transparent; background: transparent; min-height: 33px; padding: 0 11px; color: var(--muted); font: 500 10px "Space Grotesk", sans-serif; letter-spacing: .07em; cursor: pointer; transition: .2s; white-space: nowrap; }
     .tool-btn:hover { color: var(--ink); border-color: var(--line); }
-    .tool-btn.active { color: var(--space); background: var(--cyan); border-color: var(--cyan); }
-    .tool-btn.icon { font-family: Rajdhani, sans-serif; font-size: 18px; width: 34px; padding: 0; }
-    .explode-control { padding: 10px 12px; display: flex; gap: 9px; align-items: center; background: rgba(4, 13, 24, .78); border: 1px solid var(--line); backdrop-filter: blur(12px); }
-    .explode-control label { color: var(--muted); font: 500 9px "IBM Plex Mono", monospace; letter-spacing: .09em; }
-    .explode-control output { width: 28px; color: var(--gold); font: 500 10px "IBM Plex Mono", monospace; }
+    .tool-btn.active { color: #262624; background: var(--gold); border-color: var(--gold); }
+    .tool-btn.icon { font-family: "Space Grotesk", sans-serif; font-size: 18px; width: 34px; padding: 0; }
+    .explode-control { padding: 10px 12px; display: flex; gap: 9px; align-items: center; background: rgba(48,48,46,.88); border: 1px solid var(--line); border-radius: 12px; backdrop-filter: blur(12px); }
+    .explode-control label { color: var(--muted); font: 500 9px "Space Grotesk", sans-serif; letter-spacing: .09em; }
+    .explode-control output { width: 28px; color: var(--gold); font: 500 10px "Space Grotesk", sans-serif; }
     input[type="range"] { accent-color: var(--gold); width: 112px; cursor: pointer; }
-    .component-label { color: #dff6ff; background: rgba(5, 18, 29, .88); border: 1px solid rgba(113, 221, 255, .54); padding: 5px 7px 5px 9px; font: 500 9px "IBM Plex Mono", monospace; letter-spacing: .06em; cursor: pointer; white-space: nowrap; box-shadow: 0 0 18px rgba(0,0,0,.25); transition: .18s; }
+    .component-label { color: var(--ink); background: rgba(48,48,46,.92); border: 1px solid rgba(111,212,255,.54); border-radius: 8px; padding: 5px 7px 5px 9px; font: 500 9px "Space Grotesk", sans-serif; letter-spacing: .06em; cursor: pointer; white-space: nowrap; box-shadow: 0 0 18px rgba(0,0,0,.25); transition: .18s; }
     .component-label::before { content: ""; display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--cyan); margin: 0 5px 1px 0; box-shadow: 0 0 8px var(--cyan); }
     .component-label:hover, .component-label.is-active { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
     .component-label.is-active::before { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
 
-    .sidebar { min-height: 0; display: flex; flex-direction: column; background: rgba(5, 14, 24, .57); }
+    .sidebar { min-height: 0; display: flex; flex-direction: column; background: rgba(38,38,36,.78); }
     .side-head { border-bottom: 1px solid var(--line); padding: 21px 22px 16px; }
-    .side-kicker { font: 500 9px "IBM Plex Mono", monospace; letter-spacing: .15em; color: var(--muted); }
-    .side-head h2 { margin: 5px 0 2px; font: 700 25px/1 Rajdhani, "Noto Sans TC", sans-serif; letter-spacing: .025em; }
-    .side-head p { margin: 0; font: 500 10px "IBM Plex Mono", monospace; letter-spacing: .07em; color: var(--cyan); }
+    .side-kicker { font: 500 9px "Space Grotesk", sans-serif; letter-spacing: .15em; color: var(--muted); }
+    .side-head h2 { margin: 5px 0 2px; font: 600 24px/1.2 "Noto Serif TC", serif; letter-spacing: .04em; }
+    .side-head p { margin: 0; font: 500 10px "Space Grotesk", sans-serif; letter-spacing: .07em; color: var(--cyan); }
     .detail { padding: 21px 22px; overflow: auto; }
     .detail h3 { margin: 0 0 10px; font-size: 17px; }
     .detail > p { margin: 0; font-size: 12.5px; line-height: 1.78; color: var(--muted); }
     .specs { margin: 20px 0 19px; border-top: 1px solid var(--line); }
-    .spec { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font: 500 10px "IBM Plex Mono", monospace; letter-spacing: .04em; }
+    .spec { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font: 500 10px "Space Grotesk", sans-serif; letter-spacing: .04em; }
     .spec span { color: var(--soft); }
     .spec b { color: var(--ink); font-weight: 500; text-align: right; }
-    .interface { padding: 11px 12px; border-left: 2px solid var(--gold); background: rgba(255,191,74,.06); color: #cbd7e1; font-size: 11.5px; line-height: 1.65; }
-    .interface strong { color: var(--gold); font: 500 9px "IBM Plex Mono", monospace; letter-spacing: .08em; display: block; margin-bottom: 2px; }
+    .interface { padding: 11px 12px; border-left: 2px solid var(--gold); background: rgba(255,197,61,.06); color: var(--text-2, #CBC8C1); font-size: 11.5px; line-height: 1.65; }
+    .interface strong { color: var(--gold); font: 500 9px "Space Grotesk", sans-serif; letter-spacing: .08em; display: block; margin-bottom: 2px; }
     .systems { margin-top: auto; border-top: 1px solid var(--line); padding: 17px 20px 21px; }
-    .systems > span { display: block; color: var(--muted); font: 500 9px "IBM Plex Mono", monospace; letter-spacing: .13em; margin-bottom: 10px; }
+    .systems > span { display: block; color: var(--muted); font: 500 9px "Space Grotesk", sans-serif; letter-spacing: .13em; margin-bottom: 10px; }
     .system-list { display: flex; flex-wrap: wrap; gap: 7px; }
-    .system-chip { border: 1px solid var(--line); background: transparent; color: var(--muted); padding: 6px 8px; cursor: pointer; font: 500 10px "IBM Plex Mono", monospace; transition: .2s; }
-    .system-chip:hover, .system-chip.active { color: var(--cyan); border-color: var(--cyan-dim); background: rgba(113,221,255,.05); }
-    .footer-note { display: flex; justify-content: space-between; gap: 16px; padding: 14px 1px 0; color: #668198; font: 500 10px/1.6 "IBM Plex Mono", monospace; letter-spacing: .03em; }
+    .system-chip { border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--muted); padding: 6px 8px; cursor: pointer; font: 500 10px "Space Grotesk", sans-serif; transition: .2s; }
+    .system-chip:hover, .system-chip.active { color: var(--cyan); border-color: var(--cyan-dim); background: rgba(111,212,255,.05); }
+    .footer-note { display: flex; justify-content: space-between; gap: 16px; padding: 14px 1px 0; color: var(--muted); font: 500 10px/1.6 "Space Grotesk", sans-serif; letter-spacing: .03em; }
     .footer-note b { color: var(--gold); font-weight: 500; }
 
     @media (max-width: 1040px) { .workbench { grid-template-columns: 1fr; } .viewer { min-height: 630px; border-right: 0; border-bottom: 1px solid var(--line); } .sidebar { display: grid; grid-template-columns: 1fr 1fr; } .systems { border-top: 0; border-left: 1px solid var(--line); } }
     @media (max-width: 700px) { .topbar { padding: 0 16px; gap: 9px; } .breadcrumb, .status { display: none; } .return-link { padding: 6px 8px; font-size: 9px; } main { padding: 21px 13px; } .intro { display: block; } .intro-copy { width: auto; margin-top: 15px; } .viewer { min-height: 570px; } .sidebar { display: block; } .systems { border-left: 0; border-top: 1px solid var(--line); } .modebar { left: 10px; right: 10px; bottom: 10px; align-items: end; } .controls { gap: 2px; } .tool-btn { padding: 0 7px; font-size: 9px; } .tool-btn.icon { width: 28px; } .explode-control { padding: 9px; gap: 5px; } .explode-control label { display: none; } input[type="range"] { width: 70px; } .telemetry { bottom: 64px; left: 15px; font-size: 9px; } .scene-title { left: 54px; top: 24px; } .view-corner.tl { left: 13px; top: 15px; } .view-corner.tr { right: 13px; top: 15px; } .view-corner.bl { left: 13px; bottom: 58px; } .view-corner.br { right: 13px; bottom: 58px; } .component-label { font-size: 8px; padding: 4px 5px 4px 7px; } .footer-note { display: block; } .footer-note span { display: block; margin-bottom: 6px; } }
+    body.embed { min-height: 0; background: #262624; }
+    body.embed .topline, body.embed .topbar, body.embed .intro, body.embed .sidebar, body.embed .footer-note { display: none; }
+    body.embed .app, body.embed main { min-height: 0; width: 100%; padding: 0; }
+    body.embed .workbench { display: block; min-height: 0; height: 640px; border: 0; border-radius: 0; box-shadow: none; }
+    body.embed .viewer { min-height: 640px; border: 0; }
+    @media (max-width: 700px) { body.embed .workbench, body.embed .viewer { height: 570px; min-height: 570px; } }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; } }
   </style>
 </head>
@@ -190,6 +196,15 @@
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
     import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
+    const query = new URLSearchParams(window.location.search);
+    const embedded = query.get('embed') === '1';
+    const pageLanguage = query.get('lang') === 'en' ? 'en' : 'zh';
+    const parentTarget = window.location.origin === 'null' ? '*' : window.location.origin;
+    const supplyChainId = { solar: 'solar', adcs: 'adcs', hga: 'payload_ant', ttc: 'ttc', propulsion: 'prop', eps: 'pmad', obc: 'obc', thermal: 'thermal', camera: 'imaging' };
+    const modelId = { solar: 'solar', adcs: 'adcs', payload_ant: 'hga', ttc: 'ttc', prop: 'propulsion', pmad: 'eps', obc: 'obc', thermal: 'thermal', imaging: 'camera' };
+    document.documentElement.lang = pageLanguage === 'en' ? 'en' : 'zh-Hant-TW';
+    if (embedded) document.body.classList.add('embed');
+
     const mount = document.getElementById('scene');
     const data = {
       bus: { code: 'SPACECRAFT BUS', class: 'STRUCTURAL / AVIONICS CORE', name: '衛星匯流排', description: '承載各次系統並提供結構、配電、資料與熱介面。此模型採用模組化微衛星的六面板匯流排概念。', specs: [['主結構', 'Al 7075 / CFRP'], ['外形尺寸', '1.1 × 1.1 × 1.25 m'], ['設計壽命', '≥ 5 years']], interface: '機械安裝面 · 28V 電源匯流排 · CAN / SpaceWire 資料鏈路' },
@@ -204,7 +219,7 @@
     };
 
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x07101d, 0.028);
+    scene.fog = new THREE.FogExp2(0x262624, 0.028);
     const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
     camera.position.set(11.2, 7.6, 14.6);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -299,13 +314,14 @@
     const systemList = document.getElementById('systemList');
     directory.forEach(([id, label]) => { const btn = document.createElement('button'); btn.className='system-chip'; btn.type='button'; btn.dataset.id=id; btn.textContent=label; btn.addEventListener('click',()=>select(id,true)); systemList.appendChild(btn); });
     const getPiece = id => pieces.find(p => p.userData.componentId === id) || (id === 'solar' ? pieces.find(p=>p.userData.componentId==='solarRight') : null);
-    function select(id, focus) {
+    function select(id, focus, notifyParent = true) {
       if (id === 'solarRight') id = 'solar'; const chosen = data[id]; if (!chosen) return; activeId = id;
       detailCode.textContent = chosen.code; detailClass.textContent = chosen.class; detailName.textContent = chosen.name; detailDescription.textContent = chosen.description;
       specs.innerHTML = chosen.specs.map(([key,value]) => `<div class="spec"><span>${key}</span><b>${value}</b></div>`).join(''); interfaceText.textContent=chosen.interface;
       document.querySelectorAll('.system-chip').forEach(b=>b.classList.toggle('active',b.dataset.id===id)); document.querySelectorAll('.component-label').forEach(el=>el.classList.toggle('is-active',el.textContent.includes(chosen.code.split('-')[0]) || (id==='bus' && el.textContent.includes('BUS')) || (id==='solar' && el.textContent.includes('SOLAR')) || (id==='hga' && el.textContent.includes('HIGH')) || (id==='camera' && el.textContent.includes('IMAGER')) || (id==='propulsion' && el.textContent.includes('PROPULSION')) || (id==='thermal' && el.textContent.includes('THERMAL')) || (id==='adcs' && el.textContent.includes('ADCS')) || (id==='ttc' && el.textContent.includes('TT&C')) || (id==='eps' && el.textContent.includes('POWER')) || (id==='obc' && el.textContent.includes('ON-BOARD'))));
       pieces.forEach(piece => { const visualId = piece.userData.componentId === 'solarRight' ? 'solar' : piece.userData.componentId; const isActive = visualId === id; piece.userData.allMaterials.forEach(m => { if (m.emissive) { m.emissive.setHex(isActive ? 0x116c8d : 0x000000); m.emissiveIntensity = isActive ? .5 : .16; } }); });
       if (focus) { const p=getPiece(id); if(p){ const target=p.position.clone(); controls.target.lerp(target,.22); } }
+      if (notifyParent && embedded && supplyChainId[id]) window.parent.postMessage({ source: 'leo-satellite', type: 'component-select', component: supplyChainId[id] }, parentTarget);
     }
     select('bus',false);
 
@@ -313,9 +329,21 @@
     renderer.domElement.addEventListener('pointerup', event => { if (event.pointerType === 'mouse' && event.button !== 0) return; const rect=renderer.domElement.getBoundingClientRect(); pointer.x=((event.clientX-rect.left)/rect.width)*2-1; pointer.y=-((event.clientY-rect.top)/rect.height)*2+1; raycaster.setFromCamera(pointer,camera); const hits=raycaster.intersectObjects(pickRoots,true); if(hits.length){ let node=hits[0].object; while(node && !node.userData.componentId) node=node.parent; if(node) select(node.userData.componentId,true); } });
 
     const range=document.getElementById('explodeRange'), value=document.getElementById('explodeValue'), assembledBtn=document.getElementById('assembledBtn'), explodedBtn=document.getElementById('explodedBtn'), spinBtn=document.getElementById('spinBtn'), resetBtn=document.getElementById('resetBtn');
+    if (pageLanguage === 'en') {
+      document.querySelector('.scene-title').innerHTML = '<b>3D VIEWPORT</b> · spacecraft body frame · +Z nadir';
+      document.querySelector('.telemetry').innerHTML = 'ORBIT ALT. <b>550 km</b><br>ATTITUDE <b>LVLH</b><br>MODEL SCALE <b>1 : 1.8</b>';
+      assembledBtn.textContent = 'Assembly'; explodedBtn.textContent = 'Exploded';
+      spinBtn.title = 'Auto rotate'; resetBtn.title = 'Reset view';
+      range.setAttribute('aria-label', 'Exploded-view distance');
+    }
     function setExplode(n){ targetExplode=THREE.MathUtils.clamp(n,0,1); range.value=Math.round(targetExplode*100); value.value=`${String(Math.round(targetExplode*100)).padStart(2,'0')}%`; assembledBtn.classList.toggle('active',targetExplode<.02); explodedBtn.classList.toggle('active',targetExplode>.98); }
     range.addEventListener('input',()=>setExplode(range.value/100)); assembledBtn.addEventListener('click',()=>setExplode(0)); explodedBtn.addEventListener('click',()=>setExplode(1)); spinBtn.addEventListener('click',()=>{autoSpin=!autoSpin; spinBtn.classList.toggle('active',autoSpin); spinBtn.setAttribute('aria-pressed',String(autoSpin));}); resetBtn.addEventListener('click',()=>{camera.position.set(11.2,7.6,14.6); controls.target.set(0,.1,0); controls.update();});
     window.addEventListener('keydown', e=>{ if(e.key.toLowerCase()==='e') setExplode(targetExplode>.5?0:1); if(e.key.toLowerCase()==='r') resetBtn.click(); });
+    window.addEventListener('message', event => {
+      if (!embedded || event.source !== window.parent || event.data?.source !== 'taiwan-supply-chain' || event.data?.type !== 'component-select') return;
+      const id = modelId[event.data.component];
+      if (id) select(id, true, false);
+    });
     function resize(){ const rect=mount.getBoundingClientRect(); camera.aspect=rect.width/rect.height; camera.updateProjectionMatrix(); renderer.setSize(rect.width,rect.height); labelRenderer.setSize(rect.width,rect.height); } new ResizeObserver(resize).observe(mount); resize();
     const clock=new THREE.Clock();
     function tick(){ requestAnimationFrame(tick); const delta=clock.getDelta(); explode=THREE.MathUtils.damp(explode,targetExplode,5,delta); pieces.forEach(piece=>{piece.position.copy(piece.userData.home).addScaledVector(piece.userData.vector,explode);}); if(autoSpin) satellite.rotation.y += delta*.22; orbit.rotation.z+=delta*.015; starField.rotation.y-=delta*.003; controls.update(); renderer.render(scene,camera); labelRenderer.render(scene,camera); } tick();
