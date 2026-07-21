@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#262624">
+  <title>LEO 衛星系統解剖圖｜TASA Engineering Visualizer</title>
+  <meta name="description" content="可旋轉、點選與展開的低軌衛星系統 3D 工程視覺化。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Noto+Serif+TC:wght@600;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #ECEAE5;
+      --muted: #8F8C84;
+      --soft: #ABA79E;
+      --line: #464540;
+      --panel: rgba(48, 48, 46, .84);
+      --panel-solid: #30302E;
+      --cyan: #6FD4FF;
+      --cyan-dim: #4C74D9;
+      --gold: #FFC53D;
+      --danger: #FF7A5C;
+      --green: #35D0A0;
+      --space: #262624;
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; margin: 0; background: var(--space); }
+    body {
+      color: var(--ink); font-family: "Noto Sans TC", sans-serif; overflow-x: hidden;
+      background-image: radial-gradient(ellipse at 50% -35%, #3A3936 0%, #30302E 34%, #262624 72%);
+    }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    button:focus-visible, a:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+    .topline { height: 3px; background: linear-gradient(90deg, transparent, var(--cyan) 18%, var(--gold) 50%, var(--cyan) 82%, transparent); }
+    .app { min-height: 100vh; position: relative; isolation: isolate; }
+    .app::after {
+      content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .34;
+      background-image: radial-gradient(rgba(236,234,229,.45) .7px, transparent .8px), radial-gradient(rgba(111,212,255,.32) .55px, transparent .7px);
+      background-position: 0 0, 73px 47px; background-size: 137px 139px, 193px 191px;
+    }
+    .topbar {
+      height: 66px; display: flex; align-items: center; gap: 20px; padding: 0 30px;
+      border-bottom: 1px solid var(--line); background: rgba(38, 38, 36, .88); backdrop-filter: blur(18px); position: relative; z-index: 20;
+    }
+    .brand { display: flex; gap: 11px; align-items: center; text-decoration: none; color: var(--ink); min-width: max-content; }
+    .brand-mark { width: 28px; height: 28px; position: relative; border: 1.5px solid var(--blue, #4C74D9); border-radius: 50%; transform: rotate(-27deg); }
+    .brand-mark::before, .brand-mark::after { content: ""; position: absolute; inset: 5px -6px; border-top: 1px solid var(--cyan); border-bottom: 1px solid var(--cyan); border-radius: 50%; }
+    .brand-mark::after { inset: -6px 5px; transform: rotate(90deg); }
+    .brand-type strong { display: block; font-family: "Noto Serif TC", serif; font-size: 17px; letter-spacing: .1em; line-height: .9; }
+    .brand-type small { display: block; font: 500 9px "Space Grotesk", sans-serif; letter-spacing: .17em; color: var(--muted); margin-top: 4px; }
+    .breadcrumb { color: var(--soft); font: 500 11px "Space Grotesk", sans-serif; letter-spacing: .08em; margin-left: 8px; }
+    .breadcrumb b { color: var(--cyan); font-weight: 500; }
+    .top-actions { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+    .status { color: var(--green); font: 500 10px "Space Grotesk", sans-serif; letter-spacing: .12em; white-space: nowrap; }
+    .status i { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: currentColor; box-shadow: 0 0 10px currentColor; margin-right: 7px; }
+    .return-link { color: var(--muted); text-decoration: none; border: 1px solid var(--line); border-radius: 12px; padding: 7px 12px; font: 500 11px "Space Grotesk", sans-serif; letter-spacing: .07em; transition: .2s; }
+    .return-link:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    main { width: min(1760px, 100%); margin: 0 auto; padding: 28px 30px 30px; }
+    .intro { display: flex; justify-content: space-between; align-items: end; gap: 30px; margin: 0 0 22px; }
+    .eyebrow { font: 500 11px "Space Grotesk", sans-serif; letter-spacing: .16em; color: var(--blue, #4C74D9); text-transform: uppercase; }
+    h1 { margin: 5px 0 0; font: 600 clamp(30px, 3.3vw, 52px)/1.14 "Noto Serif TC", serif; letter-spacing: .08em; }
+    h1 span { color: var(--cyan); font-family: "Noto Sans TC", sans-serif; font-size: .46em; font-weight: 700; vertical-align: middle; margin-left: .24em; letter-spacing: .04em; }
+    .intro-copy { width: min(500px, 38%); margin: 0; color: var(--muted); font-size: 13px; line-height: 1.8; border-left: 1px solid var(--cyan-dim); padding-left: 17px; }
+    .workbench { display: grid; grid-template-columns: minmax(0, 1fr) 330px; min-height: min(680px, calc(100vh - 205px)); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; background: linear-gradient(160deg, rgba(58,57,54,.94), rgba(38,38,36,.97)); box-shadow: 0 20px 80px rgba(0,0,0,.22), inset 0 1px rgba(236,234,229,.04); }
+    .viewer { min-width: 0; position: relative; overflow: hidden; border-right: 1px solid var(--line); }
+    #scene { position: absolute; inset: 0; width: 100%; height: 100%; cursor: grab; }
+    #scene:active { cursor: grabbing; }
+    .scanlines { position: absolute; inset: 0; z-index: 2; pointer-events: none; opacity: .08; background: repeating-linear-gradient(0deg, transparent, transparent 3px, #6FD4FF 4px); mix-blend-mode: overlay; }
+    .view-corner { position: absolute; width: 35px; height: 35px; z-index: 3; pointer-events: none; border-color: var(--cyan); opacity: .8; }
+    .view-corner.tl { top: 16px; left: 16px; border-top: 1px solid; border-left: 1px solid; }
+    .view-corner.tr { top: 16px; right: 16px; border-top: 1px solid; border-right: 1px solid; }
+    .view-corner.bl { bottom: 64px; left: 16px; border-bottom: 1px solid; border-left: 1px solid; }
+    .view-corner.br { bottom: 64px; right: 16px; border-bottom: 1px solid; border-right: 1px solid; }
+    .scene-title { position: absolute; top: 25px; left: 66px; z-index: 3; font: 500 10px "Space Grotesk", sans-serif; letter-spacing: .12em; color: var(--muted); }
+    .scene-title b { color: var(--cyan); font-weight: 500; }
+    .reticle { position: absolute; left: 50%; top: 50%; z-index: 0; width: min(76vw, 760px); aspect-ratio: 1; transform: translate(-50%, -50%); border: 1px dashed rgba(76, 116, 217, .18); border-radius: 50%; pointer-events: none; }
+    .reticle::before, .reticle::after { content: ""; position: absolute; left: 50%; top: 0; height: 100%; border-left: 1px solid rgba(76, 116, 217, .1); transform: rotate(45deg); transform-origin: 50% 50%; }
+    .reticle::after { transform: rotate(-45deg); }
+    .telemetry { position: absolute; left: 24px; bottom: 76px; z-index: 4; color: var(--muted); font: 500 10px/1.7 "Space Grotesk", sans-serif; letter-spacing: .065em; pointer-events: none; }
+    .telemetry b { color: var(--ink); font-weight: 500; }
+    .modebar { position: absolute; z-index: 5; left: 20px; right: 20px; bottom: 17px; display: flex; justify-content: space-between; align-items: center; gap: 14px; }
+    .controls { display: flex; gap: 7px; padding: 6px; background: rgba(48,48,46,.88); border: 1px solid var(--line); border-radius: 12px; backdrop-filter: blur(12px); }
+    .tool-btn { border: 1px solid transparent; background: transparent; min-height: 33px; padding: 0 11px; color: var(--muted); font: 500 10px "Space Grotesk", sans-serif; letter-spacing: .07em; cursor: pointer; transition: .2s; white-space: nowrap; }
+    .tool-btn:hover { color: var(--ink); border-color: var(--line); }
+    .tool-btn.active { color: #262624; background: var(--gold); border-color: var(--gold); }
+    .tool-btn.icon { font-family: "Space Grotesk", sans-serif; font-size: 18px; width: 34px; padding: 0; }
+    .explode-control { padding: 10px 12px; display: flex; gap: 9px; align-items: center; background: rgba(48,48,46,.88); border: 1px solid var(--line); border-radius: 12px; backdrop-filter: blur(12px); }
+    .explode-control label { color: var(--muted); font: 500 9px "Space Grotesk", sans-serif; letter-spacing: .09em; }
+    .explode-control output { width: 28px; color: var(--gold); font: 500 10px "Space Grotesk", sans-serif; }
+    input[type="range"] { accent-color: var(--gold); width: 112px; cursor: pointer; }
+    .component-label { color: var(--ink); background: rgba(48,48,46,.92); border: 1px solid rgba(111,212,255,.54); border-radius: 8px; padding: 5px 7px 5px 9px; font: 500 9px "Space Grotesk", sans-serif; letter-spacing: .06em; cursor: pointer; white-space: nowrap; box-shadow: 0 0 18px rgba(0,0,0,.25); transition: .18s; }
+    .component-label::before { content: ""; display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--cyan); margin: 0 5px 1px 0; box-shadow: 0 0 8px var(--cyan); }
+    .component-label:hover, .component-label.is-active { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
+    .component-label.is-active::before { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+
+    .sidebar { min-height: 0; display: flex; flex-direction: column; background: rgba(38,38,36,.78); }
+    .side-head { border-bottom: 1px solid var(--line); padding: 21px 22px 16px; }
+    .side-kicker { font: 500 9px "Space Grotesk", sans-serif; letter-spacing: .15em; color: var(--muted); }
+    .side-head h2 { margin: 5px 0 2px; font: 600 24px/1.2 "Noto Serif TC", serif; letter-spacing: .04em; }
+    .side-head p { margin: 0; font: 500 10px "Space Grotesk", sans-serif; letter-spacing: .07em; color: var(--cyan); }
+    .detail { padding: 21px 22px; overflow: auto; }
+    .detail h3 { margin: 0 0 10px; font-size: 17px; }
+    .detail > p { margin: 0; font-size: 12.5px; line-height: 1.78; color: var(--muted); }
+    .specs { margin: 20px 0 19px; border-top: 1px solid var(--line); }
+    .spec { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--line); font: 500 10px "Space Grotesk", sans-serif; letter-spacing: .04em; }
+    .spec span { color: var(--soft); }
+    .spec b { color: var(--ink); font-weight: 500; text-align: right; }
+    .interface { padding: 11px 12px; border-left: 2px solid var(--gold); background: rgba(255,197,61,.06); color: var(--text-2, #CBC8C1); font-size: 11.5px; line-height: 1.65; }
+    .interface strong { color: var(--gold); font: 500 9px "Space Grotesk", sans-serif; letter-spacing: .08em; display: block; margin-bottom: 2px; }
+    .systems { margin-top: auto; border-top: 1px solid var(--line); padding: 17px 20px 21px; }
+    .systems > span { display: block; color: var(--muted); font: 500 9px "Space Grotesk", sans-serif; letter-spacing: .13em; margin-bottom: 10px; }
+    .system-list { display: flex; flex-wrap: wrap; gap: 7px; }
+    .system-chip { border: 1px solid var(--line); border-radius: 8px; background: transparent; color: var(--muted); padding: 6px 8px; cursor: pointer; font: 500 10px "Space Grotesk", sans-serif; transition: .2s; }
+    .system-chip:hover, .system-chip.active { color: var(--cyan); border-color: var(--cyan-dim); background: rgba(111,212,255,.05); }
+    .footer-note { display: flex; justify-content: space-between; gap: 16px; padding: 14px 1px 0; color: var(--muted); font: 500 10px/1.6 "Space Grotesk", sans-serif; letter-spacing: .03em; }
+    .footer-note b { color: var(--gold); font-weight: 500; }
+
+    @media (max-width: 1040px) { .workbench { grid-template-columns: 1fr; } .viewer { min-height: 630px; border-right: 0; border-bottom: 1px solid var(--line); } .sidebar { display: grid; grid-template-columns: 1fr 1fr; } .systems { border-top: 0; border-left: 1px solid var(--line); } }
+    @media (max-width: 700px) { .topbar { padding: 0 16px; gap: 9px; } .breadcrumb, .status { display: none; } .return-link { padding: 6px 8px; font-size: 9px; } main { padding: 21px 13px; } .intro { display: block; } .intro-copy { width: auto; margin-top: 15px; } .viewer { min-height: 570px; } .sidebar { display: block; } .systems { border-left: 0; border-top: 1px solid var(--line); } .modebar { left: 10px; right: 10px; bottom: 10px; align-items: end; } .controls { gap: 2px; } .tool-btn { padding: 0 7px; font-size: 9px; } .tool-btn.icon { width: 28px; } .explode-control { padding: 9px; gap: 5px; } .explode-control label { display: none; } input[type="range"] { width: 70px; } .telemetry { bottom: 64px; left: 15px; font-size: 9px; } .scene-title { left: 54px; top: 24px; } .view-corner.tl { left: 13px; top: 15px; } .view-corner.tr { right: 13px; top: 15px; } .view-corner.bl { left: 13px; bottom: 58px; } .view-corner.br { right: 13px; bottom: 58px; } .component-label { font-size: 8px; padding: 4px 5px 4px 7px; } .footer-note { display: block; } .footer-note span { display: block; margin-bottom: 6px; } }
+    body.embed { min-height: 0; background: #262624; }
+    body.embed .topline, body.embed .topbar, body.embed .intro, body.embed .sidebar, body.embed .footer-note { display: none; }
+    body.embed .app, body.embed main { min-height: 0; width: 100%; padding: 0; }
+    body.embed .workbench { display: block; min-height: 0; height: 640px; border: 0; border-radius: 0; box-shadow: none; }
+    body.embed .viewer { min-height: 640px; border: 0; }
+    @media (max-width: 700px) { body.embed .workbench, body.embed .viewer { height: 570px; min-height: 570px; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; } }
+  </style>
+</head>
+<body>
+  <div class="topline"></div>
+  <div class="app">
+    <header class="topbar">
+      <a href="index.html" class="brand" aria-label="返回 TASA 主頁">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-type"><strong>TASA</strong><small>SPACE SYSTEMS</small></span>
+      </a>
+      <div class="breadcrumb">/ ENGINEERING LAB / <b>LEO-01</b></div>
+      <div class="top-actions"><span class="status"><i></i>MODEL NOMINAL</span><a class="return-link" href="index.html">← 法規總覽</a></div>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <div class="eyebrow">Interactive 3D systems model · Revision 01</div>
+          <h1 id="page-title">LEO SATELLITE <span>低軌衛星系統解剖圖</span></h1>
+        </div>
+        <p class="intro-copy">以工程概念模型呈現衛星匯流排、酬載、姿態控制、電源、熱控與推進模組的介面關係。拖曳旋轉，點選零組件檢視資料，或使用爆炸視圖拆解系統。</p>
+      </section>
+
+      <section class="workbench" aria-label="低軌衛星互動 3D 模型">
+        <div class="viewer">
+          <div id="scene" aria-label="可互動的低軌衛星三維模型"></div>
+          <div class="reticle" aria-hidden="true"></div><div class="scanlines" aria-hidden="true"></div>
+          <div class="view-corner tl" aria-hidden="true"></div><div class="view-corner tr" aria-hidden="true"></div><div class="view-corner bl" aria-hidden="true"></div><div class="view-corner br" aria-hidden="true"></div>
+          <div class="scene-title"><b>3D VIEWPORT</b> · spacecraft body frame · +Z nadir</div>
+          <div class="telemetry">ORBIT ALT. <b>550 km</b><br>ATTITUDE <b>LVLH</b><br>MODEL SCALE <b>1 : 1.8</b></div>
+          <div class="modebar">
+            <div class="controls" role="group" aria-label="模型視角控制">
+              <button class="tool-btn active" id="assembledBtn" type="button">組裝</button>
+              <button class="tool-btn" id="explodedBtn" type="button">爆炸視圖</button>
+              <button class="tool-btn icon" id="spinBtn" type="button" aria-pressed="false" title="自動旋轉">↻</button>
+              <button class="tool-btn icon" id="resetBtn" type="button" title="重設視角">⌂</button>
+            </div>
+            <div class="explode-control"><label for="explodeRange">EXPLODE</label><input id="explodeRange" type="range" min="0" max="100" value="0" aria-label="爆炸視圖程度"><output id="explodeValue">00%</output></div>
+          </div>
+        </div>
+
+        <aside class="sidebar" aria-live="polite">
+          <div class="side-head"><div class="side-kicker">SELECTED SUBSYSTEM</div><h2 id="detailCode">SPACECRAFT BUS</h2><p id="detailClass">STRUCTURAL / AVIONICS CORE</p></div>
+          <div class="detail">
+            <h3 id="detailName">衛星匯流排</h3>
+            <p id="detailDescription">承載各次系統並提供結構、配電、資料與熱介面。此模型採用模組化微衛星的六面板匯流排概念。</p>
+            <div class="specs" id="specs"></div>
+            <div class="interface"><strong id="interfaceTitle">SYSTEM INTERFACE</strong><span id="interfaceText">機械安裝面 · 28V 電源匯流排 · CAN / SpaceWire 資料鏈路</span></div>
+          </div>
+          <div class="systems"><span>SUBSYSTEM DIRECTORY · 點選定位</span><div class="system-list" id="systemList"></div></div>
+        </aside>
+      </section>
+      <div class="footer-note"><span><b>使用方式：</b>拖曳旋轉 · 滾輪縮放 · 點選模型或標籤選取模組</span><span>概念工程圖 · 尺寸與性能為示意值，非飛行設計資料</span></div>
+    </main>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+    const query = new URLSearchParams(window.location.search);
+    const embedded = query.get('embed') === '1';
+    const pageLanguage = query.get('lang') === 'en' ? 'en' : 'zh';
+    const parentTarget = window.location.origin === 'null' ? '*' : window.location.origin;
+    const supplyChainId = { solar: 'solar', adcs: 'adcs', hga: 'payload_ant', ttc: 'ttc', propulsion: 'prop', eps: 'pmad', obc: 'obc', thermal: 'thermal', camera: 'imaging' };
+    const modelId = { solar: 'solar', adcs: 'adcs', payload_ant: 'hga', ttc: 'ttc', prop: 'propulsion', pmad: 'eps', obc: 'obc', thermal: 'thermal', imaging: 'camera' };
+    document.documentElement.lang = pageLanguage === 'en' ? 'en' : 'zh-Hant-TW';
+    if (embedded) document.body.classList.add('embed');
+
+    const mount = document.getElementById('scene');
+    const data = {
+      bus: { code: 'SPACECRAFT BUS', class: 'STRUCTURAL / AVIONICS CORE', name: '衛星匯流排', description: '承載各次系統並提供結構、配電、資料與熱介面。此模型採用模組化微衛星的六面板匯流排概念。', specs: [['主結構', 'Al 7075 / CFRP'], ['外形尺寸', '1.1 × 1.1 × 1.25 m'], ['設計壽命', '≥ 5 years']], interface: '機械安裝面 · 28V 電源匯流排 · CAN / SpaceWire 資料鏈路' },
+      solar: { code: 'EPS-01', class: 'ELECTRICAL POWER SYSTEM', name: '太陽能陣列', description: '可展開式三結砷化鎵電池板，於日照期間產生電力並由電源系統調節、儲存與分配。', specs: [['展開翼展', '9.6 m'], ['陣列額定功率', '1.45 kW EOL'], ['電池類型', '3J GaAs']], interface: 'SADA 旋轉驅動 · 28V 非穩壓母線 · 太陽向量輸入' },
+      adcs: { code: 'ADCS-02', class: 'ATTITUDE DETERMINATION & CONTROL', name: '姿態判定與控制', description: '星敏感器、反作用輪、磁力矩器與陀螺儀協同，維持指向穩定並執行姿態機動。', specs: [['指向精度', '≤ 0.08° (3σ)'], ['知識精度', '≤ 0.02° (3σ)'], ['執行機構', '4 × reaction wheels']], interface: '星敏感器視場 · 磁場量測 · OBC 姿態回授迴路' },
+      hga: { code: 'PAYLOAD-01', class: 'HIGH-GAIN COMMUNICATIONS', name: '高增益通訊酬載', description: '指向式拋物面天線提供高速下傳與任務資料鏈路；萬向接頭允許在衛星姿態受限時持續指向地面站。', specs: [['頻段', 'Ka-band'], ['天線增益', '≥ 37 dBi'], ['資料下傳', 'up to 1 Gbps']], interface: 'RF feed / waveguide · 2-axis gimbal · 熱傳導安裝面' },
+      ttc: { code: 'TT&C-03', class: 'TELEMETRY, TRACKING & COMMAND', name: '遙測追蹤與指令天線', description: '近全向低增益天線支援發射初期、緊急模式與日常遙測、追蹤及遙控指令通訊。', specs: [['頻段', 'S-band'], ['覆蓋範圍', 'near-omnidirectional'], ['冗餘設計', 'dual antenna']], interface: 'RF coax · transceiver · 安全模式鏈路' },
+      propulsion: { code: 'PROP-01', class: 'PROPULSION SYSTEM', name: '推進系統', description: '推進劑貯箱、管路與推進器提供軌道維持、碰撞規避、壽命末期離軌與姿態卸載能力。', specs: [['推進器', '4 × 1 N class'], ['推進劑', 'green monopropellant'], ['ΔV 預算', '65 m/s']], interface: '推進劑管路 · 閥件驅動 · OBC 安全抑制訊號' },
+      eps: { code: 'EPS-04', class: 'POWER MANAGEMENT & DISTRIBUTION', name: '電源管理與配電', description: '追蹤太陽能陣列最大功率點、管理鋰電池充放電，並向各次系統提供受保護的電源通道。', specs: [['母線電壓', '28 V nominal'], ['電池容量', '1.8 kWh'], ['功率調節', 'MPPT / BCR']], interface: 'array input · battery interface · protected load switches' },
+      thermal: { code: 'TCS-05', class: 'THERMAL CONTROL SYSTEM', name: '熱控制系統', description: '散熱板、導熱路徑與多層隔熱材料共同控制衛星在日照與陰影交替中的溫度範圍。', specs: [['設計範圍', '−15 to +45 °C'], ['散熱面', 'OSR radiator'], ['隔熱層', 'MLI blankets']], interface: '結構導熱面 · 熱帶 / heat strap · 溫度感測器' },
+      camera: { code: 'IMAGER-07', class: 'EARTH OBSERVATION PAYLOAD', name: '地球觀測相機', description: '以對地指向光學望遠鏡取得多光譜影像；酬載電子與資料儲存模組整合於衛星內部。', specs: [['地面解析度', '≤ 3 m GSD'], ['光譜範圍', 'VNIR multispectral'], ['資料介面', 'SpaceWire']], interface: 'nadir optical aperture · precision alignment · high-rate data link' }
+    };
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x262624, 0.028);
+    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 100);
+    camera.position.set(11.2, 7.6, 14.6);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.setClearColor(0x000000, 0);
+    mount.appendChild(renderer.domElement);
+    const labelRenderer = new CSS2DRenderer();
+    labelRenderer.domElement.style.position = 'absolute'; labelRenderer.domElement.style.inset = '0'; labelRenderer.domElement.style.pointerEvents = 'none';
+    mount.appendChild(labelRenderer.domElement);
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, .1, 0); controls.enableDamping = true; controls.dampingFactor = .06; controls.minDistance = 6.8; controls.maxDistance = 22; controls.maxPolarAngle = Math.PI * .79;
+
+    scene.add(new THREE.HemisphereLight(0x9edbff, 0x07101d, 2.2));
+    const key = new THREE.DirectionalLight(0xffffff, 3.0); key.position.set(7, 9, 8); scene.add(key);
+    const rim = new THREE.DirectionalLight(0x3aa9ff, 2.5); rim.position.set(-9, 3, -7); scene.add(rim);
+    const warm = new THREE.PointLight(0xffb74a, 3.5, 18); warm.position.set(2, -2, 4); scene.add(warm);
+    const satellite = new THREE.Group(); scene.add(satellite);
+    satellite.rotation.y = -.28; satellite.rotation.x = -.08;
+    const pieces = []; const pickRoots = []; const materials = new Map(); let activeId = 'bus'; let explode = 0; let targetExplode = 0; let autoSpin = false;
+
+    const colors = { body: 0x92a6b5, dark: 0x102638, frame: 0x82d8f5, panel: 0x133d70, cell: 0x4f95d9, gold: 0xe6b154, thermal: 0xd8e0df, green: 0x4dcf9d, prop: 0x6e91aa };
+    const mat = (color, rough = .55, metal = .55, emissive = 0x000000) => new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: metal, emissive, emissiveIntensity: .16 });
+    const edgeMat = new THREE.LineBasicMaterial({ color: colors.frame, transparent: true, opacity: .68 });
+    const addEdges = (mesh, color = colors.frame, opacity = .55) => { const e = new THREE.LineSegments(new THREE.EdgesGeometry(mesh.geometry, 18), new THREE.LineBasicMaterial({ color, transparent: true, opacity })); mesh.add(e); return e; };
+    const addBox = (parent, size, position, material, edge = true) => { const m = new THREE.Mesh(new THREE.BoxGeometry(...size), material); m.position.set(...position); parent.add(m); if (edge) addEdges(m); return m; };
+    const addCylinder = (parent, radii, height, position, material, rotation = [0,0,0]) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(radii[0], radii[1], height, 20), material); m.position.set(...position); m.rotation.set(...rotation); parent.add(m); addEdges(m, colors.frame, .42); return m; };
+    const addLine = (parent, points, color = colors.cyan) => { const geometry = new THREE.BufferGeometry().setFromPoints(points.map(p => new THREE.Vector3(...p))); const line = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color, transparent: true, opacity: .6 })); parent.add(line); return line; };
+    const createLabel = (group, id, text, offset) => { const el = document.createElement('button'); el.className = 'component-label'; el.type = 'button'; el.textContent = text; el.setAttribute('aria-label', `選取${text}`); el.addEventListener('click', e => { e.stopPropagation(); select(id, true); }); const label = new CSS2DObject(el); label.position.set(...offset); label.element.style.pointerEvents = 'auto'; group.add(label); return label; };
+    const definePiece = (id, home, vector, label, labelOffset) => { const g = new THREE.Group(); g.userData = { componentId: id, home: new THREE.Vector3(...home), vector: new THREE.Vector3(...vector), allMaterials: [] }; g.position.copy(g.userData.home); satellite.add(g); pieces.push(g); pickRoots.push(g); createLabel(g, id, label, labelOffset); return g; };
+    const register = (group) => { group.traverse(o => { if (o.isMesh && o.material) { const arr = Array.isArray(o.material) ? o.material : [o.material]; group.userData.allMaterials.push(...arr); } }); };
+    const gridPlane = new THREE.GridHelper(24, 24, 0x184865, 0x103249); gridPlane.position.y = -4.2; gridPlane.material.transparent = true; gridPlane.material.opacity = .25; scene.add(gridPlane);
+    const orbit = new THREE.Mesh(new THREE.TorusGeometry(9.5, .014, 5, 160), new THREE.MeshBasicMaterial({ color: 0x2d8eb4, transparent: true, opacity: .38 })); orbit.rotation.x = Math.PI / 2.25; orbit.rotation.z = -.28; scene.add(orbit);
+    const starGeometry = new THREE.BufferGeometry(); const stars = []; for (let i = 0; i < 450; i++) { const r = 18 + Math.random() * 18; const theta = Math.random() * Math.PI * 2; const y = (Math.random() - .46) * 22; stars.push(Math.cos(theta) * r, y, Math.sin(theta) * r); } starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(stars, 3)); const starField = new THREE.Points(starGeometry, new THREE.PointsMaterial({ color: 0xb8e6ff, size: .035, transparent: true, opacity: .7 })); scene.add(starField);
+
+    // Core bus
+    const bus = definePiece('bus', [0, 0, 0], [0, 0, 0], 'BUS / STRUCTURE', [0, 1.72, .55]);
+    const bodyMat = mat(colors.body, .48, .75); addBox(bus, [2.35, 2.45, 2.2], [0, 0, 0], bodyMat);
+    const inner = new THREE.Mesh(new THREE.BoxGeometry(1.97, 2.07, 1.83), new THREE.MeshBasicMaterial({ color: 0x0a1b27, transparent: true, opacity: .64 })); bus.add(inner);
+    for (const x of [-.96, .96]) for (const z of [-.9, .9]) { const post = addCylinder(bus, [.075,.075], 2.62, [x,0,z], mat(0xa0c6d4,.4,.75)); post.rotation.z = 0; }
+    [-.96, .96].forEach(x => { addLine(bus, [[x,-1.12,-.9],[x,1.12,.9]], colors.gold); addLine(bus, [[x,-1.12,.9],[x,1.12,-.9]], colors.gold); });
+    // equipment faces
+    const faceMat = mat(0x23445a,.5,.7); addBox(bus, [1.15,.78,.12], [0,.24,1.16], faceMat); addBox(bus, [.12,.7,1.02], [1.22,-.25,0], faceMat); addBox(bus, [1.12,.68,.12], [0,-.45,-1.16], faceMat);
+    register(bus);
+
+    // solar wings
+    function solarWing(id, side) { const g = definePiece(id, [side * 4.0, .15, .05], [side * 1.65, .45, .1], side < 0 ? 'SOLAR ARRAY A' : 'SOLAR ARRAY B', [side * 1.1, .55, 0]); const boom = addCylinder(g, [.07,.07], 2.3, [side * -.85,0,0], mat(colors.thermal,.4,.8), [0,0,Math.PI/2]); for (let i=0; i<4; i++) { const panel = new THREE.Group(); panel.position.set(side*(1.65 + i*1.22), 0, 0); g.add(panel); const p = addBox(panel, [1.08, 1.95, .07], [0,0,0], mat(colors.panel,.34,.74), false); addEdges(p, 0x96cdf7, .74); for (let u=-.36;u<=.36;u+=.36) addLine(panel, [[u,-.9,.045],[u,.9,.045]], 0x68b6ed); for (let v=-.58;v<=.58;v+=.58) addLine(panel, [[-.52,v,.045],[.52,v,.045]], 0x68b6ed); } addCylinder(g, [.23,.23], .32, [side * -1.15,0,0], mat(colors.gold,.35,.85), [0,0,Math.PI/2]); register(g); }
+    solarWing('solar', -1); solarWing('solarRight', 1); data.solarRight = data.solar;
+
+    // ADCS deck
+    const adcs = definePiece('adcs', [-.34, 1.65, .05], [-1.9, 1.34, .28], 'ADCS / SENSORS', [-.2, .7, .18]);
+    addBox(adcs, [1.18,.34,.92], [0,0,0], mat(0x588197,.4,.7));
+    for (const x of [-.38,.38]) { const st = addCylinder(adcs, [.18,.18], .48, [x,.36,.05], mat(0x172b3c,.35,.65)); st.rotation.x = Math.PI/2; const lens = new THREE.Mesh(new THREE.CircleGeometry(.13,20), new THREE.MeshBasicMaterial({color:0x74d6ff})); lens.position.set(x,.36,.3); adcs.add(lens); }
+    addCylinder(adcs,[.16,.16],.52,[0,-.3,.08],mat(colors.gold,.38,.82),[Math.PI/2,0,0]); register(adcs);
+
+    // high gain antenna
+    const hga = definePiece('hga', [.25, 1.46, -.78], [.7, 2.35, -1.65], 'HIGH-GAIN ANTENNA', [.1,.9,-.15]);
+    const mast = addCylinder(hga,[.1,.1],.92,[0,0,0],mat(colors.thermal,.35,.76)); mast.rotation.x = Math.PI/2;
+    const dish = new THREE.Mesh(new THREE.SphereGeometry(.72, 32, 16, 0, Math.PI*2, 0, Math.PI/2), mat(0xd2dce2,.22,.78)); dish.position.set(0,.02,-.68); dish.rotation.x = Math.PI; hga.add(dish); addEdges(dish, 0x9fdff8,.56);
+    addLine(hga, [[0,0,-.55],[0,.55,-.98]], colors.gold); addCylinder(hga,[.045,.045],.5,[0,.28,-.89],mat(colors.gold,.35,.75),[.48,0,0]); register(hga);
+
+    // ttc antenna
+    const ttc = definePiece('ttc', [1.15, 1.48, .72], [1.75, 1.65, 1.25], 'TT&C ANTENNA', [.35,.62,.1]);
+    addCylinder(ttc,[.06,.06],1.05,[0,0,0],mat(colors.thermal,.35,.75)); const helix = new THREE.Mesh(new THREE.TorusGeometry(.18,.03,8,20), mat(colors.gold,.3,.75)); helix.position.y=.42; helix.rotation.x=Math.PI/2; ttc.add(helix); addBox(ttc,[.42,.19,.42],[0,-.58,0],mat(colors.dark,.48,.7)); register(ttc);
+
+    // Power management
+    const eps = definePiece('eps', [1.43, -.36, .25], [2.3,-.85,.72], 'POWER / EPS', [.52,.46,.1]);
+    addBox(eps,[.72,.92,.78],[0,0,0],mat(0x285b64,.42,.76)); for(let y=-.23;y<=.23;y+=.23) addLine(eps,[[-.36,y,.42],[.36,y,.42]],colors.green); addBox(eps,[.52,.18,.17],[0,.58,0],mat(colors.gold,.35,.72)); register(eps);
+
+    // Flight computer
+    const obc = definePiece('obc', [-1.44,-.35,.35],[-2.2,-.75,.6], 'ON-BOARD COMPUTER',[-.5,.48,.12]);
+    addBox(obc,[.76,.78,.75],[0,0,0],mat(0x35526f,.42,.72)); for(let y=-.22;y<=.22;y+=.22) addLine(obc,[[-.32,y,.4],[.32,y,.4]],colors.cyan); const cpu = addBox(obc,[.3,.18,.09],[0,.05,.43],mat(colors.gold,.3,.8)); register(obc);
+
+    // thermal radiator
+    const thermal = definePiece('thermal', [.05,-.06,1.22],[.25,-1.3,1.35],'THERMAL RADIATOR',[.15,.58,.13]);
+    const rad = addBox(thermal,[1.55,1.4,.12],[0,0,0],mat(0xd6e0df,.38,.68)); for(let x=-.55;x<=.55;x+=.275) addLine(thermal,[[x,-.64,.07],[x,.64,.07]],0x76b7ce); for(let y=-.45;y<=.45;y+=.3) addLine(thermal,[[-.7,y,.07],[.7,y,.07]],0x76b7ce); register(thermal);
+
+    // camera payload
+    const cameraPayload = definePiece('camera', [-.05,-1.6,-.15],[-.5,-2.1,-.52],'EARTH IMAGER',[.2,-.65,.15]);
+    addBox(cameraPayload,[1.28,.48,1.18],[0,0,0],mat(0x1e4057,.4,.75)); const barrel = addCylinder(cameraPayload,[.48,.38],.68,[0,-.35,0],mat(0x0d2336,.3,.8)); const optic = new THREE.Mesh(new THREE.CircleGeometry(.34,28),new THREE.MeshBasicMaterial({color:0x5fd1ff})); optic.position.set(0,-.7,0); optic.rotation.x=-Math.PI/2; cameraPayload.add(optic); addLine(cameraPayload,[[-.5,.1,.6],[.5,.1,.6]],colors.gold); register(cameraPayload);
+
+    // propulsion
+    const propulsion = definePiece('propulsion',[.58,-1.55,.32],[1.35,-2.2,.9],'PROPULSION',[.38,-.8,.12]);
+    addCylinder(propulsion,[.47,.47],.92,[0,0,0],mat(colors.prop,.36,.8)); const cap = new THREE.Mesh(new THREE.SphereGeometry(.47,20,12,0,Math.PI*2,0,Math.PI/2),mat(0x7ea5ba,.3,.8)); cap.position.y=.46; propulsion.add(cap); for(const [x,z] of [[-.45,-.45],[.45,-.45],[-.45,.45],[.45,.45]]) { const thr = addCylinder(propulsion,[.14,.08],.35,[x,-.65,z],mat(0x294e63,.33,.78)); const nozzle = addCylinder(propulsion,[.19,.12],.22,[x,-.9,z],mat(0x455d6a,.42,.75)); } register(propulsion);
+
+    // add simple mechanical cabling lines
+    addLine(satellite, [[-1.1,.5,1.15],[-2.1,.5,1.3],[-2.35,.15,.3]], colors.gold);
+    addLine(satellite, [[1.08,.35,1.15],[1.8,.4,.75],[2.0,-.1,.35]], colors.gold);
+
+    const detailCode = document.getElementById('detailCode'), detailClass = document.getElementById('detailClass'), detailName = document.getElementById('detailName'), detailDescription = document.getElementById('detailDescription'), specs = document.getElementById('specs'), interfaceText = document.getElementById('interfaceText');
+    const directory = [['bus','BUS'],['solar','SOLAR'],['adcs','ADCS'],['hga','HGA'],['ttc','TT&C'],['eps','EPS'],['obc','OBC'],['thermal','TCS'],['camera','IMAGER'],['propulsion','PROP']];
+    const systemList = document.getElementById('systemList');
+    directory.forEach(([id, label]) => { const btn = document.createElement('button'); btn.className='system-chip'; btn.type='button'; btn.dataset.id=id; btn.textContent=label; btn.addEventListener('click',()=>select(id,true)); systemList.appendChild(btn); });
+    const getPiece = id => pieces.find(p => p.userData.componentId === id) || (id === 'solar' ? pieces.find(p=>p.userData.componentId==='solarRight') : null);
+    function select(id, focus, notifyParent = true) {
+      if (id === 'solarRight') id = 'solar'; const chosen = data[id]; if (!chosen) return; activeId = id;
+      detailCode.textContent = chosen.code; detailClass.textContent = chosen.class; detailName.textContent = chosen.name; detailDescription.textContent = chosen.description;
+      specs.innerHTML = chosen.specs.map(([key,value]) => `<div class="spec"><span>${key}</span><b>${value}</b></div>`).join(''); interfaceText.textContent=chosen.interface;
+      document.querySelectorAll('.system-chip').forEach(b=>b.classList.toggle('active',b.dataset.id===id)); document.querySelectorAll('.component-label').forEach(el=>el.classList.toggle('is-active',el.textContent.includes(chosen.code.split('-')[0]) || (id==='bus' && el.textContent.includes('BUS')) || (id==='solar' && el.textContent.includes('SOLAR')) || (id==='hga' && el.textContent.includes('HIGH')) || (id==='camera' && el.textContent.includes('IMAGER')) || (id==='propulsion' && el.textContent.includes('PROPULSION')) || (id==='thermal' && el.textContent.includes('THERMAL')) || (id==='adcs' && el.textContent.includes('ADCS')) || (id==='ttc' && el.textContent.includes('TT&C')) || (id==='eps' && el.textContent.includes('POWER')) || (id==='obc' && el.textContent.includes('ON-BOARD'))));
+      pieces.forEach(piece => { const visualId = piece.userData.componentId === 'solarRight' ? 'solar' : piece.userData.componentId; const isActive = visualId === id; piece.userData.allMaterials.forEach(m => { if (m.emissive) { m.emissive.setHex(isActive ? 0x116c8d : 0x000000); m.emissiveIntensity = isActive ? .5 : .16; } }); });
+      if (focus) { const p=getPiece(id); if(p){ const target=p.position.clone(); controls.target.lerp(target,.22); } }
+      if (notifyParent && embedded && supplyChainId[id]) window.parent.postMessage({ source: 'leo-satellite', type: 'component-select', component: supplyChainId[id] }, parentTarget);
+    }
+    select('bus',false);
+
+    const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2();
+    renderer.domElement.addEventListener('pointerup', event => { if (event.pointerType === 'mouse' && event.button !== 0) return; const rect=renderer.domElement.getBoundingClientRect(); pointer.x=((event.clientX-rect.left)/rect.width)*2-1; pointer.y=-((event.clientY-rect.top)/rect.height)*2+1; raycaster.setFromCamera(pointer,camera); const hits=raycaster.intersectObjects(pickRoots,true); if(hits.length){ let node=hits[0].object; while(node && !node.userData.componentId) node=node.parent; if(node) select(node.userData.componentId,true); } });
+
+    const range=document.getElementById('explodeRange'), value=document.getElementById('explodeValue'), assembledBtn=document.getElementById('assembledBtn'), explodedBtn=document.getElementById('explodedBtn'), spinBtn=document.getElementById('spinBtn'), resetBtn=document.getElementById('resetBtn');
+    if (pageLanguage === 'en') {
+      document.querySelector('.scene-title').innerHTML = '<b>3D VIEWPORT</b> · spacecraft body frame · +Z nadir';
+      document.querySelector('.telemetry').innerHTML = 'ORBIT ALT. <b>550 km</b><br>ATTITUDE <b>LVLH</b><br>MODEL SCALE <b>1 : 1.8</b>';
+      assembledBtn.textContent = 'Assembly'; explodedBtn.textContent = 'Exploded';
+      spinBtn.title = 'Auto rotate'; resetBtn.title = 'Reset view';
+      range.setAttribute('aria-label', 'Exploded-view distance');
+    }
+    function setExplode(n){ targetExplode=THREE.MathUtils.clamp(n,0,1); range.value=Math.round(targetExplode*100); value.value=`${String(Math.round(targetExplode*100)).padStart(2,'0')}%`; assembledBtn.classList.toggle('active',targetExplode<.02); explodedBtn.classList.toggle('active',targetExplode>.98); }
+    range.addEventListener('input',()=>setExplode(range.value/100)); assembledBtn.addEventListener('click',()=>setExplode(0)); explodedBtn.addEventListener('click',()=>setExplode(1)); spinBtn.addEventListener('click',()=>{autoSpin=!autoSpin; spinBtn.classList.toggle('active',autoSpin); spinBtn.setAttribute('aria-pressed',String(autoSpin));}); resetBtn.addEventListener('click',()=>{camera.position.set(11.2,7.6,14.6); controls.target.set(0,.1,0); controls.update();});
+    window.addEventListener('keydown', e=>{ if(e.key.toLowerCase()==='e') setExplode(targetExplode>.5?0:1); if(e.key.toLowerCase()==='r') resetBtn.click(); });
+    window.addEventListener('message', event => {
+      if (!embedded || event.source !== window.parent || event.data?.source !== 'taiwan-supply-chain' || event.data?.type !== 'component-select') return;
+      const id = modelId[event.data.component];
+      if (id) select(id, true, false);
+    });
+    function resize(){ const rect=mount.getBoundingClientRect(); camera.aspect=rect.width/rect.height; camera.updateProjectionMatrix(); renderer.setSize(rect.width,rect.height); labelRenderer.setSize(rect.width,rect.height); } new ResizeObserver(resize).observe(mount); resize();
+    const clock=new THREE.Clock();
+    function tick(){ requestAnimationFrame(tick); const delta=clock.getDelta(); explode=THREE.MathUtils.damp(explode,targetExplode,5,delta); pieces.forEach(piece=>{piece.position.copy(piece.userData.home).addScaledVector(piece.userData.vector,explode);}); if(autoSpin) satellite.rotation.y += delta*.22; orbit.rotation.z+=delta*.015; starField.rotation.y-=delta*.003; controls.update(); renderer.render(scene,camera); labelRenderer.render(scene,camera); } tick();
+  </script>
+</body>
+</html>
