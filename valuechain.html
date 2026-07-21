@@ -43,9 +43,10 @@
   .topnav .brand { display: flex; align-items: center; gap: 10px; margin-right: auto; font-weight: 700; font-size: 16px; color: var(--text); }
   .topnav .orb { width: 30px; height: 30px; border-radius: 50%; border: 1.5px solid var(--blue); display: grid; place-items: center; flex: none; }
   .topnav .orb i { width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px var(--green); }
-  .topnav a.navlink { font-size: 14.5px; color: var(--text-2); padding: 4px 2px; border-bottom: 2px solid transparent; }
+  .topnav a.navlink { font-size: 14.5px; color: var(--text-2); padding: 4px 2px; border-bottom: 2px solid transparent; white-space: nowrap; }
   .topnav a.navlink:hover { color: var(--cyan); text-decoration: none; border-bottom-color: var(--cyan); }
-  .langtoggle { display: flex; border: 1px solid var(--gold); border-radius: 999px; overflow: hidden; }
+  .navscroll { display: contents; }
+  .langtoggle { display: flex; border: 1px solid var(--gold); border-radius: 999px; overflow: hidden; flex: none; }
   .langtoggle button {
     font-family: 'Space Grotesk', 'Noto Sans TC'; background: transparent; color: var(--gold);
     border: none; padding: 6px 16px; font-size: 13.5px; cursor: pointer; letter-spacing: 0.05em;
@@ -108,6 +109,14 @@
     0%   { box-shadow: 0 0 0 1px rgba(31,30,28,0.55), 0 0 0 0 rgba(255,122,92,0.55); }
     100% { box-shadow: 0 0 0 1px rgba(31,30,28,0.55), 0 0 0 13px rgba(255,122,92,0); }
   }
+  .pie-hit { display: flex; align-items: center; justify-content: center; }
+  /* two-finger-to-pan hint overlay (touch devices) */
+  .map-gesture-hint {
+    position: absolute; inset: 0; z-index: 500; display: grid; place-items: center;
+    background: rgba(31,30,28,0.55); color: var(--text); font-size: 14px; text-align: center; padding: 24px;
+    opacity: 0; pointer-events: none; transition: opacity .25s; border-radius: 14px;
+  }
+  .map-gesture-hint.show { opacity: 1; }
 
   /* filters */
   .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
@@ -123,7 +132,7 @@
   .panel { margin-top: 30px; }
   .panel .ptitle { font-family: 'Noto Serif TC', serif; font-size: 24px; font-weight: 600; margin: 0 0 4px; }
   .panel .psub { font-family: 'Space Grotesk'; font-size: 12.5px; color: var(--muted); letter-spacing: 0.08em; margin-bottom: 22px; }
-  .orgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 16px; }
+  .orgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 16px; }
   .org { border: 1px solid var(--border); border-left: 3px solid var(--seg, var(--gold)); border-radius: 14px; background: var(--bg-2); padding: 18px 22px; display: flex; flex-direction: column; }
   .org .head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
   .org b { font-size: 16px; }
@@ -191,6 +200,36 @@
   footer .t { font-family: 'Noto Serif TC', serif; font-weight: 600; font-size: 22px; margin-bottom: 8px; }
   footer .s { font-family: 'Space Grotesk'; font-size: 12px; letter-spacing: 0.2em; color: var(--muted); }
   footer .links { margin: 20px 0 0; font-size: 13.5px; color: var(--muted); }
+
+  /* ============ MOBILE ============ */
+  @media (max-width: 760px) {
+    .topnav { padding: 10px 5vw; gap: 12px; flex-wrap: nowrap; }
+    .topnav .brand { font-size: 15px; flex: none; margin-right: 0; }
+    .topnav .brand .orb { width: 26px; height: 26px; }
+    .navscroll {
+      display: flex; align-items: center; gap: 18px; flex: 1 1 auto; min-width: 0;
+      overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      -webkit-mask-image: linear-gradient(90deg, #000 88%, transparent); mask-image: linear-gradient(90deg, #000 88%, transparent);
+    }
+    .navscroll::-webkit-scrollbar { display: none; }
+    .topnav a.navlink { font-size: 14px; padding: 2px 0; }
+    .langtoggle button { padding: 6px 13px; font-size: 13px; }
+
+    .hero { padding: 64px 7vw 84px; }
+    section.block { padding: 56px 7vw; }
+    .sec-intro { margin-bottom: 32px; }
+    .stat { flex: 1 1 140px; padding: 12px 16px; }
+
+    /* map: taller, declutter labels, easier touch */
+    #twmap { height: 66vh; min-height: 380px; max-height: 560px; }
+    .mapbox { padding: 8px; border-radius: 18px; }
+    .cluster-label:not(.sel) { display: none; }   /* only the tapped city keeps its label */
+    .cluster-label div { font-size: 13px; }
+    .panel { margin-top: 22px; }
+    .ratelegend { gap: 10px 14px; font-size: 12.5px; }
+    .satbox, .comp-panel { min-width: 0; }
+    .comp-chips .cchip { font-size: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -199,12 +238,14 @@
 
 <nav class="topnav" aria-label="main">
   <span class="brand"><span class="orb"><i></i></span><span data-t="nav_brand"></span></span>
-  <a class="navlink" href="#chain" data-t="nav_chain"></a>
-  <a class="navlink" href="#map" data-t="nav_map"></a>
-  <a class="navlink" href="#anatomy" data-t="nav_anatomy"></a>
-  <a class="navlink" href="#missions" data-t="nav_missions"></a>
-  <a class="navlink" href="index.html" data-t="nav_tw"></a>
-  <a class="navlink" href="international.html" data-t="nav_intl"></a>
+  <div class="navscroll">
+    <a class="navlink" href="#chain" data-t="nav_chain"></a>
+    <a class="navlink" href="#map" data-t="nav_map"></a>
+    <a class="navlink" href="#anatomy" data-t="nav_anatomy"></a>
+    <a class="navlink" href="#missions" data-t="nav_missions"></a>
+    <a class="navlink" href="index.html" data-t="nav_tw"></a>
+    <a class="navlink" href="international.html" data-t="nav_intl"></a>
+  </div>
   <div class="langtoggle" role="group" aria-label="language">
     <button id="btn-zh" onclick="setLang('zh')">中文</button>
     <button id="btn-en" onclick="setLang('en')">EN</button>
@@ -638,6 +679,7 @@ const I18N = {
     sec2:'產業地圖', sec2en:'Industry Map',
     sec2intro:'點擊地圖節點檢視當地的公司與機構,或以價值鏈環節篩選。節點大小反映收錄機構數量。',
     maphint:'※ 底圖:OpenStreetMap。圓圈依當地五種產業類別的組成比例上色(對照上方篩選器的顏色);圓圈大小反映機構數量,脈動者為國家發射場域。可拖曳與縮放地圖。',
+    gestureHint:'用兩指移動與縮放地圖',
     secA:'LEO 衛星元件 × 臺灣供應鏈', secAen:'Satellite Anatomy',
     secAintro:'一顆低軌衛星拆開來,臺灣在哪裡?點擊爆炸圖上的元件編號,檢視對應的臺灣廠商與供應鏈強度。電子含量高、可標準化量產的元件,臺灣幾乎全數卡位;缺口集中在化學與能源含量高的環節。',
     r_strong:'國際供應鏈要角', r_mid:'發展中・累積飛行履歷', r_gap:'缺口・仰賴進口',
@@ -667,6 +709,7 @@ const I18N = {
     sec2:'Industry Map', sec2en:'Where the Industry Lives',
     sec2intro:'Click a node to see local companies and institutions, or filter by value-chain segment. Node size reflects the number of entries.',
     maphint:'※ Base map: OpenStreetMap. Each circle is coloured by its mix of the five industry segments (matching the filter colours above); circle size reflects the number of organizations, and the pulsing one is the national launch site. Drag and zoom to explore.',
+    gestureHint:'Use two fingers to move and zoom the map',
     secA:'LEO Satellite × Taiwan Supply Chain', secAen:'Satellite Anatomy',
     secAintro:'Take a LEO satellite apart — where is Taiwan? Click a numbered component in the exploded view to see the matching Taiwanese suppliers and chain strength. Taiwan holds nearly every electronics-heavy, mass-producible part; the gaps cluster in chemistry- and energy-heavy subsystems.',
     r_strong:'Key global supplier', r_mid:'Developing / gaining flight heritage', r_gap:'Gap — import-reliant',
@@ -754,6 +797,25 @@ function initMap() {
   requestAnimationFrame(() => { map.invalidateSize(); fit(); });
   let rt;
   window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { map.invalidateSize(); fit(); }, 200); });
+
+  // Touch devices: require two fingers to pan so one-finger swipes scroll the PAGE,
+  // not the map. Show a brief hint when a lone finger tries to drag.
+  if (window.matchMedia('(pointer: coarse)').matches) {
+    map.dragging.disable();
+    const hint = document.createElement('div');
+    hint.className = 'map-gesture-hint';
+    hint.setAttribute('data-t', 'gestureHint');
+    el.appendChild(hint);
+    let hideT;
+    const flash = () => { hint.classList.add('show'); clearTimeout(hideT); hideT = setTimeout(() => hint.classList.remove('show'), 1300); };
+    el.addEventListener('touchstart', e => {
+      if (e.touches.length >= 2) { map.dragging.enable(); hint.classList.remove('show'); }
+    }, { passive: true });
+    el.addEventListener('touchmove', e => {
+      if (e.touches.length === 1 && !map.dragging.enabled()) flash();
+    }, { passive: true });
+    el.addEventListener('touchend', () => { if (map.dragging.enabled()) map.dragging.disable(); }, { passive: true });
+  }
 }
 
 const SEG_ORDER = ['agency', 'launch', 'satellite', 'ground', 'service'];
@@ -784,22 +846,24 @@ function renderMap() {
     const isSel = selCity === key;
     const r = Math.min(8 + orgsHere.length * 1.6, 18);
     const d = Math.round(r * 2);
+    const hit = d + 16;                         // transparent padding → larger tap target
     const bg = segGradient(orgsHere);          // coloured by industry segment(s)
     const bw = isSel ? 3 : 1.5;
     const bc = isSel ? '#FFC53D' : '#1F1E1C';
     const op = match ? 1 : 0.28;
     const icon = L.divIcon({
       className: 'pie-marker',
-      html: `<div class="pie${key === 'pingtung' ? ' launch' : ''}" style="width:${d}px;height:${d}px;` +
-            `background:${bg};border-color:${bc};border-width:${bw}px;opacity:${op};"></div>`,
-      iconSize: [d, d], iconAnchor: [d / 2, d / 2],
+      html: `<div class="pie-hit" style="width:${hit}px;height:${hit}px;">` +
+            `<div class="pie${key === 'pingtung' ? ' launch' : ''}" style="width:${d}px;height:${d}px;` +
+            `background:${bg};border-color:${bc};border-width:${bw}px;opacity:${op};"></div></div>`,
+      iconSize: [hit, hit], iconAnchor: [hit / 2, hit / 2],
     });
     const marker = L.marker([c.lat, c.lng], { icon, keyboard: true, title: lang === 'zh' ? c.zh : c.en });
     marker.on('click', () => { selCity = (selCity === key ? null : key); update(); });
     marker.bindTooltip(
       `<div>${lang === 'zh' ? c.zh : c.en} · ${orgsHere.length}</div>`,
       { permanent: true, direction: c.labelDir || 'right',
-        offset: c.labelDir === 'top' ? [0, -(r + 4)] : [c.labelDir === 'left' ? -(r + 4) : (r + 4), 0],
+        offset: c.labelDir === 'top' ? [0, -(r + 5)] : [c.labelDir === 'left' ? -(r + 5) : (r + 5), 0],
         className: 'cluster-label' + (isSel ? ' sel' : ''), opacity: match ? 1 : 0.35 }
     );
     markerLayer.addLayer(marker);
