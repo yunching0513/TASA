@@ -91,10 +91,13 @@
     .explode-control label { color: var(--muted); font: 500 9px "Space Grotesk", sans-serif; letter-spacing: .09em; }
     .explode-control output { width: 28px; color: var(--gold); font: 500 10px "Space Grotesk", sans-serif; }
     input[type="range"] { accent-color: var(--gold); width: 112px; cursor: pointer; }
-    .component-label { color: var(--ink); background: rgba(48,48,46,.92); border: 1px solid rgba(111,212,255,.54); border-radius: 8px; padding: 5px 7px 5px 9px; font: 500 9px "Space Grotesk", sans-serif; letter-spacing: .06em; cursor: pointer; white-space: nowrap; box-shadow: 0 0 18px rgba(0,0,0,.25); transition: .18s; }
-    .component-label::before { content: ""; display: inline-block; width: 4px; height: 4px; border-radius: 50%; background: var(--cyan); margin: 0 5px 1px 0; box-shadow: 0 0 8px var(--cyan); }
-    .component-label:hover, .component-label.is-active { border-color: var(--gold); color: var(--gold); transform: translateY(-2px); }
-    .component-label.is-active::before { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
+    .component-index { position: absolute; top: 53px; left: 24px; z-index: 4; width: min(270px, calc(100% - 48px)); padding: 8px; border: 1px solid rgba(111,212,255,.35); border-radius: 10px; background: rgba(38,38,36,.78); box-shadow: 0 10px 30px rgba(0,0,0,.18); backdrop-filter: blur(10px); }
+    .component-index__title { display: block; margin: 0 2px 7px; color: var(--muted); font: 500 8px "Space Grotesk", sans-serif; letter-spacing: .13em; }
+    .component-index__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; }
+    .component-index__item { min-width: 0; border: 1px solid transparent; border-radius: 5px; padding: 5px 6px; color: var(--soft); background: transparent; cursor: pointer; overflow: hidden; text-align: left; text-overflow: ellipsis; white-space: nowrap; font: 500 8px "Space Grotesk", sans-serif; letter-spacing: .035em; transition: .18s; }
+    .component-index__item::before { content: ""; display: inline-block; width: 4px; height: 4px; margin: 0 5px 1px 0; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
+    .component-index__item:hover, .component-index__item.is-active { color: var(--gold); border-color: rgba(255,197,61,.46); background: rgba(255,197,61,.08); }
+    .component-index__item.is-active::before { background: var(--gold); box-shadow: 0 0 8px var(--gold); }
 
     .sidebar { min-height: 0; display: flex; flex-direction: column; background: rgba(38,38,36,.78); }
     .side-head { border-bottom: 1px solid var(--line); padding: 21px 22px 16px; }
@@ -119,7 +122,7 @@
     .footer-note b { color: var(--gold); font-weight: 500; }
 
     @media (max-width: 1040px) { .workbench { grid-template-columns: 1fr; } .viewer { min-height: 630px; border-right: 0; border-bottom: 1px solid var(--line); } .sidebar { display: grid; grid-template-columns: 1fr 1fr; } .systems { border-top: 0; border-left: 1px solid var(--line); } }
-    @media (max-width: 700px) { .topbar { padding: 0 16px; gap: 9px; } .breadcrumb, .status { display: none; } .return-link { padding: 6px 8px; font-size: 9px; } main { padding: 21px 13px; } .intro { display: block; } .intro-copy { width: auto; margin-top: 15px; } .viewer { min-height: 570px; } .sidebar { display: block; } .systems { border-left: 0; border-top: 1px solid var(--line); } .modebar { left: 10px; right: 10px; bottom: 10px; align-items: end; } .controls { gap: 2px; } .tool-btn { padding: 0 7px; font-size: 9px; } .tool-btn.icon { width: 28px; } .explode-control { padding: 9px; gap: 5px; } .explode-control label { display: none; } input[type="range"] { width: 70px; } .telemetry { bottom: 64px; left: 15px; font-size: 9px; } .scene-title { left: 54px; top: 24px; } .view-corner.tl { left: 13px; top: 15px; } .view-corner.tr { right: 13px; top: 15px; } .view-corner.bl { left: 13px; bottom: 58px; } .view-corner.br { right: 13px; bottom: 58px; } .component-label { font-size: 8px; padding: 4px 5px 4px 7px; } .footer-note { display: block; } .footer-note span { display: block; margin-bottom: 6px; } }
+    @media (max-width: 700px) { .topbar { padding: 0 16px; gap: 9px; } .breadcrumb, .status { display: none; } .return-link { padding: 6px 8px; font-size: 9px; } main { padding: 21px 13px; } .intro { display: block; } .intro-copy { width: auto; margin-top: 15px; } .viewer { min-height: 570px; } .sidebar { display: block; } .systems { border-left: 0; border-top: 1px solid var(--line); } .modebar { left: 10px; right: 10px; bottom: 10px; align-items: end; } .controls { gap: 2px; } .tool-btn { padding: 0 7px; font-size: 9px; } .tool-btn.icon { width: 28px; } .explode-control { padding: 9px; gap: 5px; } .explode-control label { display: none; } input[type="range"] { width: 70px; } .telemetry { bottom: 64px; left: 15px; font-size: 9px; } .scene-title { left: 54px; top: 24px; } .component-index { top: 49px; left: 14px; width: min(270px, calc(100% - 28px)); } .view-corner.tl { left: 13px; top: 15px; } .view-corner.tr { right: 13px; top: 15px; } .view-corner.bl { left: 13px; bottom: 58px; } .view-corner.br { right: 13px; bottom: 58px; } .footer-note { display: block; } .footer-note span { display: block; margin-bottom: 6px; } }
     body.embed { min-height: 0; background: #262624; }
     body.embed .topline, body.embed .topbar, body.embed .intro, body.embed .sidebar, body.embed .footer-note { display: none; }
     body.embed .app, body.embed main { min-height: 0; width: 100%; padding: 0; }
@@ -156,6 +159,7 @@
           <div class="reticle" aria-hidden="true"></div><div class="scanlines" aria-hidden="true"></div>
           <div class="view-corner tl" aria-hidden="true"></div><div class="view-corner tr" aria-hidden="true"></div><div class="view-corner bl" aria-hidden="true"></div><div class="view-corner br" aria-hidden="true"></div>
           <div class="scene-title"><b>3D VIEWPORT</b> · spacecraft body frame · +Z nadir</div>
+          <div class="component-index" id="componentIndex" aria-label="衛星零組件索引"></div>
           <div class="telemetry">ORBIT ALT. <b>550 km</b><br>ATTITUDE <b>LVLH</b><br>MODEL SCALE <b>1 : 1.8</b></div>
           <div class="modebar">
             <div class="controls" role="group" aria-label="模型視角控制">
@@ -179,7 +183,7 @@
           <div class="systems"><span>SUBSYSTEM DIRECTORY · 點選定位</span><div class="system-list" id="systemList"></div></div>
         </aside>
       </section>
-      <div class="footer-note"><span><b>使用方式：</b>拖曳旋轉 · 滾輪縮放 · 點選模型或標籤選取模組</span><span>概念工程圖 · 尺寸與性能為示意值，非飛行設計資料</span></div>
+      <div class="footer-note"><span><b>使用方式：</b>拖曳旋轉 · 滾輪縮放 · 點選模型或左上索引選取模組</span><span>概念工程圖 · 尺寸與性能為示意值，非飛行設計資料</span></div>
     </main>
   </div>
 
@@ -194,7 +198,6 @@
   <script type="module">
     import * as THREE from 'three';
     import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-    import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 
     const query = new URLSearchParams(window.location.search);
     const embedded = query.get('embed') === '1';
@@ -227,9 +230,6 @@
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.setClearColor(0x000000, 0);
     mount.appendChild(renderer.domElement);
-    const labelRenderer = new CSS2DRenderer();
-    labelRenderer.domElement.style.position = 'absolute'; labelRenderer.domElement.style.inset = '0'; labelRenderer.domElement.style.pointerEvents = 'none';
-    mount.appendChild(labelRenderer.domElement);
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.target.set(0, .1, 0); controls.enableDamping = true; controls.dampingFactor = .06; controls.minDistance = 6.8; controls.maxDistance = 22; controls.maxPolarAngle = Math.PI * .79;
 
@@ -248,15 +248,14 @@
     const addBox = (parent, size, position, material, edge = true) => { const m = new THREE.Mesh(new THREE.BoxGeometry(...size), material); m.position.set(...position); parent.add(m); if (edge) addEdges(m); return m; };
     const addCylinder = (parent, radii, height, position, material, rotation = [0,0,0]) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(radii[0], radii[1], height, 20), material); m.position.set(...position); m.rotation.set(...rotation); parent.add(m); addEdges(m, colors.frame, .42); return m; };
     const addLine = (parent, points, color = colors.cyan) => { const geometry = new THREE.BufferGeometry().setFromPoints(points.map(p => new THREE.Vector3(...p))); const line = new THREE.Line(geometry, new THREE.LineBasicMaterial({ color, transparent: true, opacity: .6 })); parent.add(line); return line; };
-    const createLabel = (group, id, text, offset) => { const el = document.createElement('button'); el.className = 'component-label'; el.type = 'button'; el.textContent = text; el.setAttribute('aria-label', `選取${text}`); el.addEventListener('click', e => { e.stopPropagation(); select(id, true); }); const label = new CSS2DObject(el); label.position.set(...offset); label.element.style.pointerEvents = 'auto'; group.add(label); return label; };
-    const definePiece = (id, home, vector, label, labelOffset) => { const g = new THREE.Group(); g.userData = { componentId: id, home: new THREE.Vector3(...home), vector: new THREE.Vector3(...vector), allMaterials: [] }; g.position.copy(g.userData.home); satellite.add(g); pieces.push(g); pickRoots.push(g); createLabel(g, id, label, labelOffset); return g; };
+    const definePiece = (id, home, vector) => { const g = new THREE.Group(); g.userData = { componentId: id, home: new THREE.Vector3(...home), vector: new THREE.Vector3(...vector), allMaterials: [] }; g.position.copy(g.userData.home); satellite.add(g); pieces.push(g); pickRoots.push(g); return g; };
     const register = (group) => { group.traverse(o => { if (o.isMesh && o.material) { const arr = Array.isArray(o.material) ? o.material : [o.material]; group.userData.allMaterials.push(...arr); } }); };
     const gridPlane = new THREE.GridHelper(24, 24, 0x184865, 0x103249); gridPlane.position.y = -4.2; gridPlane.material.transparent = true; gridPlane.material.opacity = .25; scene.add(gridPlane);
     const orbit = new THREE.Mesh(new THREE.TorusGeometry(9.5, .014, 5, 160), new THREE.MeshBasicMaterial({ color: 0x2d8eb4, transparent: true, opacity: .38 })); orbit.rotation.x = Math.PI / 2.25; orbit.rotation.z = -.28; scene.add(orbit);
     const starGeometry = new THREE.BufferGeometry(); const stars = []; for (let i = 0; i < 450; i++) { const r = 18 + Math.random() * 18; const theta = Math.random() * Math.PI * 2; const y = (Math.random() - .46) * 22; stars.push(Math.cos(theta) * r, y, Math.sin(theta) * r); } starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(stars, 3)); const starField = new THREE.Points(starGeometry, new THREE.PointsMaterial({ color: 0xb8e6ff, size: .035, transparent: true, opacity: .7 })); scene.add(starField);
 
     // Core bus
-    const bus = definePiece('bus', [0, 0, 0], [0, 0, 0], 'BUS / STRUCTURE', [0, 1.72, .55]);
+    const bus = definePiece('bus', [0, 0, 0], [0, 0, 0]);
     const bodyMat = mat(colors.body, .48, .75); addBox(bus, [2.35, 2.45, 2.2], [0, 0, 0], bodyMat);
     const inner = new THREE.Mesh(new THREE.BoxGeometry(1.97, 2.07, 1.83), new THREE.MeshBasicMaterial({ color: 0x0a1b27, transparent: true, opacity: .64 })); bus.add(inner);
     for (const x of [-.96, .96]) for (const z of [-.9, .9]) { const post = addCylinder(bus, [.075,.075], 2.62, [x,0,z], mat(0xa0c6d4,.4,.75)); post.rotation.z = 0; }
@@ -266,43 +265,43 @@
     register(bus);
 
     // solar wings
-    function solarWing(id, side) { const g = definePiece(id, [side * 4.0, .15, .05], [side * 1.65, .45, .1], side < 0 ? 'SOLAR ARRAY A' : 'SOLAR ARRAY B', [side * 1.1, .55, 0]); const boom = addCylinder(g, [.07,.07], 2.3, [side * -.85,0,0], mat(colors.thermal,.4,.8), [0,0,Math.PI/2]); for (let i=0; i<4; i++) { const panel = new THREE.Group(); panel.position.set(side*(1.65 + i*1.22), 0, 0); g.add(panel); const p = addBox(panel, [1.08, 1.95, .07], [0,0,0], mat(colors.panel,.34,.74), false); addEdges(p, 0x96cdf7, .74); for (let u=-.36;u<=.36;u+=.36) addLine(panel, [[u,-.9,.045],[u,.9,.045]], 0x68b6ed); for (let v=-.58;v<=.58;v+=.58) addLine(panel, [[-.52,v,.045],[.52,v,.045]], 0x68b6ed); } addCylinder(g, [.23,.23], .32, [side * -1.15,0,0], mat(colors.gold,.35,.85), [0,0,Math.PI/2]); register(g); }
+    function solarWing(id, side) { const g = definePiece(id, [side * 4.0, .15, .05], [side * 1.65, .45, .1]); const boom = addCylinder(g, [.07,.07], 2.3, [side * -.85,0,0], mat(colors.thermal,.4,.8), [0,0,Math.PI/2]); for (let i=0; i<4; i++) { const panel = new THREE.Group(); panel.position.set(side*(1.65 + i*1.22), 0, 0); g.add(panel); const p = addBox(panel, [1.08, 1.95, .07], [0,0,0], mat(colors.panel,.34,.74), false); addEdges(p, 0x96cdf7, .74); for (let u=-.36;u<=.36;u+=.36) addLine(panel, [[u,-.9,.045],[u,.9,.045]], 0x68b6ed); for (let v=-.58;v<=.58;v+=.58) addLine(panel, [[-.52,v,.045],[.52,v,.045]], 0x68b6ed); } addCylinder(g, [.23,.23], .32, [side * -1.15,0,0], mat(colors.gold,.35,.85), [0,0,Math.PI/2]); register(g); }
     solarWing('solar', -1); solarWing('solarRight', 1); data.solarRight = data.solar;
 
     // ADCS deck
-    const adcs = definePiece('adcs', [-.34, 1.65, .05], [-1.9, 1.34, .28], 'ADCS / SENSORS', [-.2, .7, .18]);
+    const adcs = definePiece('adcs', [-.34, 1.65, .05], [-1.9, 1.34, .28]);
     addBox(adcs, [1.18,.34,.92], [0,0,0], mat(0x588197,.4,.7));
     for (const x of [-.38,.38]) { const st = addCylinder(adcs, [.18,.18], .48, [x,.36,.05], mat(0x172b3c,.35,.65)); st.rotation.x = Math.PI/2; const lens = new THREE.Mesh(new THREE.CircleGeometry(.13,20), new THREE.MeshBasicMaterial({color:0x74d6ff})); lens.position.set(x,.36,.3); adcs.add(lens); }
     addCylinder(adcs,[.16,.16],.52,[0,-.3,.08],mat(colors.gold,.38,.82),[Math.PI/2,0,0]); register(adcs);
 
     // high gain antenna
-    const hga = definePiece('hga', [.25, 1.46, -.78], [.7, 2.35, -1.65], 'HIGH-GAIN ANTENNA', [.1,.9,-.15]);
+    const hga = definePiece('hga', [.25, 1.46, -.78], [.7, 2.35, -1.65]);
     const mast = addCylinder(hga,[.1,.1],.92,[0,0,0],mat(colors.thermal,.35,.76)); mast.rotation.x = Math.PI/2;
     const dish = new THREE.Mesh(new THREE.SphereGeometry(.72, 32, 16, 0, Math.PI*2, 0, Math.PI/2), mat(0xd2dce2,.22,.78)); dish.position.set(0,.02,-.68); dish.rotation.x = Math.PI; hga.add(dish); addEdges(dish, 0x9fdff8,.56);
     addLine(hga, [[0,0,-.55],[0,.55,-.98]], colors.gold); addCylinder(hga,[.045,.045],.5,[0,.28,-.89],mat(colors.gold,.35,.75),[.48,0,0]); register(hga);
 
     // ttc antenna
-    const ttc = definePiece('ttc', [1.15, 1.48, .72], [1.75, 1.65, 1.25], 'TT&C ANTENNA', [.35,.62,.1]);
+    const ttc = definePiece('ttc', [1.15, 1.48, .72], [1.75, 1.65, 1.25]);
     addCylinder(ttc,[.06,.06],1.05,[0,0,0],mat(colors.thermal,.35,.75)); const helix = new THREE.Mesh(new THREE.TorusGeometry(.18,.03,8,20), mat(colors.gold,.3,.75)); helix.position.y=.42; helix.rotation.x=Math.PI/2; ttc.add(helix); addBox(ttc,[.42,.19,.42],[0,-.58,0],mat(colors.dark,.48,.7)); register(ttc);
 
     // Power management
-    const eps = definePiece('eps', [1.43, -.36, .25], [2.3,-.85,.72], 'POWER / EPS', [.52,.46,.1]);
+    const eps = definePiece('eps', [1.43, -.36, .25], [2.3,-.85,.72]);
     addBox(eps,[.72,.92,.78],[0,0,0],mat(0x285b64,.42,.76)); for(let y=-.23;y<=.23;y+=.23) addLine(eps,[[-.36,y,.42],[.36,y,.42]],colors.green); addBox(eps,[.52,.18,.17],[0,.58,0],mat(colors.gold,.35,.72)); register(eps);
 
     // Flight computer
-    const obc = definePiece('obc', [-1.44,-.35,.35],[-2.2,-.75,.6], 'ON-BOARD COMPUTER',[-.5,.48,.12]);
+    const obc = definePiece('obc', [-1.44,-.35,.35],[-2.2,-.75,.6]);
     addBox(obc,[.76,.78,.75],[0,0,0],mat(0x35526f,.42,.72)); for(let y=-.22;y<=.22;y+=.22) addLine(obc,[[-.32,y,.4],[.32,y,.4]],colors.cyan); const cpu = addBox(obc,[.3,.18,.09],[0,.05,.43],mat(colors.gold,.3,.8)); register(obc);
 
     // thermal radiator
-    const thermal = definePiece('thermal', [.05,-.06,1.22],[.25,-1.3,1.35],'THERMAL RADIATOR',[.15,.58,.13]);
+    const thermal = definePiece('thermal', [.05,-.06,1.22],[.25,-1.3,1.35]);
     const rad = addBox(thermal,[1.55,1.4,.12],[0,0,0],mat(0xd6e0df,.38,.68)); for(let x=-.55;x<=.55;x+=.275) addLine(thermal,[[x,-.64,.07],[x,.64,.07]],0x76b7ce); for(let y=-.45;y<=.45;y+=.3) addLine(thermal,[[-.7,y,.07],[.7,y,.07]],0x76b7ce); register(thermal);
 
     // camera payload
-    const cameraPayload = definePiece('camera', [-.05,-1.6,-.15],[-.5,-2.1,-.52],'EARTH IMAGER',[.2,-.65,.15]);
+    const cameraPayload = definePiece('camera', [-.05,-1.6,-.15],[-.5,-2.1,-.52]);
     addBox(cameraPayload,[1.28,.48,1.18],[0,0,0],mat(0x1e4057,.4,.75)); const barrel = addCylinder(cameraPayload,[.48,.38],.68,[0,-.35,0],mat(0x0d2336,.3,.8)); const optic = new THREE.Mesh(new THREE.CircleGeometry(.34,28),new THREE.MeshBasicMaterial({color:0x5fd1ff})); optic.position.set(0,-.7,0); optic.rotation.x=-Math.PI/2; cameraPayload.add(optic); addLine(cameraPayload,[[-.5,.1,.6],[.5,.1,.6]],colors.gold); register(cameraPayload);
 
     // propulsion
-    const propulsion = definePiece('propulsion',[.58,-1.55,.32],[1.35,-2.2,.9],'PROPULSION',[.38,-.8,.12]);
+    const propulsion = definePiece('propulsion',[.58,-1.55,.32],[1.35,-2.2,.9]);
     addCylinder(propulsion,[.47,.47],.92,[0,0,0],mat(colors.prop,.36,.8)); const cap = new THREE.Mesh(new THREE.SphereGeometry(.47,20,12,0,Math.PI*2,0,Math.PI/2),mat(0x7ea5ba,.3,.8)); cap.position.y=.46; propulsion.add(cap); for(const [x,z] of [[-.45,-.45],[.45,-.45],[-.45,.45],[.45,.45]]) { const thr = addCylinder(propulsion,[.14,.08],.35,[x,-.65,z],mat(0x294e63,.33,.78)); const nozzle = addCylinder(propulsion,[.19,.12],.22,[x,-.9,z],mat(0x455d6a,.42,.75)); } register(propulsion);
 
     // add simple mechanical cabling lines
@@ -310,15 +309,18 @@
     addLine(satellite, [[1.08,.35,1.15],[1.8,.4,.75],[2.0,-.1,.35]], colors.gold);
 
     const detailCode = document.getElementById('detailCode'), detailClass = document.getElementById('detailClass'), detailName = document.getElementById('detailName'), detailDescription = document.getElementById('detailDescription'), specs = document.getElementById('specs'), interfaceText = document.getElementById('interfaceText');
-    const directory = [['bus','BUS'],['solar','SOLAR'],['adcs','ADCS'],['hga','HGA'],['ttc','TT&C'],['eps','EPS'],['obc','OBC'],['thermal','TCS'],['camera','IMAGER'],['propulsion','PROP']];
+    const directory = [['bus','BUS','BUS / STRUCTURE'],['solar','SOLAR','SOLAR ARRAYS'],['adcs','ADCS','ADCS / SENSORS'],['hga','HGA','HIGH-GAIN ANTENNA'],['ttc','TT&C','TT&C ANTENNA'],['eps','EPS','POWER / EPS'],['obc','OBC','ON-BOARD COMPUTER'],['thermal','TCS','THERMAL RADIATOR'],['camera','IMAGER','EARTH IMAGER'],['propulsion','PROP','PROPULSION']];
     const systemList = document.getElementById('systemList');
-    directory.forEach(([id, label]) => { const btn = document.createElement('button'); btn.className='system-chip'; btn.type='button'; btn.dataset.id=id; btn.textContent=label; btn.addEventListener('click',()=>select(id,true)); systemList.appendChild(btn); });
+    const componentIndex = document.getElementById('componentIndex');
+    componentIndex.innerHTML = '<span class="component-index__title">COMPONENT INDEX · 10</span><div class="component-index__grid"></div>';
+    const componentIndexGrid = componentIndex.querySelector('.component-index__grid');
+    directory.forEach(([id, shortLabel, fullLabel]) => { const btn = document.createElement('button'); btn.className='system-chip'; btn.type='button'; btn.dataset.id=id; btn.textContent=shortLabel; btn.addEventListener('click',()=>select(id,true)); systemList.appendChild(btn); const indexBtn = document.createElement('button'); indexBtn.className='component-index__item'; indexBtn.type='button'; indexBtn.dataset.id=id; indexBtn.textContent=fullLabel; indexBtn.setAttribute('aria-label', `選取${fullLabel}`); indexBtn.addEventListener('click',()=>select(id,true)); componentIndexGrid.appendChild(indexBtn); });
     const getPiece = id => pieces.find(p => p.userData.componentId === id) || (id === 'solar' ? pieces.find(p=>p.userData.componentId==='solarRight') : null);
     function select(id, focus, notifyParent = true) {
       if (id === 'solarRight') id = 'solar'; const chosen = data[id]; if (!chosen) return; activeId = id;
       detailCode.textContent = chosen.code; detailClass.textContent = chosen.class; detailName.textContent = chosen.name; detailDescription.textContent = chosen.description;
       specs.innerHTML = chosen.specs.map(([key,value]) => `<div class="spec"><span>${key}</span><b>${value}</b></div>`).join(''); interfaceText.textContent=chosen.interface;
-      document.querySelectorAll('.system-chip').forEach(b=>b.classList.toggle('active',b.dataset.id===id)); document.querySelectorAll('.component-label').forEach(el=>el.classList.toggle('is-active',el.textContent.includes(chosen.code.split('-')[0]) || (id==='bus' && el.textContent.includes('BUS')) || (id==='solar' && el.textContent.includes('SOLAR')) || (id==='hga' && el.textContent.includes('HIGH')) || (id==='camera' && el.textContent.includes('IMAGER')) || (id==='propulsion' && el.textContent.includes('PROPULSION')) || (id==='thermal' && el.textContent.includes('THERMAL')) || (id==='adcs' && el.textContent.includes('ADCS')) || (id==='ttc' && el.textContent.includes('TT&C')) || (id==='eps' && el.textContent.includes('POWER')) || (id==='obc' && el.textContent.includes('ON-BOARD'))));
+      document.querySelectorAll('.system-chip').forEach(b=>b.classList.toggle('active',b.dataset.id===id)); document.querySelectorAll('.component-index__item').forEach(b=>b.classList.toggle('is-active',b.dataset.id===id));
       pieces.forEach(piece => { const visualId = piece.userData.componentId === 'solarRight' ? 'solar' : piece.userData.componentId; const isActive = visualId === id; piece.userData.allMaterials.forEach(m => { if (m.emissive) { m.emissive.setHex(isActive ? 0x116c8d : 0x000000); m.emissiveIntensity = isActive ? .5 : .16; } }); });
       if (focus) { const p=getPiece(id); if(p){ const target=p.position.clone(); controls.target.lerp(target,.22); } }
       if (notifyParent && embedded && supplyChainId[id]) window.parent.postMessage({ source: 'leo-satellite', type: 'component-select', component: supplyChainId[id] }, parentTarget);
@@ -344,9 +346,9 @@
       const id = modelId[event.data.component];
       if (id) select(id, true, false);
     });
-    function resize(){ const rect=mount.getBoundingClientRect(); camera.aspect=rect.width/rect.height; camera.updateProjectionMatrix(); renderer.setSize(rect.width,rect.height); labelRenderer.setSize(rect.width,rect.height); } new ResizeObserver(resize).observe(mount); resize();
+    function resize(){ const rect=mount.getBoundingClientRect(); camera.aspect=rect.width/rect.height; camera.updateProjectionMatrix(); renderer.setSize(rect.width,rect.height); } new ResizeObserver(resize).observe(mount); resize();
     const clock=new THREE.Clock();
-    function tick(){ requestAnimationFrame(tick); const delta=clock.getDelta(); explode=THREE.MathUtils.damp(explode,targetExplode,5,delta); pieces.forEach(piece=>{piece.position.copy(piece.userData.home).addScaledVector(piece.userData.vector,explode);}); if(autoSpin) satellite.rotation.y += delta*.22; orbit.rotation.z+=delta*.015; starField.rotation.y-=delta*.003; controls.update(); renderer.render(scene,camera); labelRenderer.render(scene,camera); } tick();
+    function tick(){ requestAnimationFrame(tick); const delta=clock.getDelta(); explode=THREE.MathUtils.damp(explode,targetExplode,5,delta); pieces.forEach(piece=>{piece.position.copy(piece.userData.home).addScaledVector(piece.userData.vector,explode);}); if(autoSpin) satellite.rotation.y += delta*.22; orbit.rotation.z+=delta*.015; starField.rotation.y-=delta*.003; controls.update(); renderer.render(scene,camera); } tick();
   </script>
 </body>
 </html>
