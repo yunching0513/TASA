@@ -97,6 +97,17 @@
   }
   .cluster-label.sel div { color: var(--gold); }
   .mapfallback { display: grid; place-items: center; height: 100%; color: var(--muted); font-size: 14px; text-align: center; padding: 20px; }
+  /* pie markers coloured by industry segment */
+  .pie-marker { background: none; border: none; }
+  .pie-marker .pie {
+    box-sizing: border-box; border-radius: 50%; border-style: solid; cursor: pointer;
+    box-shadow: 0 0 0 1px rgba(31,30,28,0.55); transition: opacity .2s;
+  }
+  .pie-marker .pie.launch { animation: ringpulse 2.2s ease-out infinite; }
+  @keyframes ringpulse {
+    0%   { box-shadow: 0 0 0 1px rgba(31,30,28,0.55), 0 0 0 0 rgba(255,122,92,0.55); }
+    100% { box-shadow: 0 0 0 1px rgba(31,30,28,0.55), 0 0 0 13px rgba(255,122,92,0); }
+  }
 
   /* filters */
   .filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 22px; }
@@ -626,7 +637,7 @@ const I18N = {
     sec1intro:'太空產業從上游到下游環環相扣。臺灣以地面設備見長,並沿著半導體與精密製造的優勢,向衛星本體、火箭與應用服務延伸。',
     sec2:'產業地圖', sec2en:'Industry Map',
     sec2intro:'點擊地圖節點檢視當地的公司與機構,或以價值鏈環節篩選。節點大小反映收錄機構數量。',
-    maphint:'※ 底圖:OpenStreetMap。據點以總部或主要基地所在縣市標示;橘色節點為國家發射場域。可拖曳與縮放地圖。',
+    maphint:'※ 底圖:OpenStreetMap。圓圈依當地五種產業類別的組成比例上色(對照上方篩選器的顏色);圓圈大小反映機構數量,脈動者為國家發射場域。可拖曳與縮放地圖。',
     secA:'LEO 衛星元件 × 臺灣供應鏈', secAen:'Satellite Anatomy',
     secAintro:'一顆低軌衛星拆開來,臺灣在哪裡?點擊爆炸圖上的元件編號,檢視對應的臺灣廠商與供應鏈強度。電子含量高、可標準化量產的元件,臺灣幾乎全數卡位;缺口集中在化學與能源含量高的環節。',
     r_strong:'國際供應鏈要角', r_mid:'發展中・累積飛行履歷', r_gap:'缺口・仰賴進口',
@@ -655,7 +666,7 @@ const I18N = {
     sec1intro:"The space industry runs upstream to downstream. Taiwan leads in ground equipment and is extending along its semiconductor and precision-manufacturing strengths into satellites, rockets and services.",
     sec2:'Industry Map', sec2en:'Where the Industry Lives',
     sec2intro:'Click a node to see local companies and institutions, or filter by value-chain segment. Node size reflects the number of entries.',
-    maphint:'※ Base map: OpenStreetMap. Pins mark the city of each HQ or main base; the orange node is the national launch site. Drag and zoom to explore.',
+    maphint:'※ Base map: OpenStreetMap. Each circle is coloured by its mix of the five industry segments (matching the filter colours above); circle size reflects the number of organizations, and the pulsing one is the national launch site. Drag and zoom to explore.',
     secA:'LEO Satellite × Taiwan Supply Chain', secAen:'Satellite Anatomy',
     secAintro:'Take a LEO satellite apart — where is Taiwan? Click a numbered component in the exploded view to see the matching Taiwanese suppliers and chain strength. Taiwan holds nearly every electronics-heavy, mass-producible part; the gaps cluster in chemistry- and energy-heavy subsystems.',
     r_strong:'Key global supplier', r_mid:'Developing / gaining flight heritage', r_gap:'Gap — import-reliant',
@@ -745,6 +756,25 @@ function initMap() {
   window.addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(() => { map.invalidateSize(); fit(); }, 200); });
 }
 
+const SEG_ORDER = ['agency', 'launch', 'satellite', 'ground', 'service'];
+
+// build a conic-gradient string from the segment mix at a city
+function segGradient(orgsHere) {
+  const counts = {};
+  orgsHere.forEach(o => { counts[o.seg] = (counts[o.seg] || 0) + 1; });
+  const total = orgsHere.length || 1;
+  let acc = 0;
+  const stops = [];
+  SEG_ORDER.forEach(sk => {
+    if (!counts[sk]) return;
+    const start = (acc / total) * 360;
+    acc += counts[sk];
+    const end = (acc / total) * 360;
+    stops.push(`${SEGS[sk].color} ${start}deg ${end}deg`);
+  });
+  return stops.length > 1 ? `conic-gradient(${stops.join(',')})` : (stops[0] ? stops[0].split(' ')[0] : '#6FD4FF');
+}
+
 function renderMap() {
   if (!map || !markerLayer) return;
   markerLayer.clearLayers();
@@ -753,15 +783,18 @@ function renderMap() {
     const match = selSeg ? orgsHere.some(o => o.seg === selSeg) : true;
     const isSel = selCity === key;
     const r = Math.min(8 + orgsHere.length * 1.6, 18);
-    const baseColor = key === 'pingtung' ? '#FF7A5C' : '#6FD4FF';
-    const marker = L.circleMarker([c.lat, c.lng], {
-      radius: r,
-      color: isSel ? '#FFC53D' : '#262624',
-      weight: isSel ? 3 : 1.5,
-      fillColor: isSel ? '#FFC53D' : baseColor,
-      fillOpacity: match ? 0.85 : 0.2,
-      opacity: match ? 1 : 0.3,
+    const d = Math.round(r * 2);
+    const bg = segGradient(orgsHere);          // coloured by industry segment(s)
+    const bw = isSel ? 3 : 1.5;
+    const bc = isSel ? '#FFC53D' : '#1F1E1C';
+    const op = match ? 1 : 0.28;
+    const icon = L.divIcon({
+      className: 'pie-marker',
+      html: `<div class="pie${key === 'pingtung' ? ' launch' : ''}" style="width:${d}px;height:${d}px;` +
+            `background:${bg};border-color:${bc};border-width:${bw}px;opacity:${op};"></div>`,
+      iconSize: [d, d], iconAnchor: [d / 2, d / 2],
     });
+    const marker = L.marker([c.lat, c.lng], { icon, keyboard: true, title: lang === 'zh' ? c.zh : c.en });
     marker.on('click', () => { selCity = (selCity === key ? null : key); update(); });
     marker.bindTooltip(
       `<div>${lang === 'zh' ? c.zh : c.en} · ${orgsHere.length}</div>`,
@@ -770,12 +803,6 @@ function renderMap() {
         className: 'cluster-label' + (isSel ? ' sel' : ''), opacity: match ? 1 : 0.35 }
     );
     markerLayer.addLayer(marker);
-    // glow ring for the national launch site
-    if (key === 'pingtung') {
-      markerLayer.addLayer(L.circleMarker([c.lat, c.lng], {
-        radius: r + 7, color: '#FF7A5C', weight: 1.2, fill: false, opacity: match ? 0.7 : 0.2, interactive: false,
-      }));
-    }
   });
 }
 
