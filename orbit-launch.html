@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#262624">
+  <meta name="description" content="以可互動 3D 模型比較 LEO、MEO、GEO 軌道，並模擬火箭發射與衛星入軌。">
+  <title>GEO · MEO · LEO 軌道與發射｜TASA Orbital Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&family=Noto+Serif+TC:wght@600;900&family=Space+Grotesk:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root { --ink:#eceae5; --muted:#8f8c84; --soft:#aba79e; --line:#464540; --panel:#30302e; --space:#262624; --cyan:#6fd4ff; --blue:#4c74d9; --gold:#ffc53d; --green:#35d0a0; --orange:#ff8a4c; --leo:#6fd4ff; --meo:#35d0a0; --geo:#ffc53d; }
+    * { box-sizing:border-box; }
+    html,body { min-height:100%; margin:0; background:var(--space); }
+    body { color:var(--ink); font-family:"Noto Sans TC",sans-serif; overflow-x:hidden; background-image:radial-gradient(ellipse at 48% -28%,#3c3b38 0%,#30302e 34%,#262624 75%); }
+    button { font:inherit; color:inherit; }
+    button:focus-visible,a:focus-visible,input:focus-visible { outline:2px solid var(--gold); outline-offset:3px; }
+    .topline { height:3px; background:linear-gradient(90deg,transparent,var(--cyan) 18%,var(--gold) 50%,var(--cyan) 82%,transparent); }
+    .app { min-height:100vh; position:relative; isolation:isolate; }
+    .app::after { content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.34; background-image:radial-gradient(rgba(236,234,229,.42) .7px,transparent .8px),radial-gradient(rgba(111,212,255,.28) .55px,transparent .7px); background-position:0 0,73px 47px; background-size:137px 139px,193px 191px; }
+    .topbar { min-height:66px; display:flex; align-items:center; gap:20px; padding:12px 30px; border-bottom:1px solid var(--line); background:rgba(38,38,36,.88); backdrop-filter:blur(18px); position:relative; z-index:20; }
+    .brand { display:flex; align-items:center; gap:11px; color:var(--ink); text-decoration:none; min-width:max-content; }
+    .brand-mark { width:28px; height:28px; position:relative; border:1.5px solid var(--blue); border-radius:50%; transform:rotate(-27deg); }
+    .brand-mark::before,.brand-mark::after { content:""; position:absolute; inset:5px -6px; border-top:1px solid var(--cyan); border-bottom:1px solid var(--cyan); border-radius:50%; }
+    .brand-mark::after { inset:-6px 5px; transform:rotate(90deg); }
+    .brand-type strong { display:block; font-family:"Noto Serif TC",serif; font-size:17px; letter-spacing:.1em; line-height:.9; }
+    .brand-type small { display:block; margin-top:4px; color:var(--muted); font:500 9px "Space Grotesk",sans-serif; letter-spacing:.17em; }
+    .breadcrumb { margin-left:8px; color:var(--soft); font:500 11px "Space Grotesk",sans-serif; letter-spacing:.08em; }
+    .breadcrumb b { color:var(--cyan); font-weight:500; }
+    .top-actions { margin-left:auto; display:flex; align-items:center; flex-wrap:wrap; justify-content:flex-end; gap:9px; }
+    .nav-link { border:1px solid var(--line); border-radius:11px; padding:7px 10px; color:var(--muted); font:500 10px "Space Grotesk",sans-serif; letter-spacing:.07em; text-decoration:none; transition:.2s; }
+    .nav-link:hover { border-color:var(--cyan); color:var(--cyan); }
+    main { width:min(1760px,100%); margin:0 auto; padding:28px 30px 34px; }
+    .intro { display:flex; justify-content:space-between; align-items:end; gap:28px; margin:0 0 22px; }
+    .eyebrow { color:var(--blue); font:500 11px "Space Grotesk",sans-serif; letter-spacing:.16em; text-transform:uppercase; }
+    h1 { margin:5px 0 0; font:600 clamp(30px,3.3vw,52px)/1.14 "Noto Serif TC",serif; letter-spacing:.08em; }
+    h1 span { color:var(--cyan); font-family:"Noto Sans TC",sans-serif; font-size:.46em; font-weight:700; letter-spacing:.04em; vertical-align:middle; margin-left:.24em; }
+    .intro-copy { width:min(520px,39%); margin:0; padding-left:17px; border-left:1px solid var(--blue); color:var(--muted); font-size:13px; line-height:1.8; }
+    .lab { display:grid; grid-template-columns:minmax(0,1fr) 338px; min-height:min(690px,calc(100vh - 205px)); overflow:hidden; border:1px solid var(--line); border-radius:20px; background:linear-gradient(160deg,rgba(58,57,54,.94),rgba(38,38,36,.97)); box-shadow:0 20px 80px rgba(0,0,0,.22),inset 0 1px rgba(236,234,229,.04); }
+    .viewer { min-width:0; position:relative; overflow:hidden; border-right:1px solid var(--line); }
+    #scene { position:absolute; inset:0; cursor:grab; }
+    #scene:active { cursor:grabbing; }
+    .scanlines { position:absolute; inset:0; z-index:2; pointer-events:none; opacity:.08; background:repeating-linear-gradient(0deg,transparent,transparent 3px,#6fd4ff 4px); mix-blend-mode:overlay; }
+    .view-corner { position:absolute; z-index:3; width:35px; height:35px; pointer-events:none; border-color:var(--cyan); opacity:.8; }
+    .view-corner.tl { top:16px; left:16px; border-top:1px solid; border-left:1px solid; }.view-corner.tr { top:16px; right:16px; border-top:1px solid; border-right:1px solid; }.view-corner.bl { bottom:17px; left:16px; border-bottom:1px solid; border-left:1px solid; }.view-corner.br { right:16px; bottom:17px; border-right:1px solid; border-bottom:1px solid; }
+    .scene-title { position:absolute; z-index:3; top:25px; left:66px; color:var(--muted); font:500 10px "Space Grotesk",sans-serif; letter-spacing:.12em; }.scene-title b { color:var(--cyan); font-weight:500; }
+    .scene-note { position:absolute; z-index:3; right:24px; top:25px; color:var(--muted); font:500 9px "Space Grotesk",sans-serif; letter-spacing:.07em; text-align:right; }
+    .orbit-key { position:absolute; z-index:4; top:53px; left:24px; width:min(255px,calc(100% - 48px)); padding:9px; border:1px solid rgba(111,212,255,.34); border-radius:10px; background:rgba(38,38,36,.78); box-shadow:0 10px 30px rgba(0,0,0,.18); backdrop-filter:blur(10px); }
+    .orbit-key__title { display:block; margin:0 2px 7px; color:var(--muted); font:500 8px "Space Grotesk",sans-serif; letter-spacing:.13em; }
+    .orbit-key__row { display:grid; grid-template-columns:14px 38px 1fr; align-items:center; column-gap:6px; min-height:21px; color:var(--soft); font:500 9px "Space Grotesk",sans-serif; letter-spacing:.05em; }.orbit-key__row b { color:var(--ink); font-weight:500; }.orbit-key__row small { color:var(--muted); font-size:8px; }.orbit-key__dot { width:7px; height:7px; border-radius:50%; box-shadow:0 0 10px currentColor; }.orbit-key__row.leo .orbit-key__dot{color:var(--leo);background:var(--leo)}.orbit-key__row.meo .orbit-key__dot{color:var(--meo);background:var(--meo)}.orbit-key__row.geo .orbit-key__dot{color:var(--geo);background:var(--geo)}
+    .flight-overlay { position:absolute; z-index:4; left:24px; bottom:24px; padding:10px 12px; border-left:2px solid var(--gold); background:rgba(38,38,36,.76); color:var(--muted); font:500 9px/1.65 "Space Grotesk",sans-serif; letter-spacing:.07em; pointer-events:none; }.flight-overlay b { display:block; color:var(--gold); font-weight:500; }.flight-overlay strong { color:var(--ink); font-size:13px; font-weight:500; }
+    .side { display:flex; min-height:0; flex-direction:column; background:rgba(38,38,36,.78); }
+    .side-head { padding:21px 22px 16px; border-bottom:1px solid var(--line); }.side-kicker { color:var(--muted); font:500 9px "Space Grotesk",sans-serif; letter-spacing:.15em; }.side-head h2 { margin:5px 0 2px; font:600 25px/1.2 "Noto Serif TC",serif; letter-spacing:.04em; }.side-head p { margin:0; color:var(--cyan); font:500 10px "Space Grotesk",sans-serif; letter-spacing:.07em; }
+    .orbit-picker { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; padding:16px 20px; border-bottom:1px solid var(--line); }.orbit-choice { border:1px solid var(--line); border-radius:9px; padding:9px 5px; background:transparent; color:var(--muted); cursor:pointer; font:500 10px "Space Grotesk",sans-serif; letter-spacing:.07em; transition:.2s; }.orbit-choice:hover { color:var(--ink); border-color:var(--soft); }.orbit-choice.active { color:#262624; background:var(--gold); border-color:var(--gold); }
+    .details { padding:20px 22px; overflow:auto; }.details h3 { margin:0 0 9px; font-size:17px; }.details p { margin:0; color:var(--muted); font-size:12.5px; line-height:1.76; }.facts { margin:18px 0 0; border-top:1px solid var(--line); }.fact { display:grid; grid-template-columns:1fr auto; gap:10px; padding:9px 0; border-bottom:1px solid var(--line); font:500 10px "Space Grotesk",sans-serif; letter-spacing:.04em; }.fact span { color:var(--soft); }.fact b { color:var(--ink); font-weight:500; text-align:right; }
+    .launch-controls { margin-top:auto; padding:17px 20px 21px; border-top:1px solid var(--line); }.launch-controls > span { display:block; margin-bottom:10px; color:var(--muted); font:500 9px "Space Grotesk",sans-serif; letter-spacing:.13em; }.actions { display:grid; grid-template-columns:1fr 1fr; gap:7px; }.action { min-height:37px; border:1px solid var(--line); border-radius:8px; background:transparent; color:var(--soft); cursor:pointer; font:500 10px "Space Grotesk",sans-serif; letter-spacing:.05em; transition:.2s; }.action:hover { color:var(--ink); border-color:var(--cyan); }.action.primary { border-color:var(--gold); background:var(--gold); color:#262624; }.speed { display:flex; align-items:center; gap:10px; margin-top:14px; color:var(--muted); font:500 9px "Space Grotesk",sans-serif; letter-spacing:.07em; }.speed output { width:25px; color:var(--gold); text-align:right; } input[type="range"] { width:100%; accent-color:var(--gold); cursor:pointer; }
+    .comparison { margin-top:22px; border:1px solid var(--line); border-radius:18px; overflow:hidden; background:rgba(48,48,46,.55); }.comparison-head { display:flex; justify-content:space-between; align-items:baseline; gap:20px; padding:18px 22px 12px; }.comparison-head h2 { margin:0; font:600 20px "Noto Serif TC",serif; letter-spacing:.04em; }.comparison-head p { margin:0; color:var(--muted); font-size:11px; }.comparison-grid { display:grid; grid-template-columns:1.05fr repeat(3,1fr); }.comparison-grid > div { min-height:50px; padding:12px 15px; border-top:1px solid var(--line); border-right:1px solid var(--line); font-size:12px; line-height:1.55; }.comparison-grid > div:nth-child(4n) { border-right:0; }.comparison-grid .head { color:var(--muted); font:500 10px "Space Grotesk",sans-serif; letter-spacing:.08em; }.comparison-grid .leo { color:var(--leo); }.comparison-grid .meo { color:var(--meo); }.comparison-grid .geo { color:var(--geo); }.comparison-grid .row-label { color:var(--soft); font-size:11px; }
+    .footer-note { display:flex; justify-content:space-between; gap:16px; padding:14px 1px 0; color:var(--muted); font:500 10px/1.6 "Space Grotesk",sans-serif; letter-spacing:.03em; }.footer-note b { color:var(--gold); font-weight:500; }
+    @media(max-width:1040px) { .lab { grid-template-columns:1fr; }.viewer { min-height:650px; border-right:0; border-bottom:1px solid var(--line); }.side { display:grid; grid-template-columns:1fr 1fr; }.launch-controls { border-top:0; border-left:1px solid var(--line); }.details { border-bottom:0; }.comparison-grid { grid-template-columns:1fr 1fr; }.comparison-grid > div:nth-child(4n) { border-right:1px solid var(--line); }.comparison-grid > div:nth-child(2n) { border-right:0; }.comparison-grid .head:first-child { display:none; } }
+    @media(max-width:700px) { .topbar { padding:11px 16px; gap:9px; }.breadcrumb { display:none; }.top-actions { gap:6px; }.nav-link { padding:6px 8px; font-size:9px; } main { padding:21px 13px 26px; }.intro { display:block; }.intro-copy { width:auto; margin-top:15px; }.viewer { min-height:590px; }.side { display:block; }.launch-controls { border-left:0; border-top:1px solid var(--line); }.scene-title { top:24px; left:54px; }.scene-note { top:25px; right:14px; font-size:8px; }.orbit-key { top:49px; left:14px; width:min(255px,calc(100% - 28px)); }.flight-overlay { left:14px; bottom:16px; }.view-corner.tl { top:15px; left:13px; }.view-corner.tr { top:15px; right:13px; }.view-corner.bl { bottom:13px; left:13px; }.view-corner.br { right:13px; bottom:13px; }.comparison-head { display:block; }.comparison-head p { margin-top:5px; }.comparison-grid > div { min-height:44px; padding:10px; font-size:11px; }.footer-note { display:block; }.footer-note span { display:block; margin-bottom:6px; } }
+    @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition-duration:.01ms!important; animation-duration:.01ms!important; } }
+  </style>
+</head>
+<body>
+  <div class="topline"></div>
+  <div class="app">
+    <header class="topbar">
+      <a class="brand" href="index.html" aria-label="返回 TASA 主頁"><span class="brand-mark" aria-hidden="true"></span><span class="brand-type"><strong>TASA</strong><small>ORBITAL SYSTEMS</small></span></a>
+      <div class="breadcrumb">/ ORBITAL LAB / <b>MISSION PROFILE</b></div>
+      <div class="top-actions"><a class="nav-link" href="leo-satellite.html">衛星解剖圖</a><a class="nav-link" href="valuechain.html">產業鏈地圖</a><a class="nav-link" href="index.html">← 法規總覽</a></div>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div><div class="eyebrow">Interactive 3D orbital mechanics · schematic mission simulation</div><h1 id="page-title">ORBITAL LAB <span>GEO · MEO · LEO 軌道與發射</span></h1></div>
+        <p class="intro-copy">以同一個 3D 視窗比較三種地球軌道的高度、週期與典型任務。選擇目標軌道後啟動火箭，觀察由地面發射、轉移飛行到衛星部署入軌的示意流程。</p>
+      </section>
+
+      <section class="lab" aria-label="地球軌道與火箭發射 3D 模擬">
+        <div class="viewer">
+          <div id="scene" role="img" aria-label="可旋轉的 3D 地球、LEO、MEO、GEO 軌道與火箭入軌示意"></div>
+          <div class="scanlines" aria-hidden="true"></div><div class="view-corner tl" aria-hidden="true"></div><div class="view-corner tr" aria-hidden="true"></div><div class="view-corner bl" aria-hidden="true"></div><div class="view-corner br" aria-hidden="true"></div>
+          <div class="scene-title"><b>ORBITAL VIEWPORT</b> · Earth-centred inertial frame</div><div class="scene-note">高度與距離為視覺化比例<br>not to scale</div>
+          <div class="orbit-key" aria-label="軌道圖例"><span class="orbit-key__title">ORBITAL ALTITUDE INDEX</span><div class="orbit-key__row leo"><i class="orbit-key__dot"></i><b>LEO</b><small>160–2,000 km</small></div><div class="orbit-key__row meo"><i class="orbit-key__dot"></i><b>MEO</b><small>2,000–35,786 km</small></div><div class="orbit-key__row geo"><i class="orbit-key__dot"></i><b>GEO</b><small>35,786 km</small></div></div>
+          <div class="flight-overlay"><b id="flightPhase">READY · LEO TARGET</b><span>MISSION ALTITUDE</span><strong id="flightAltitude">— km</strong></div>
+        </div>
+
+        <aside class="side" aria-live="polite">
+          <div class="side-head"><div class="side-kicker">SELECTED ORBIT</div><h2 id="orbitCode">LEO</h2><p id="orbitClass">LOW EARTH ORBIT</p></div>
+          <div class="orbit-picker" role="group" aria-label="選擇目標軌道"><button class="orbit-choice active" type="button" data-orbit="leo">LEO</button><button class="orbit-choice" type="button" data-orbit="meo">MEO</button><button class="orbit-choice" type="button" data-orbit="geo">GEO</button></div>
+          <div class="details"><h3 id="orbitName">低地球軌道</h3><p id="orbitDescription">最靠近地球的常用軌道。較低的傳輸延遲與較高的地表解析度，使它適合遙測、科學任務與大規模通訊星系。</p><div class="facts" id="facts"></div></div>
+          <div class="launch-controls"><span>LAUNCH SIMULATION · 目標 <b id="launchTarget">LEO</b></span><div class="actions"><button class="action primary" id="launchBtn" type="button">模擬發射</button><button class="action" id="resetBtn" type="button">重設任務</button></div><label class="speed" for="speedRange">TIME SCALE <input id="speedRange" type="range" min="1" max="4" value="2" step="1"><output id="speedValue">2×</output></label></div>
+        </aside>
+      </section>
+
+      <section class="comparison" aria-labelledby="comparison-title">
+        <div class="comparison-head"><h2 id="comparison-title">三種軌道的任務取向</h2><p>常用高度與週期為概略值；不同傾角、橢圓軌道與任務設計會改變實際數據。</p></div>
+        <div class="comparison-grid" role="table" aria-label="LEO MEO GEO 比較表"><div class="head" role="columnheader">比較項目</div><div class="head leo" role="columnheader">LEO</div><div class="head meo" role="columnheader">MEO</div><div class="head geo" role="columnheader">GEO</div><div class="row-label" role="rowheader">典型高度</div><div>160–2,000 km</div><div>2,000–35,786 km</div><div>35,786 km 赤道上空</div><div class="row-label" role="rowheader">典型週期</div><div>約 90–130 分</div><div>約 2–24 小時</div><div>23 小時 56 分</div><div class="row-label" role="rowheader">主要優勢</div><div>低延遲、解析度高</div><div>覆蓋與延遲折衷</div><div>地面視角固定</div><div class="row-label" role="rowheader">常見任務</div><div>遙測、通訊星系、載人任務</div><div>導航定位、部分通訊</div><div>氣象、廣播、固定通訊</div></div>
+      </section>
+      <div class="footer-note"><span><b>使用方式：</b>拖曳旋轉 · 滾輪縮放 · 選擇軌道 · 模擬發射</span><span>概念工程示意 · 軌道比例與火箭軌跡為教學視覺化，非飛行規劃資料</span></div>
+    </main>
+  </div>
+
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"}}</script>
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    const mount = document.getElementById('scene');
+    const orbitData = {
+      leo: { code:'LEO', class:'LOW EARTH ORBIT', name:'低地球軌道', radius:3.55, altitude:'160–2,000 km', launchAltitude:550, period:'約 90–130 分', use:'遙測 · 科學 · 寬頻星系', description:'最靠近地球的常用軌道。較低的傳輸延遲與較高的地表解析度，使它適合遙測、科學任務與大規模通訊星系。', color:0x6fd4ff, speed:.68, tilt:.8 },
+      meo: { code:'MEO', class:'MEDIUM EARTH ORBIT', name:'中地球軌道', radius:5.85, altitude:'2,000–35,786 km', launchAltitude:20200, period:'約 2–24 小時', use:'導航定位 · 通訊', description:'介於低軌與同步軌道之間，能以較少衛星提供較大覆蓋範圍；全球導航衛星系統多配置於這個高度帶。', color:0x35d0a0, speed:.27, tilt:.42 },
+      geo: { code:'GEO', class:'GEOSTATIONARY EARTH ORBIT', name:'地球同步靜止軌道', radius:8.9, altitude:'35,786 km', launchAltitude:35786, period:'23 小時 56 分', use:'氣象 · 廣播 · 固定通訊', description:'位於赤道上空的同步軌道；衛星繞行週期與地球自轉相同，因此地面天線能持續指向天空中的固定位置。', color:0xffc53d, speed:.06, tilt:0 }
+    };
+    const scene = new THREE.Scene(); scene.fog = new THREE.FogExp2(0x262624,.024);
+    const camera = new THREE.PerspectiveCamera(47,1,.1,100); camera.position.set(13.8,8.7,15.2);
+    const renderer = new THREE.WebGLRenderer({ antialias:true, alpha:true }); renderer.setPixelRatio(Math.min(devicePixelRatio,2)); renderer.outputColorSpace=THREE.SRGBColorSpace; renderer.setClearColor(0x000000,0); mount.appendChild(renderer.domElement);
+    const controls = new OrbitControls(camera,renderer.domElement); controls.target.set(0,.15,0); controls.enableDamping=true; controls.dampingFactor=.06; controls.minDistance=9; controls.maxDistance=27; controls.maxPolarAngle=Math.PI*.82;
+    scene.add(new THREE.HemisphereLight(0xa6d9ff,0x07101d,2.4)); const key = new THREE.DirectionalLight(0xffffff,3.2); key.position.set(8,10,9); scene.add(key); const rim = new THREE.DirectionalLight(0x3aa9ff,2.7); rim.position.set(-9,2,-7); scene.add(rim);
+
+    const earthRadius=2.25;
+    const earthTexture = (() => { const canvas=document.createElement('canvas'); canvas.width=1024; canvas.height=512; const ctx=canvas.getContext('2d'); const gradient=ctx.createLinearGradient(0,0,0,512); gradient.addColorStop(0,'#b9e8ff'); gradient.addColorStop(.18,'#286d9a'); gradient.addColorStop(.53,'#123e69'); gradient.addColorStop(1,'#081d38'); ctx.fillStyle=gradient; ctx.fillRect(0,0,1024,512); ctx.fillStyle='rgba(147,205,151,.72)'; const lands=[[145,100,80,42],[335,145,90,76],[580,80,150,55],[770,175,82,60],[480,286,120,70],[180,315,95,65],[700,350,175,50]]; lands.forEach(([x,y,w,h],i)=>{ctx.beginPath(); for(let p=0;p<8;p++){const a=p/8*Math.PI*2; const r=1+(p%2)*.24; const px=x+Math.cos(a)*w*.5*r; const py=y+Math.sin(a)*h*.5*r; p?ctx.lineTo(px,py):ctx.moveTo(px,py);} ctx.closePath(); ctx.fill(); if(i%2===0){ctx.fillStyle='rgba(218,204,142,.42)';ctx.fill();ctx.fillStyle='rgba(147,205,151,.72)';} }); ctx.fillStyle='rgba(240,250,255,.84)'; ctx.fillRect(0,0,1024,18);ctx.fillRect(0,494,1024,18); return new THREE.CanvasTexture(canvas); })();
+    const earth = new THREE.Group(); scene.add(earth); const globe=new THREE.Mesh(new THREE.SphereGeometry(earthRadius,64,64),new THREE.MeshPhongMaterial({map:earthTexture,shininess:18,specular:0x6fb6d6})); earth.add(globe); const grid=new THREE.Mesh(new THREE.SphereGeometry(earthRadius*1.006,32,18),new THREE.MeshBasicMaterial({color:0x8ad8ff,wireframe:true,transparent:true,opacity:.13})); earth.add(grid); const atmosphere=new THREE.Mesh(new THREE.SphereGeometry(earthRadius*1.055,64,64),new THREE.MeshBasicMaterial({color:0x65c9ff,transparent:true,opacity:.12,side:THREE.BackSide})); earth.add(atmosphere);
+    const starGeo=new THREE.BufferGeometry(),stars=[]; for(let i=0;i<650;i++){const r=16+Math.random()*20,t=Math.random()*Math.PI*2,y=(Math.random()-.5)*28;stars.push(Math.cos(t)*r,y,Math.sin(t)*r);} starGeo.setAttribute('position',new THREE.Float32BufferAttribute(stars,3)); scene.add(new THREE.Points(starGeo,new THREE.PointsMaterial({color:0xc4e8ff,size:.035,transparent:true,opacity:.75})));
+
+    function makeSatellite(color) { const sat=new THREE.Group(); const body=new THREE.Mesh(new THREE.BoxGeometry(.26,.22,.34),new THREE.MeshStandardMaterial({color:0xb8c5ca,roughness:.35,metalness:.75,emissive:color,emissiveIntensity:.18})); sat.add(body); const panelMat=new THREE.MeshStandardMaterial({color:0x174d91,roughness:.35,metalness:.65,emissive:0x062758,emissiveIntensity:.45}); [-.38,.38].forEach(x=>{const panel=new THREE.Mesh(new THREE.BoxGeometry(.38,.14,.025),panelMat);panel.position.x=x;sat.add(panel);}); const antenna=new THREE.Mesh(new THREE.CylinderGeometry(.025,.025,.24,10),new THREE.MeshStandardMaterial({color,roughness:.3,metalness:.8}));antenna.rotation.z=Math.PI/2;antenna.position.z=.23;sat.add(antenna); return sat; }
+    const orbits={};
+    function makeOrbit(id) { const d=orbitData[id], group=new THREE.Group(); group.rotation.x=Math.PI/2; group.rotation.z=d.tilt; scene.add(group); const torus=new THREE.Mesh(new THREE.TorusGeometry(d.radius,.018,8,192),new THREE.MeshBasicMaterial({color:d.color,transparent:true,opacity:.72}));group.add(torus); const sat=makeSatellite(d.color);group.add(sat);orbits[id]={group,sat,angle:id==='leo'?2.2:id==='meo'?4.3:5.4,material:torus.material}; }
+    Object.keys(orbitData).forEach(makeOrbit);
+    const rocket=new THREE.Group(); const rocketBody=new THREE.Mesh(new THREE.CylinderGeometry(.13,.18,1.55,18),new THREE.MeshStandardMaterial({color:0xe9edf0,roughness:.35,metalness:.7}));rocket.add(rocketBody);const nose=new THREE.Mesh(new THREE.ConeGeometry(.13,.38,18),new THREE.MeshStandardMaterial({color:0xd7e4e9,roughness:.28,metalness:.7}));nose.position.y=.96;rocket.add(nose);const booster=new THREE.Mesh(new THREE.CylinderGeometry(.055,.08,.98,12),new THREE.MeshStandardMaterial({color:0x7c9ab0,roughness:.45,metalness:.6}));[-.22,.22].forEach(x=>{const b=booster.clone();b.position.set(x,-.05,0);rocket.add(b);});const plume=new THREE.Mesh(new THREE.ConeGeometry(.22,.7,18),new THREE.MeshBasicMaterial({color:0xff9d3f,transparent:true,opacity:.88}));plume.position.y=-1.1;plume.rotation.x=Math.PI;rocket.add(plume);rocket.visible=false;scene.add(rocket);
+    const routeLine=new THREE.Line(new THREE.BufferGeometry(),new THREE.LineBasicMaterial({color:0xffc53d,transparent:true,opacity:.58}));scene.add(routeLine); const missionSat=makeSatellite(0xffc53d);missionSat.visible=false;scene.add(missionSat);
+
+    let selected='leo',launching=false,delivered=false,flight=0,timeScale=2,trajectory=null;
+    const orbitCode=document.getElementById('orbitCode'),orbitClass=document.getElementById('orbitClass'),orbitName=document.getElementById('orbitName'),orbitDescription=document.getElementById('orbitDescription'),facts=document.getElementById('facts'),flightPhase=document.getElementById('flightPhase'),flightAltitude=document.getElementById('flightAltitude'),launchTarget=document.getElementById('launchTarget'),launchBtn=document.getElementById('launchBtn'),resetBtn=document.getElementById('resetBtn'),speedRange=document.getElementById('speedRange'),speedValue=document.getElementById('speedValue');
+    function updateOrbitView() { const d=orbitData[selected]; orbitCode.textContent=d.code;orbitClass.textContent=d.class;orbitName.textContent=d.name;orbitDescription.textContent=d.description;facts.innerHTML=[['軌道高度',d.altitude],['繞行週期',d.period],['典型任務',d.use]].map(([k,v])=>`<div class="fact"><span>${k}</span><b>${v}</b></div>`).join('');launchTarget.textContent=d.code;document.querySelectorAll('.orbit-choice').forEach(b=>b.classList.toggle('active',b.dataset.orbit===selected));Object.entries(orbits).forEach(([id,o])=>{o.material.opacity=(id===selected)?.95:.28;o.sat.scale.setScalar(id===selected?1.22:.82);});resetMission(); }
+    function rebuildTrajectory() { const d=orbitData[selected],r=d.radius; trajectory=new THREE.CatmullRomCurve3([new THREE.Vector3(0,earthRadius+.05,0),new THREE.Vector3(0,earthRadius+2.2,0),new THREE.Vector3(r*.38,r*.72,0),new THREE.Vector3(r,0,0)]); routeLine.geometry.dispose();routeLine.geometry=new THREE.BufferGeometry().setFromPoints(trajectory.getPoints(110)); }
+    function resetMission() { launching=false;delivered=false;flight=0;rocket.visible=false;scene.add(missionSat);missionSat.visible=false;rebuildTrajectory();flightPhase.textContent=`READY · ${orbitData[selected].code} TARGET`;flightAltitude.textContent='— km';launchBtn.textContent='模擬發射'; }
+    function beginLaunch() { if(launching){resetMission();return;} resetMission();launching=true;rocket.visible=true;launchBtn.textContent='中止並重設';flightPhase.textContent='LIFTOFF · 第一級燃燒'; }
+    document.querySelectorAll('.orbit-choice').forEach(button=>button.addEventListener('click',()=>{selected=button.dataset.orbit;updateOrbitView();}));launchBtn.addEventListener('click',beginLaunch);resetBtn.addEventListener('click',resetMission);speedRange.addEventListener('input',()=>{timeScale=Number(speedRange.value);speedValue.value=`${timeScale}×`;});
+    updateOrbitView();
+
+    function resize(){const r=mount.getBoundingClientRect();camera.aspect=r.width/r.height;camera.updateProjectionMatrix();renderer.setSize(r.width,r.height);}new ResizeObserver(resize).observe(mount);resize();
+    const clock=new THREE.Clock(); const up=new THREE.Vector3(0,1,0);
+    function animate(){requestAnimationFrame(animate);const delta=Math.min(clock.getDelta(),.05);earth.rotation.y+=delta*.035;Object.entries(orbits).forEach(([id,o])=>{const d=orbitData[id];o.angle+=delta*d.speed;o.sat.position.set(Math.cos(o.angle)*d.radius,Math.sin(o.angle)*d.radius,0);o.sat.rotation.y-=delta*.8;}); if(launching){flight=Math.min(1,flight+delta*.115*timeScale);const p=trajectory.getPointAt(flight),tangent=trajectory.getTangentAt(Math.min(.999,flight)).normalize();rocket.position.copy(p);rocket.quaternion.setFromUnitVectors(up,tangent);plume.scale.setScalar(.9+Math.sin(performance.now()*.025)*.12);const d=orbitData[selected];flightAltitude.textContent=`~${Math.round(d.launchAltitude*flight).toLocaleString()} km`;flightPhase.textContent=flight<.28?'ASCENT · 第一級燃燒':flight<.5?'STAGING · 二級點火':flight<.78?'TRANSFER · 上面級加速':flight<.98?'ORBIT INSERTION · 引擎關機':'DEPLOYED · 衛星入軌';if(flight>=1){launching=false;delivered=true;rocket.visible=false;orbits[selected].group.add(missionSat);missionSat.visible=true;missionSat.position.set(d.radius,0,0);flightAltitude.textContent=`${d.launchAltitude.toLocaleString()} km`;launchBtn.textContent='再次模擬';}}if(delivered){const d=orbitData[selected];missionSat.rotation.y-=delta*.8;missionSat.position.set(Math.cos(orbits[selected].angle+.28)*d.radius,Math.sin(orbits[selected].angle+.28)*d.radius,0);}controls.update();renderer.render(scene,camera);}animate();
+  </script>
+</body>
+</html>
