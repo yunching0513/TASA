@@ -59,3 +59,11 @@
 ## 免責聲明
 
 本頁為便民彙整之易讀版,不具法律效力。正式條文以[全國法規資料庫](https://law.moj.gov.tw/)及[國科會主管法規共用系統](https://law.nstc.gov.tw/)公布者為準。
+
+
+---
+
+## 著作權 Copyright
+
+© 2026　吳昀慶 Yun-Ching Wu
+授權條款見 [`LICENSE`](LICENSE) 與 [`LICENSE-CONTENT`](LICENSE-CONTENT)　詳細聲明見 [`COPYRIGHT.md`](COPYRIGHT.md)
